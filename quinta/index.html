@@ -1,0 +1,192 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Materiale informatica — Classe quinta</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+:root{
+  --paper:#f6f4ee;
+  --paper-dim:#eeebe1;
+  --ink:#15213b;
+  --ink-soft:#4a5468;
+  --blue:#2f6fed;
+  --blue-dim:#dbe6fd;
+  --teal:#1f8f7d;
+  --teal-dim:#d9efe9;
+  --amber:#d98c1f;
+  --amber-dim:#f8e6c8;
+  --line:#d9d4c6;
+}
+*{box-sizing:border-box;}
+body{
+  margin:0;
+  background:var(--paper);
+  color:var(--ink);
+  font-family:'IBM Plex Sans',sans-serif;
+  line-height:1.55;
+  min-height:100vh;
+  display:flex;
+  flex-direction:column;
+}
+code,.mono{font-family:'IBM Plex Mono',monospace;}
+
+header.hero{
+  padding:5em 2em 3.5em;
+  max-width:1100px;
+  margin:0 auto;
+  width:100%;
+}
+header.hero .eyebrow{
+  font-family:'IBM Plex Mono',monospace;
+  color:var(--blue);
+  font-size:.85rem;
+  margin-bottom:1em;
+}
+header.hero h1{
+  font-family:'IBM Plex Mono',monospace;
+  font-size:clamp(1.7rem,3.2vw,2.4rem);
+  line-height:1.15;
+  margin:0 0 .5em 0;
+  font-weight:600;
+  color:#47576b;
+  white-space:nowrap;
+}
+@media(max-width:600px){
+  header.hero h1{ white-space:normal; font-size:1.5rem; }
+}
+header.hero .byline{
+  font-family:'IBM Plex Mono',monospace;
+  font-size:1rem;
+  color:#47576b;
+}
+header.hero .byline strong{color:#47576b; font-weight:600;}
+
+main{
+  max-width:1100px;
+  margin:0 auto;
+  padding:0 2em 5em;
+  width:100%;
+  flex:1;
+}
+
+.grid{
+  display:grid;
+  grid-template-columns:repeat(3,1fr);
+  gap:1.6em;
+}
+@media(max-width:820px){.grid{grid-template-columns:1fr;}}
+
+.card{
+  display:flex;
+  flex-direction:column;
+  background:#fff;
+  border:1px solid var(--line);
+  padding:2em 1.8em;
+  min-height:260px;
+  text-decoration:none;
+  color:inherit;
+  transition:border-color .15s, transform .15s;
+  position:relative;
+}
+a.card:hover{
+  border-color:var(--ink);
+  transform:translateY(-2px);
+}
+.card .module{
+  font-family:'IBM Plex Mono',monospace;
+  font-size:.78rem;
+  color:var(--blue);
+  margin-bottom:1em;
+}
+.card.disabled .module{color:var(--ink-soft);}
+.card h2{
+  font-size:1.4rem;
+  margin:0 0 .6em 0;
+  font-weight:600;
+}
+.card p{
+  font-size:.95rem;
+  color:var(--ink-soft);
+  margin:0 0 1.6em 0;
+  flex:1;
+}
+.card .cta{
+  font-family:'IBM Plex Mono',monospace;
+  font-size:.85rem;
+  display:flex;
+  align-items:center;
+  gap:.4em;
+}
+a.card .cta{color:var(--blue);}
+a.card:hover .cta{gap:.6em;}
+.card.disabled{
+  background:var(--paper-dim);
+  cursor:default;
+}
+.badge-progress{
+  position:absolute;
+  top:1.4em;
+  right:1.4em;
+  font-family:'IBM Plex Mono',monospace;
+  font-size:.7rem;
+  padding:.3em .6em;
+  border:1px solid var(--amber);
+  color:var(--amber);
+  background:var(--amber-dim);
+}
+.card.disabled .cta{color:var(--ink-soft);}
+
+footer{
+  padding:2.5em 2em;
+  text-align:center;
+  color:var(--ink-soft);
+  font-family:'IBM Plex Mono',monospace;
+  font-size:.8rem;
+  border-top:1px solid var(--line);
+}
+</style>
+</head>
+<body>
+
+<header class="hero">
+  <div class="eyebrow">Liceo Scientifico — Scienze Applicate</div>
+  <h1>Materiale informatica — Classe quinta</h1>
+  <p class="byline">a cura della <strong>prof.ssa Francesca Voltolini</strong></p>
+</header>
+
+<main>
+  <div class="grid">
+
+    <a class="card" href="calcolo_numerico.html">
+      <div class="module">MODULO B · UNITÀ B1</div>
+      <h2>Calcolo numerico</h2>
+      <p>Dal problema reale al risultato approssimato: rappresentazione dei numeri, metodi iterativi, zeri di funzione, integrazione numerica e metodo Monte Carlo.</p>
+      <div class="cta">Apri la lezione →</div>
+    </a>
+
+    <div class="card disabled">
+      <span class="badge-progress">IN PROGRESS</span>
+      <div class="module">MODULO B · UNITÀ B3</div>
+      <h2>Intelligenza Artificiale</h2>
+      <p>Materiale in preparazione.</p>
+      <div class="cta">Presto disponibile</div>
+    </div>
+
+    <div class="card disabled">
+      <span class="badge-progress">IN PROGRESS</span>
+      <div class="module">MODULO B · UNITÀ B4</div>
+      <h2>Data Science</h2>
+      <p>Materiale in preparazione.</p>
+      <div class="cta">Presto disponibile</div>
+    </div>
+
+  </div>
+</main>
+
+<footer>Materiale didattico realizzato con l'assistenza di Claude (Anthropic)</footer>
+
+</body>
+</html>

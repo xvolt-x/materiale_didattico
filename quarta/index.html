@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Classe Quarta &middot; Home</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Source+Serif+4:opsz,wght@8..60,400..700&family=IBM+Plex+Sans:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap">
+<style>
+  :root{
+    --bg:#FBF9F3;
+    --ink:#14213D;
+    --panel:#FFFFFF;
+    --panel-2:#F1ECDD;
+    --line:#CBBFA0;
+    --line-soft:#E7DFC8;
+    --text:#1B2333;
+    --text-dim:#5D6472;
+    --signal:#8F5A0C;
+    --signal-soft:#E9D3AC;
+    --disabled:#9CA3AF;
+    --font-display:'Source Serif 4', Georgia, serif;
+    --font-body:'IBM Plex Sans', Arial, sans-serif;
+    --font-mono:'IBM Plex Mono', 'Courier New', monospace;
+    padding-top: env(safe-area-inset-top, 0px);
+    padding-bottom: env(safe-area-inset-bottom, 0px);
+  }
+  @media (prefers-color-scheme: dark){
+    :root:not([data-theme="light"]){ --bg:#FBF9F3; --panel:#FFFFFF; }
+  }
+  :root[data-theme="dark"]{ --bg:#FBF9F3; --panel:#FFFFFF; }
+
+  *{ box-sizing:border-box; }
+  html,body{ height:100%; margin:0; }
+  body{
+    background:var(--bg);
+    color:var(--text);
+    font-family:var(--font-body);
+    line-height:1.5;
+    -webkit-font-smoothing:antialiased;
+    min-height:100%;
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+    justify-content:center;
+    padding:120px 8vw 100px;
+  }
+
+  .bg-grid{
+    position:fixed; inset:0; z-index:0; pointer-events:none;
+    background-image:
+      linear-gradient(var(--line-soft) 1px, transparent 1px),
+      linear-gradient(90deg, var(--line-soft) 1px, transparent 1px);
+    background-size:56px 56px;
+    opacity:.6;
+    -webkit-mask-image:radial-gradient(ellipse 90% 70% at 50% 10%, #000 40%, transparent 85%);
+            mask-image:radial-gradient(ellipse 90% 70% at 50% 10%, #000 40%, transparent 85%);
+  }
+
+  main{ position:relative; z-index:1; max-width:1180px; width:100%; text-align:center; }
+
+  .kicker{
+    font-family:var(--font-mono); font-size:15px; color:var(--signal);
+    margin:0 0 18px;
+  }
+  h1{
+    font-family:var(--font-display); font-weight:400; margin:0 auto;
+    font-size:clamp(38px,6vw,64px); line-height:1.1; max-width:18ch; color:var(--text);
+  }
+
+  .cards{
+    margin-top:64px;
+    display:grid;
+    grid-template-columns:repeat(auto-fit, minmax(240px, 1fr));
+    gap:28px;
+    text-align:left;
+  }
+
+  .card{
+    background:var(--panel);
+    border:1px solid var(--line);
+    border-radius:10px;
+    padding:32px 28px;
+    text-decoration:none;
+    color:var(--text);
+    display:flex;
+    flex-direction:column;
+    gap:12px;
+    transition:border-color .2s, transform .2s, box-shadow .2s;
+    position:relative;
+  }
+  .card:hover, .card:focus-visible{
+    border-color:var(--signal);
+    transform:translateY(-3px);
+    box-shadow:0 14px 30px -10px rgba(20,33,61,0.15);
+  }
+
+  .card .tag{
+    font-family:var(--font-mono); font-size:13px; color:var(--signal);
+  }
+  .card h2{
+    font-family:var(--font-display); font-weight:400; margin:0;
+    font-size:26px; color:var(--text);
+  }
+  .card .desc{
+    font-size:15px; color:var(--text-dim); margin:0; flex-grow:1;
+  }
+  .card .ref{
+    display:inline-flex; align-items:center; gap:8px;
+    font-family:var(--font-mono); font-size:12.5px; color:var(--text-dim);
+    padding-left:12px; border-left:2px solid var(--line); margin-top:4px;
+  }
+
+  .card--disabled{
+    cursor:not-allowed;
+    border-style:dashed;
+  }
+  .card--disabled:hover{
+    transform:none; box-shadow:none; border-color:var(--line);
+  }
+  .card--disabled .tag{ color:var(--disabled); }
+  .card--disabled h2{ color:var(--text-dim); }
+
+  .badge{
+    position:absolute; top:20px; right:20px;
+    font-family:var(--font-mono); font-size:11px; text-transform:uppercase; letter-spacing:.04em;
+    color:var(--text-dim); background:var(--panel-2); border:1px solid var(--line);
+    padding:4px 9px; border-radius:100px;
+  }
+
+  footer{
+    position:relative; z-index:1;
+    margin-top:70px;
+    font-family:var(--font-mono); font-size:13px; color:var(--text-dim);
+    text-align:center;
+  }
+</style>
+</head>
+<body>
+
+<div class="bg-grid" aria-hidden="true"></div>
+
+<main>
+  <p class="kicker">Classe Quarta</p>
+  <h1>Programmazione Web: HTML &amp; CSS</h1>
+
+  <div class="cards">
+
+    <a class="card" href="https://xvolt-x.github.io/classe_quarta/web.html">
+      <span class="tag">01</span>
+      <h2>Dentro il web</h2>
+      <p class="desc">Come funziona il web: reti, browser, server e protocolli.</p>
+      <span class="ref">Unità B2 · Linguaggi HTML e CSS — pp. 158-165</span>
+    </a>
+
+    <a class="card" href="https://xvolt-x.github.io/classe_quarta/html.html">
+      <span class="tag">02</span>
+      <h2>Il linguaggio HTML</h2>
+      <p class="desc">Struttura e tag fondamentali per costruire una pagina web.</p>
+      <span class="ref">Unità B2 · Linguaggi HTML e CSS — pp. 166-174</span>
+    </a>
+
+    <div class="card card--disabled" aria-disabled="true" title="Link non ancora disponibile">
+      <span class="badge">Da collegare</span>
+      <span class="tag">03</span>
+      <h2>CSS &mdash; Fogli di stile</h2>
+      <p class="desc">Colori, layout e stile grafico delle pagine web.</p>
+      <span class="ref">Unità B2 · Linguaggi HTML e CSS</span>
+    </div>
+
+  </div>
+</main>
+
+<footer>
+  Materiale didattico · Realizzato con l'assistenza di Claude (Anthropic)
+</footer>
+
+</body>
+</html>
