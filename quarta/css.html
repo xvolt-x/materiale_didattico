@@ -1,0 +1,874 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Fogli di stile CSS</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Source+Serif+4:opsz,wght@8..60,400..700&family=IBM+Plex+Sans:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap">
+<style>
+  :root{
+    --bg:#FBF9F3;
+    --ink:#14213D;
+    --panel:#FFFFFF;
+    --panel-2:#F1ECDD;
+    --paper:#FFFFFF;
+    --line:#CBBFA0;
+    --line-soft:#E7DFC8;
+    --text:#1B2333;
+    --text-dim:#5D6472;
+    --signal:#8F5A0C;
+    --signal-soft:#E9D3AC;
+    --alert:#B23327;
+    --ok:#1F7A52;
+    --font-display:'Source Serif 4', Georgia, serif;
+    --font-body:'IBM Plex Sans', Arial, sans-serif;
+    --font-mono:'IBM Plex Mono', 'Courier New', monospace;
+  }
+  @media (prefers-color-scheme: dark){ :root{ --bg:#FBF9F3; --panel:#FFFFFF; } }
+  :root[data-theme="dark"]{ --bg:#FBF9F3; --panel:#FFFFFF; }
+
+  *{ box-sizing:border-box; }
+  html{ scroll-behavior:smooth; }
+  body{ margin:0; background:var(--bg); color:var(--text); font-family:var(--font-body); line-height:1.5; -webkit-font-smoothing:antialiased; }
+  a{ color:inherit; }
+  ::selection{ background:var(--signal); color:var(--bg); }
+
+  .bg-grid{
+    position:fixed; inset:0; z-index:0; pointer-events:none;
+    background-image:linear-gradient(var(--line-soft) 1px, transparent 1px), linear-gradient(90deg, var(--line-soft) 1px, transparent 1px);
+    background-size:56px 56px; opacity:.6;
+    -webkit-mask-image:radial-gradient(ellipse 90% 70% at 50% 10%, #000 40%, transparent 85%);
+            mask-image:radial-gradient(ellipse 90% 70% at 50% 10%, #000 40%, transparent 85%);
+  }
+
+  section{ position:relative; z-index:1; padding:150px 8vw 110px; max-width:1180px; margin:0 auto; }
+  h1,h2,h3{ font-family:var(--font-display); font-weight:400; margin:0; color:var(--text); }
+  h2{ font-size:clamp(32px,4.2vw,50px); line-height:1.14; max-width:20ch; }
+  h3{ font-size:22px; font-weight:600; font-family:var(--font-body); margin:0 0 6px; }
+  .subtitle{ font-family:var(--font-body); font-size:18px; font-style:italic; color:var(--text-dim); margin:10px 0 0; max-width:50ch; }
+  .page-ref{ display:inline-flex; align-items:center; gap:8px; font-family:var(--font-mono); font-size:13px; color:var(--signal); margin-top:16px; padding-left:12px; border-left:2px solid var(--signal); }
+  .page-ref.hero-ref{ color:var(--text-dim); border-left-color:var(--line); margin-top:26px; }
+  .lede{ font-size:clamp(17px,1.9vw,20px); color:var(--text-dim); max-width:66ch; margin:22px 0 0; }
+  .mono{ font-family:var(--font-mono); }
+  p.note{ font-size:14px; color:var(--text-dim); margin-top:14px; }
+  ul.note-list{ font-size:14px; color:var(--text-dim); margin:14px 0 0; padding-left:20px; }
+  ul.note-list li{ margin-bottom:6px; }
+
+  /* ---------- Esercizi ---------- */
+  .ex-card{ margin-top:28px; padding:32px; }
+  .ex-level{ display:inline-block; font-family:var(--font-mono); font-size:12px; font-weight:600; letter-spacing:.03em; padding:5px 12px; border-radius:100px; margin-bottom:14px; }
+  .ex-level.base{ background:var(--signal-soft); color:#7A4A08; }
+  .ex-level.intermedio{ background:#F0DDB8; color:#7A4A08; }
+  .ex-level.avanzato{ background:#E9C88E; color:#5C3705; }
+  .ex-level.riepilogo{ background:var(--alert); color:#fff; }
+  .ex-card h3{ font-size:19px; margin-bottom:8px; }
+  .ex-card .ex-goal{ font-size:13.5px; font-style:italic; color:var(--text-dim); margin-top:18px; padding-top:16px; border-top:1px solid var(--line); }
+
+  /* ---------- Nav ---------- */
+  nav.wire-nav{ position:fixed; right:26px; top:50%; transform:translateY(-50%); z-index:50; display:flex; flex-direction:column; align-items:center; gap:0; }
+  nav.wire-nav .seg{ width:1px; height:20px; background:var(--line); }
+  nav.wire-nav button{ appearance:none; border:none; background:none; padding:7px 0; margin:0; cursor:pointer; display:block; position:relative; }
+  nav.wire-nav button .dot{ width:9px; height:9px; border-radius:50%; border:1.5px solid var(--text-dim); background:transparent; display:block; transition:background .25s, border-color .25s, transform .25s; }
+  nav.wire-nav button.active .dot{ background:var(--signal); border-color:var(--signal); transform:scale(1.35); }
+  nav.wire-nav button .label{ position:absolute; right:22px; top:50%; transform:translateY(-50%); font-family:var(--font-mono); font-size:12px; color:var(--text); background:var(--panel); border:1px solid var(--line); padding:5px 10px; border-radius:4px; white-space:nowrap; opacity:0; pointer-events:none; transition:opacity .15s; }
+  nav.wire-nav button:hover .label{ opacity:1; }
+  @media (max-width:860px){ nav.wire-nav{ display:none; } }
+
+  /* ---------- Hero ---------- */
+  .hero{ min-height:92svh; display:flex; flex-direction:column; justify-content:center; padding-top:0; padding-bottom:0; max-width:1180px; }
+  .hero h1{ font-size:clamp(44px,7.4vw,88px); line-height:1.0; max-width:13ch; }
+  .hero .lede{ font-size:clamp(19px,2.1vw,23px); max-width:50ch; }
+  .scrollcue{ margin-top:56px; display:flex; align-items:center; gap:12px; font-family:var(--font-mono); font-size:14px; color:var(--text-dim); }
+  .scrollcue svg{ animation:bob 1.8s ease-in-out infinite; }
+  @keyframes bob{ 0%,100%{ transform:translateY(0); } 50%{ transform:translateY(6px); } }
+  @media (prefers-reduced-motion: reduce){ .scrollcue svg{ animation:none; } }
+
+  .hero-tags{ display:flex; gap:10px; flex-wrap:wrap; margin-top:38px; }
+  .hero-tags span{ font-family:var(--font-mono); font-size:13px; color:var(--text-dim); border:1px solid var(--line); border-radius:100px; padding:8px 16px; background:var(--panel); }
+
+  /* ---------- Panels & generic ---------- */
+  .panel{ background:var(--panel); border:1px solid var(--line); border-radius:10px; }
+  .grid2{ display:grid; grid-template-columns:1fr 1fr; gap:32px; align-items:start; }
+  @media (max-width:860px){ .grid2{ grid-template-columns:1fr; } }
+
+  .btn{ font-family:var(--font-mono); font-size:14px; color:var(--text); background:var(--panel-2); border:1px solid var(--line); border-radius:6px; padding:11px 16px; cursor:pointer; transition:border-color .2s, background .2s, color .2s; }
+  .btn:hover{ border-color:var(--signal); }
+  .btn:active{ transform:translateY(1px); }
+  .btn.primary{ border-color:var(--signal); color:var(--bg); background:var(--signal); font-weight:600; }
+  .btn.primary:hover{ background:#A8710F; }
+  .btn.on{ border-color:var(--signal); background:var(--signal); color:var(--bg); font-weight:600; }
+  .toggle-row{ display:flex; gap:10px; flex-wrap:wrap; margin-top:22px; }
+
+  /* ---------- Anatomy (hover) bar — riusata in più sezioni ---------- */
+  .anat-bar{ margin-top:44px; padding:20px 24px; border-radius:8px; background:var(--panel); border:1px solid var(--line); font-family:var(--font-mono); font-size:clamp(14px,2.2vw,20px); display:flex; flex-wrap:wrap; align-items:baseline; }
+  .anat-bar .seg{ padding:3px 2px; border-bottom:2px solid transparent; cursor:pointer; transition:border-color .15s, background .15s; border-radius:2px; font-weight:600; }
+  .anat-bar .seg:hover, .anat-bar .seg.active{ border-color:var(--signal); background:var(--signal-soft); }
+  .anat-bar .pl{ color:var(--text-dim); }
+  .anat-bar .tg{ color:var(--signal); }
+  .anat-bar .at{ color:var(--ok); }
+  .anat-bar .vl{ color:var(--alert); }
+  .anat-bar .ct{ color:var(--text-dim); }
+  .anat-cap{ margin-top:18px; min-height:60px; padding:16px 20px; background:var(--panel-2); border-left:2px solid var(--signal); border-radius:0 8px 8px 0; }
+  .anat-cap .name{ font-family:var(--font-mono); font-size:13px; font-weight:600; color:var(--signal); margin-bottom:4px; }
+  .anat-cap .expl{ font-size:14.5px; color:var(--text-dim); }
+
+  /* ---------- Code block ---------- */
+  .code-block{ background:var(--panel-2); border:1px solid var(--line); border-radius:8px; padding:20px 22px; font-family:var(--font-mono); font-size:12.5px; line-height:1.75; overflow-x:auto; white-space:pre; color:var(--text-dim); }
+  .code-block .tg{ color:var(--signal); }
+  .code-block .at{ color:var(--ok); }
+  .code-block .vl{ color:var(--alert); }
+  .code-block .cm{ color:var(--text-dim); font-style:italic; }
+  .code-block .part{ transition:background .25s; border-radius:3px; }
+  .code-block .part.hl{ background:var(--signal-soft); }
+
+  .browser{ border:1px solid var(--line); border-radius:10px; overflow:hidden; background:var(--paper); }
+  .browser .bar{ background:var(--panel-2); padding:9px 14px; display:flex; gap:8px; align-items:center; border-bottom:1px solid var(--line); }
+  .browser .dotb{ width:9px; height:9px; border-radius:50%; background:var(--line); }
+  .browser .addr{ margin-left:8px; font-family:var(--font-mono); font-size:12px; color:var(--text-dim); }
+  .browser .stage{ padding:28px 30px; min-height:120px; color:#2b2b26; font-family:Georgia, serif; font-size:16px; }
+
+  /* ---------- DOM tree ---------- */
+  .tree-wrap{ margin-top:44px; overflow-x:auto; }
+  .tree-wrap svg{ width:100%; min-width:640px; height:auto; }
+  .tn-doc{ fill:var(--alert); stroke:none; }
+  .tn-root{ fill:var(--signal); stroke:none; }
+  .tn-elem{ fill:var(--ok); stroke:none; }
+  .tn-attr{ fill:var(--panel-2); stroke:var(--line); stroke-width:1.3; stroke-dasharray:3 2; }
+  .tn-text{ fill:var(--panel); stroke:var(--line); stroke-width:1.3; }
+  .tn-label{ font-family:var(--font-mono); font-size:11px; fill:#fff; text-anchor:middle; dominant-baseline:middle; font-weight:600; }
+  .tn-label.dark{ fill:var(--text-dim); }
+  .tn-line{ stroke:var(--line); stroke-width:1.4; fill:none; }
+  .tn-line.dashed{ stroke-dasharray:3 3; }
+  .tree-legend{ display:flex; gap:18px; flex-wrap:wrap; margin-top:16px; font-size:12.5px; color:var(--text-dim); }
+  .tree-legend .it{ display:flex; align-items:center; gap:7px; }
+  .tree-legend .sw{ width:11px; height:11px; border-radius:3px; flex:none; }
+
+  /* ---------- Tag gallery (flip) ---------- */
+  .tag-gallery{ display:grid; grid-template-columns:repeat(auto-fit,minmax(240px,1fr)); gap:16px; margin-top:44px; }
+  .tag-card{ height:180px; cursor:pointer; perspective:1000px; }
+  .tag-card .card-inner{ position:relative; width:100%; height:100%; transition:transform .5s; transform-style:preserve-3d; }
+  .tag-card.flipped .card-inner{ transform:rotateY(180deg); }
+  .tag-card .face{ position:absolute; inset:0; backface-visibility:hidden; border-radius:8px; padding:18px 20px; background:var(--panel); border:1px solid var(--line); overflow:auto; transition:border-color .2s; }
+  .tag-card.flipped .face.front{ border-color:var(--signal); }
+  .tag-card .face.back{ transform:rotateY(180deg); background:var(--panel-2); font-family:var(--font-mono); font-size:11.5px; line-height:1.6; color:var(--text-dim); white-space:pre-wrap; }
+  .tag-card .face.back .tg{ color:var(--signal); }
+  .tag-card .tg-name{ font-family:var(--font-mono); font-size:12.5px; color:var(--signal); margin-bottom:12px; font-weight:600; }
+  .tag-card .tg-render{ font-size:15px; color:var(--text); line-height:1.5; }
+  .tag-card .flip-hint{ position:absolute; bottom:8px; right:10px; font-family:var(--font-mono); font-size:10px; color:var(--text-dim); opacity:.7; }
+  .tag-card blockquote{ margin:0; padding-left:14px; border-left:3px solid var(--signal-soft); font-style:italic; }
+  .tag-card address{ font-style:italic; }
+  .tag-card pre{ margin:0; font-family:var(--font-mono); font-size:12px; background:var(--panel-2); padding:10px; border-radius:4px; overflow-x:auto; }
+
+  /* ---------- Site diagram (tag semantici) ---------- */
+  .site-diagram{ margin-top:44px; border:1px solid var(--line); border-radius:8px; overflow:hidden; }
+  .sd-region{ padding:18px 22px; cursor:pointer; font-family:var(--font-mono); font-size:14px; color:var(--text-dim); background:var(--panel); border-bottom:1px solid var(--line); transition:background .2s, color .2s; }
+  .sd-region:last-child{ border-bottom:none; }
+  .sd-region:hover, .sd-region.active{ background:var(--signal-soft); color:var(--text); }
+  .sd-region.main{ min-height:110px; display:flex; align-items:center; }
+
+  /* ---------- CSS three-ways cards ---------- */
+  .css-ways{ display:flex; gap:18px; flex-wrap:wrap; margin-top:44px; }
+  .css-way{ flex:1; min-width:220px; background:var(--panel); border:1px solid var(--line); border-radius:8px; padding:22px; }
+  .css-way .num{ font-family:var(--font-mono); font-size:12px; color:var(--signal); margin-bottom:8px; }
+  .css-way h3{ font-size:17px; }
+  .css-way p{ font-size:13.5px; color:var(--text-dim); margin:8px 0 0; }
+
+  /* ---------- Box model demo ---------- */
+  .bm-demo{ margin-top:44px; padding:32px; }
+  .bm-controls{ display:flex; gap:30px; flex-wrap:wrap; margin-bottom:32px; font-family:var(--font-mono); font-size:12.5px; color:var(--text-dim); }
+  .bm-controls label{ display:flex; flex-direction:column; gap:8px; }
+  .bm-controls input[type=range]{ accent-color:var(--signal); width:140px; }
+  .bm-controls b{ color:var(--text); }
+  .bm-stage{ display:flex; justify-content:center; padding:10px; overflow:auto; }
+  .bm-margin{ background:var(--signal-soft); position:relative; }
+  .bm-border{ background:var(--panel); border-style:solid; border-color:var(--alert); position:relative; }
+  .bm-padding{ background:var(--panel-2); position:relative; }
+  .bm-content{ background:var(--panel); border:1px solid var(--line); width:140px; height:64px; display:flex; align-items:center; justify-content:center; font-family:var(--font-mono); font-size:12px; color:var(--text-dim); text-align:center; }
+  .bm-tag{ position:absolute; top:3px; left:7px; font-family:var(--font-mono); font-size:9px; color:var(--text-dim); text-transform:uppercase; letter-spacing:.06em; }
+
+  /* ---------- div/span demo ---------- */
+  .ds-demo{ margin-top:44px; padding:32px; }
+  .ds-text{ font-size:19px; line-height:1.7; }
+  .ds-text .imp{ transition:background .2s, font-weight .2s; padding:0 2px; border-radius:2px; }
+  .ds-text .imp.active{ background:var(--signal-soft); font-weight:700; }
+  #dsTitle{ transition:color .2s, font-weight .2s; }
+  #dsTitle.active{ color:var(--signal); font-weight:700; }
+
+  /* ---------- Unità di misura demo ---------- */
+  .em-demo{ margin-top:44px; padding:32px; }
+  .em-demo input[type=range]{ width:100%; accent-color:var(--signal); margin:12px 0 30px; }
+  .em-boxes{ display:flex; gap:24px; flex-wrap:wrap; align-items:flex-start; }
+  .em-box{ background:var(--panel-2); border:1px solid var(--line); border-radius:6px; height:64px; display:flex; align-items:center; justify-content:center; flex:none; transition:width .1s linear; }
+  .em-box.fixed{ width:160px; }
+  .em-box-label{ font-family:var(--font-mono); font-size:11.5px; color:var(--text-dim); text-align:center; padding:0 8px; }
+
+  /* ---------- Mini table ---------- */
+  .mini-table{ width:100%; border-collapse:collapse; margin-top:32px; font-family:var(--font-mono); font-size:12.5px; }
+  .mini-table th, .mini-table td{ text-align:left; padding:9px 10px; border-bottom:1px solid var(--line); }
+  .mini-table th{ color:var(--text-dim); font-weight:600; font-size:11px; text-transform:uppercase; letter-spacing:.04em; }
+  .mini-table td:first-child{ color:var(--signal); }
+
+  /* ---------- Finale ---------- */
+  .finale{ background:var(--panel); border:1px solid var(--line); border-radius:14px; padding:60px 6vw; margin:0 8vw 130px; max-width:1180px; position:relative; z-index:1; }
+  .finale h2{ max-width:16ch; }
+  .glossary{ display:flex; flex-wrap:wrap; gap:10px; margin-top:32px; }
+  .chip{ font-family:var(--font-mono); font-size:14px; color:var(--text); border:1px solid var(--line); border-radius:100px; padding:9px 16px; cursor:pointer; background:var(--panel-2); transition:border-color .2s; }
+  .chip:hover{ border-color:var(--signal); }
+  .chip.open{ border-color:var(--signal); }
+  .glossary-def{ margin-top:18px; padding:16px 20px; background:var(--panel-2); border-radius:8px; font-size:15px; color:var(--text-dim); display:none; }
+  .glossary-def.show{ display:block; }
+  .glossary-def b{ color:var(--text); }
+
+  footer{ position:relative; z-index:1; text-align:center; padding:36px 20px 56px; font-family:var(--font-mono); font-size:13px; color:var(--text-dim); }
+
+  /* ---------- Aggiunte per la pagina CSS ---------- */
+  .stack{ display:flex; flex-direction:column; gap:14px; }
+  .code-label{ font-family:var(--font-mono); font-size:12px; color:var(--signal); margin:0 0 6px; font-weight:600; }
+  .rule-note{ margin-top:22px; padding:16px 20px; background:var(--panel-2); border-left:2px solid var(--signal); border-radius:0 8px 8px 0; font-size:15px; color:var(--text-dim); }
+  .rule-note b{ color:var(--text); }
+  .rule-note ul{ margin:8px 0 0; padding-left:20px; }
+  .rule-note li{ margin-bottom:4px; }
+  .hit{ outline:2px solid var(--signal); outline-offset:2px; background:var(--signal-soft); border-radius:3px; }
+  .sel-stage > *{ margin:0 0 12px; }
+  .sel-stage button{ font-family:inherit; font-size:14px; padding:6px 14px; }
+  .ed{ position:relative; height:210px; }
+  .ed pre, .ed textarea{ position:absolute; inset:0; margin:0; padding:14px 16px; font-family:var(--font-mono); font-size:12.5px; line-height:1.75; white-space:pre; tab-size:2; border:1px solid var(--line); border-radius:8px; box-sizing:border-box; overflow:auto; }
+  .ed pre{ background:var(--panel-2); color:var(--text-dim); overflow:hidden; pointer-events:none; }
+  .ed pre .tg{ color:var(--signal); } .ed pre .at{ color:var(--ok); } .ed pre .vl{ color:var(--alert); } .ed pre .cm{ color:var(--text-dim); font-style:italic; }
+  .ed textarea{ background:transparent; color:transparent; caret-color:var(--ink); resize:none; outline:none; }
+  .ed textarea:focus{ border-color:var(--signal); }
+  iframe.live{ width:100%; height:100%; min-height:300px; border:0; background:#fff; display:block; }
+  .pv{ transition:all .25s; }
+  .pv.a{ font-family:Arial,sans-serif; color:#333; }
+  .pv.a h1{ color:#1f6eb3; border-bottom:3px solid #1f6eb3; padding-bottom:6px; font-size:22px; }
+  .pv.a li{ color:#1f6eb3; }
+  .pv.b{ background:#14213D; color:#FBF9F3; padding:18px; border-radius:6px; font-family:Georgia,serif; }
+  .pv.b h1{ color:#E9C88E; text-align:center; font-size:24px; letter-spacing:.08em; text-transform:uppercase; }
+  .pv.b p{ text-align:center; }
+  .pv.b ul{ list-style:none; display:flex; gap:16px; justify-content:center; padding:0; }
+  .pv.b li{ border:1px solid #E9C88E; padding:3px 12px; border-radius:100px; }
+  .pv h1{ margin:0 0 10px; font-size:24px; } .pv p{ margin:0 0 10px; } .pv ul{ margin:0; padding-left:20px; }
+  .ds-box{ border-radius:6px; transition:all .2s; }
+  .ds-box > div{ padding:10px 14px; background:var(--panel-2); border-radius:4px; margin-bottom:6px; }
+  .ds-box.flex{ display:flex; gap:8px; }
+  .ds-box.flex > div{ flex:1; margin-bottom:0; }
+  .ds-box.outl > div{ outline:2px dashed var(--signal); }
+  .ds-p{ margin:14px 0 0; font-size:16px; }
+  .ds-p span{ background:var(--signal-soft); padding:1px 4px; border-radius:3px; }
+  .ds-p.outl span{ outline:2px dashed var(--alert); }
+  .ds-p.blk span{ display:block; margin:4px 0; }
+  .rule-row{ display:block; transition:opacity .2s; }
+  .rule-row.lose{ opacity:.4; text-decoration:line-through; }
+  .rule-row.off{ opacity:.35; }
+  .rule-row.win{ background:var(--signal-soft); border-radius:3px; }
+  .step-cap{ margin-top:18px; padding:14px 20px; background:var(--panel-2); border-left:2px solid var(--signal); border-radius:0 8px 8px 0; font-size:15px; color:var(--text-dim); }
+  .step-cap b{ color:var(--text); }
+  .step-nav{ display:flex; gap:10px; align-items:center; margin-top:22px; flex-wrap:wrap; }
+  .step-count{ font-family:var(--font-mono); font-size:13px; color:var(--text-dim); margin-left:6px; }
+  .link-card{ display:block; text-decoration:none; padding:22px 24px; margin-top:16px; transition:border-color .2s; }
+  .link-card:hover{ border-color:var(--signal); }
+  .link-card .src{ font-family:var(--font-mono); font-size:12px; color:var(--signal); }
+  .link-card .ttl{ font-size:19px; font-weight:600; margin-top:4px; }
+  .link-card .url{ font-family:var(--font-mono); font-size:12px; color:var(--text-dim); margin-top:4px; word-break:break-all; }
+</style>
+</head>
+<body>
+
+<div class="bg-grid" aria-hidden="true"></div>
+
+<nav class="wire-nav" id="wireNav" aria-label="Navigazione sezioni">
+  <button data-target="hero"><span class="dot"></span><span class="label">Inizio</span></button>
+  <div class="seg"></div>
+  <button data-target="perche"><span class="dot"></span><span class="label">Perché CSS</span></button>
+  <div class="seg"></div>
+  <button data-target="tre-modi"><span class="dot"></span><span class="label">Tre modi</span></button>
+  <div class="seg"></div>
+  <button data-target="anatomia"><span class="dot"></span><span class="label">Anatomia</span></button>
+  <div class="seg"></div>
+  <button data-target="selettori"><span class="dot"></span><span class="label">Selettori</span></button>
+  <div class="seg"></div>
+  <button data-target="prova"><span class="dot"></span><span class="label">Prova tu</span></button>
+  <div class="seg"></div>
+  <button data-target="div-span"><span class="dot"></span><span class="label">div e span</span></button>
+  <div class="seg"></div>
+  <button data-target="box-model"><span class="dot"></span><span class="label">Box model</span></button>
+  <div class="seg"></div>
+  <button data-target="cascata"><span class="dot"></span><span class="label">Cascata</span></button>
+  <div class="seg"></div>
+  <button data-target="esempio"><span class="dot"></span><span class="label">Esempio guidato</span></button>
+  <div class="seg"></div>
+  <button data-target="link"><span class="dot"></span><span class="label">Link utili</span></button>
+</nav>
+
+<!-- HERO -->
+<section class="hero" id="hero">
+  <h1>Dai uno stile al Web.</h1>
+  <p class="page-ref hero-ref">Unità B2 · Linguaggi HTML e CSS — pp. 177-182</p>
+  <p class="lede">L'HTML costruisce la pagina, i CSS la vestono: colori, spazi, bordi, layout.</p>
+
+  <div class="panel" style="margin-top:34px; padding:24px 26px; max-width:620px">
+    <div class="browser">
+      <div class="bar"><span class="dotb"></span><span class="dotb"></span><span class="dotb"></span><span class="addr">index.html</span></div>
+      <div class="stage"><h2 id="heroTitle" style="font-family:Georgia,serif; font-size:26px; font-weight:700; margin:0; color:#14213D; max-width:none">Titolo del sito</h2></div>
+    </div>
+    <div class="toggle-row" id="heroColor">
+      <button class="btn on" data-v="#14213D">color: nero</button>
+      <button class="btn" data-v="#1f6eb3">color: blu</button>
+      <button class="btn" data-v="#B23327">color: rosso</button>
+    </div>
+    <div class="toggle-row" id="heroAlign" style="margin-top:10px">
+      <button class="btn on" data-v="left">text-align: left</button>
+      <button class="btn" data-v="center">text-align: center</button>
+      <button class="btn" data-v="right">text-align: right</button>
+    </div>
+    <pre class="code-block" id="heroCode" style="margin:18px 0 0"></pre>
+  </div>
+
+  <div class="scrollcue">
+    <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M2 5L8 11L14 5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
+    scorri per iniziare
+  </div>
+</section>
+
+<!-- 1. PERCHÉ CSS -->
+<section id="perche">
+  <h2>HTML dice cosa, CSS dice come</h2>
+  <p class="subtitle">A cosa servono i fogli di stile</p>
+  <p class="lede"><b>CSS</b> (<i>Cascading Style Sheets</i>, “fogli di stile a cascata”) è il linguaggio che definisce l'<b>aspetto</b> di una pagina web. Il <b>contenuto</b> e la <b>struttura</b> restano nell'HTML, la <b>presentazione</b> è affidata ai CSS: è la separazione di compiti già incontrata nell'unità B1.</p>
+
+  <div class="toggle-row" id="pvBtns">
+    <button class="btn on" data-v="">Nessun CSS</button>
+    <button class="btn" data-v="a">Stile A</button>
+    <button class="btn" data-v="b">Stile B</button>
+  </div>
+
+  <div class="grid2" style="margin-top:22px">
+    <div class="stack">
+      <div><p class="code-label">index.html (sempre uguale)</p><pre class="code-block" id="pvHtml"></pre></div>
+      <div><p class="code-label">style.css</p><pre class="code-block" id="pvCss"></pre></div>
+    </div>
+    <div class="browser">
+      <div class="bar"><span class="dotb"></span><span class="dotb"></span><span class="dotb"></span><span class="addr">anteprima</span></div>
+      <div class="stage"><div class="pv" id="pvStage"><h1>Il mio sito</h1><p>Benvenuti nella pagina.</p><ul><li>Home</li><li>Contatti</li></ul></div></div>
+    </div>
+  </div>
+</section>
+
+<!-- 2. TRE MODI -->
+<section id="tre-modi">
+  <h2>Dove si scrive il CSS?</h2>
+  <p class="subtitle">Tre modi per collegare uno stile alla pagina</p>
+  <div class="toggle-row" id="waysTabs">
+    <button class="btn on" data-tab="inline">Inline</button>
+    <button class="btn" data-tab="interno">Interno</button>
+    <button class="btn" data-tab="esterno">Esterno</button>
+  </div>
+  <p class="lede" id="waysText" style="margin-top:20px"></p>
+  <div class="grid2" style="margin-top:20px">
+    <div class="stack" id="waysCodes"></div>
+    <div class="browser">
+      <div class="bar"><span class="dotb"></span><span class="dotb"></span><span class="dotb"></span><span class="addr">index.html</span></div>
+      <div class="stage"><p style="margin:0; color:#1f6eb3; font-weight:700; font-size:20px">Ciao, mondo!</p></div>
+    </div>
+  </div>
+  <p class="note" id="waysNote"></p>
+</section>
+
+<!-- 3. ANATOMIA -->
+<section id="anatomia">
+  <h2>Anatomia di una regola CSS</h2>
+  <p class="subtitle">Selettore, proprietà e valore</p>
+  <p class="lede">Un foglio di stile è un elenco di <b>regole</b>. Ogni regola dice a quali elementi si applica e quali caratteristiche modificare.</p>
+
+  <div class="anat-bar" id="anatomyCss">
+    <span class="seg" data-name="Selettore" data-expl="Indica a quali elementi della pagina si applica la regola. Qui: tutti i titoli h1."><span class="tg">h1</span></span><span class="pl"> </span><span class="seg" data-name="Blocco di dichiarazioni" data-expl="Racchiuso tra parentesi graffe { }, contiene una o più dichiarazioni."><span class="pl">{</span></span><span class="pl"> </span><span class="seg" data-name="Proprietà" data-expl="La caratteristica da modificare: colore, dimensione, allineamento, bordo…"><span class="at">color</span></span><span class="seg" data-name="Dichiarazione" data-expl="Una dichiarazione è una coppia proprietà: valore. Proprietà e valore sono separati da due punti."><span class="pl">:</span></span><span class="pl"> </span><span class="seg" data-name="Valore" data-expl="Come deve diventare la proprietà scelta. Qui: il testo diventa blu."><span class="vl">blue</span></span><span class="seg" data-name="Fine dichiarazione" data-expl="Ogni dichiarazione termina con un punto e virgola. Dimenticarlo è l'errore più frequente."><span class="pl">;</span></span><span class="pl"> </span><span class="seg" data-name="Commento" data-expl="Testo ignorato dal browser, utile per annotare il codice. Si scrive tra /* e */."><span class="ct">/* Colore del testo blu */</span></span><span class="pl"> </span><span class="seg" data-name="Blocco di dichiarazioni" data-expl="Racchiuso tra parentesi graffe { }, contiene una o più dichiarazioni."><span class="pl">}</span></span>
+  </div>
+  <div class="anat-cap" id="anatomyCssCaption"><div class="name">Regola CSS</div><div class="expl">Una regola associa uno stile a uno o più elementi della pagina.</div></div>
+
+  <div style="margin-top:28px"><p class="code-label">style.css</p><pre class="code-block" id="anatCode"></pre></div>
+
+  <div class="rule-note"><b>Ricorda</b>
+    <ul>
+      <li>proprietà e valore sono separati da <span class="mono">:</span></li>
+      <li>ogni dichiarazione finisce con <span class="mono">;</span></li>
+      <li>il blocco è racchiuso tra <span class="mono">{ }</span></li>
+    </ul>
+  </div>
+</section>
+
+<!-- 4. SELETTORI -->
+<section id="selettori">
+  <h2>A chi si applica lo stile?</h2>
+  <p class="subtitle">I selettori di tipo, di classe e di id</p>
+
+  <div class="toggle-row" id="selTabs">
+    <button class="btn on" data-sel="p" data-name="Selettore di tipo (tag)" data-text="Si applica a tutti gli elementi di quel tipo.">p { … }</button>
+    <button class="btn" data-sel=".evidenziato" data-name="Selettore di classe" data-text="Si applica a tutti gli elementi con quella classe, anche di tipo diverso. Nell'HTML si usa l'attributo class.">.evidenziato { … }</button>
+    <button class="btn" data-sel="#bottone-invio" data-name="Selettore di id" data-text="Si applica a un solo elemento: l'id deve essere unico nella pagina. Serve anche per i link interni.">#bottone-invio { … }</button>
+  </div>
+
+  <div class="grid2" style="margin-top:22px">
+    <div class="stack">
+      <div><p class="code-label">index.html</p><pre class="code-block" id="selHtml"></pre></div>
+      <div><p class="code-label">style.css</p><pre class="code-block" id="selCss"></pre></div>
+    </div>
+    <div>
+      <div class="browser">
+        <div class="bar"><span class="dotb"></span><span class="dotb"></span><span class="dotb"></span><span class="addr">anteprima</span></div>
+        <div class="stage sel-stage" id="selStage">
+          <h2 style="font-size:20px; margin:0 0 12px; max-width:none; font-family:Georgia,serif">Titolo</h2>
+          <p>Un paragrafo normale.</p>
+          <p class="evidenziato">Un paragrafo evidenziato.</p>
+          <span class="evidenziato">Uno span evidenziato</span>
+          <div style="margin-top:12px"><button id="bottone-invio">Invia</button></div>
+        </div>
+      </div>
+      <div class="anat-cap" id="selCap" style="margin-top:16px"><div class="name"></div><div class="expl"></div></div>
+    </div>
+  </div>
+</section>
+
+<!-- 5. PROVA TU -->
+<section id="prova">
+  <h2>Prova tu!</h2>
+  <p class="subtitle">Modifica HTML e CSS e guarda subito il risultato</p>
+  <div class="toggle-row" id="labPresets">
+    <button class="btn on" data-p="tipo">Selettore di tipo</button>
+    <button class="btn" data-p="classe">Selettore di classe</button>
+    <button class="btn" data-p="id">Selettore di id</button>
+    <button class="btn" data-p="pagina">Pagina intera</button>
+  </div>
+
+  <div class="grid2" style="margin-top:22px">
+    <div class="stack">
+      <div><p class="code-label">HTML</p>
+        <div class="ed"><pre id="labHtmlHl" aria-hidden="true"></pre><textarea id="labHtml" wrap="off" spellcheck="false"></textarea></div></div>
+      <div><p class="code-label">CSS</p>
+        <div class="ed"><pre id="labCssHl" aria-hidden="true"></pre><textarea id="labCss" wrap="off" spellcheck="false"></textarea></div></div>
+    </div>
+    <div class="browser" style="display:flex; flex-direction:column">
+      <div class="bar"><span class="dotb"></span><span class="dotb"></span><span class="dotb"></span><span class="addr">anteprima</span></div>
+      <div style="flex:1; min-height:300px"><iframe class="live" id="labFrame" sandbox title="Anteprima"></iframe></div>
+    </div>
+  </div>
+</section>
+
+<!-- 6. DIV E SPAN -->
+<section id="div-span">
+  <h2>Integrazione HTML: i tag div e span</h2>
+  <p class="subtitle">Due contenitori generici, uno a blocchi e uno in linea</p>
+  <p class="page-ref">p. 179</p>
+  <p class="lede"><span class="mono">&lt;div&gt;</span> è un contenitore <b>a blocco</b>: occupa tutta la larghezza e va a capo. <span class="mono">&lt;span&gt;</span> è un contenitore <b>in linea</b>: sta dentro al testo, senza spezzarlo. Da soli non fanno nulla: servono per applicare stili.</p>
+
+  <div class="toggle-row" id="dsBtns">
+    <button class="btn" data-k="outl">Mostra i riquadri</button>
+    <button class="btn" data-k="flex">contenitore display:flex</button>
+    <button class="btn" data-k="blk">gli span display:block</button>
+  </div>
+
+  <div class="grid2" style="margin-top:22px">
+    <div class="stack">
+      <div><p class="code-label">index.html</p><pre class="code-block" id="dsHtml"></pre></div>
+      <div><p class="code-label">CSS applicato</p><pre class="code-block" id="dsCss"></pre></div>
+    </div>
+    <div class="browser">
+      <div class="bar"><span class="dotb"></span><span class="dotb"></span><span class="dotb"></span><span class="addr">anteprima</span></div>
+      <div class="stage" style="font-family:'IBM Plex Sans',sans-serif; font-size:15px">
+        <div class="ds-box" id="dsBox"><div>Menu</div><div>Contenuto principale</div><div>Info</div></div>
+        <p class="ds-p" id="dsP">Una frase con <span>due</span> <span>span</span> dentro.</p>
+      </div>
+    </div>
+  </div>
+  <div class="rule-note"><b>Layout moderno.</b> Per costruire il layout di una pagina si usano i <span class="mono">&lt;div&gt;</span> con <span class="mono">display: flex</span> (oppure <span class="mono">grid</span>), non più le tabelle: le tabelle restano solo per i dati tabellari.</div>
+</section>
+
+<!-- 7. BOX MODEL -->
+<section id="box-model">
+  <h2>Ogni elemento è una scatola</h2>
+  <p class="subtitle">Il box model</p>
+  <p class="lede">Ogni elemento è composto da quattro strati: il <b>contenuto</b>, il <b>padding</b> (lo spazio dentro il bordo), il <b>border</b> (il bordo) e il <b>margin</b> (lo spazio fuori dal bordo).</p>
+
+  <div class="panel bm-demo">
+    <div class="bm-controls">
+      <label>margin: <b id="bmMv">20px</b><input type="range" id="bmM" min="0" max="50" value="20"></label>
+      <label>border: <b id="bmBv">6px</b><input type="range" id="bmB" min="0" max="20" value="6"></label>
+      <label>padding: <b id="bmPv">18px</b><input type="range" id="bmP" min="0" max="50" value="18"></label>
+    </div>
+    <div class="bm-stage">
+      <div class="bm-margin" id="bmMargin"><span class="bm-tag">margin</span>
+        <div class="bm-border" id="bmBorder"><span class="bm-tag">border</span>
+          <div class="bm-padding" id="bmPadding"><span class="bm-tag">padding</span>
+            <div class="bm-content">contenuto</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div style="margin-top:22px"><p class="code-label">style.css</p><pre class="code-block" id="bmCode"></pre></div>
+</section>
+
+<!-- 8. CASCATA -->
+<section id="cascata">
+  <h2>Il concetto di cascata</h2>
+  <p class="subtitle">Quando più regole colpiscono lo stesso elemento</p>
+  <p class="lede">Se più regole si applicano allo stesso elemento, vince la <b>più specifica</b>; a parità di specificità vince l'<b>ultima</b> scritta. Semplificando: tipo &lt; classe &lt; id &lt; inline.</p>
+
+  <div class="toggle-row" id="casBtns">
+    <button class="btn on" data-k="0">tipo</button>
+    <button class="btn on" data-k="1">classe</button>
+    <button class="btn on" data-k="2">id</button>
+    <button class="btn on" data-k="3">inline</button>
+  </div>
+
+  <div class="grid2" style="margin-top:22px">
+    <pre class="code-block" id="casCode"></pre>
+    <div>
+      <div class="browser">
+        <div class="bar"><span class="dotb"></span><span class="dotb"></span><span class="dotb"></span><span class="addr">Che colore ho?</span></div>
+        <div class="stage"><p id="casP" style="margin:0; font-size:24px; font-weight:700; font-family:'IBM Plex Sans',sans-serif">Che colore ho?</p></div>
+      </div>
+      <div class="anat-cap" id="casCap" style="margin-top:16px"><div class="name"></div><div class="expl"></div></div>
+    </div>
+  </div>
+  <div class="rule-note"><b>Nota.</b> La dichiarazione <span class="mono">!important</span> forza una regola a vincere su tutte le altre: va usata il meno possibile.</div>
+</section>
+
+<!-- 9. ESEMPIO GUIDATO -->
+<section id="esempio">
+  <h2>Costruiamo la pagina degli aforismi</h2>
+  <p class="subtitle">Un div, uno span, una classe, un id</p>
+  <p class="page-ref">p. 180</p>
+
+  <div class="step-nav">
+    <button class="btn" id="stPrev">← Indietro</button>
+    <button class="btn primary" id="stNext">Avanti →</button>
+    <span class="step-count" id="stCount"></span>
+  </div>
+
+  <div class="grid2" style="margin-top:22px">
+    <div class="stack">
+      <div><p class="code-label">index.html (non cambia)</p><pre class="code-block" id="stHtml"></pre></div>
+      <div><p class="code-label">style.css</p><pre class="code-block" id="stCss"></pre></div>
+    </div>
+    <div class="browser">
+      <div class="bar"><span class="dotb"></span><span class="dotb"></span><span class="dotb"></span><span class="addr">aforismi.html</span></div>
+      <div style="min-height:420px"><iframe class="live" id="stFrame" sandbox title="Anteprima aforismi" style="min-height:420px"></iframe></div>
+    </div>
+  </div>
+  <div class="step-cap" id="stCap"></div>
+</section>
+
+<!-- 10. LINK UTILI -->
+<section id="link">
+  <h2>Per approfondire</h2>
+  <p class="subtitle">Link utili</p>
+  <a class="panel link-card" href="https://developer.mozilla.org/it/docs/Web/CSS/Reference" target="_blank" rel="noopener">
+    <div class="src">MDN</div><div class="ttl">Elenco delle proprietà CSS</div><div class="url">developer.mozilla.org/it/docs/Web/CSS/Reference</div></a>
+  <a class="panel link-card" href="https://developer.mozilla.org/it/docs/Learn_web_development/Core/Styling_basics" target="_blank" rel="noopener">
+    <div class="src">MDN</div><div class="ttl">Tutorial base su CSS</div><div class="url">developer.mozilla.org/it/docs/Learn_web_development/Core/Styling_basics</div></a>
+  <a class="panel link-card" href="https://www.w3schools.com/css/" target="_blank" rel="noopener">
+    <div class="src">W3Schools</div><div class="ttl">Tutorial completo su CSS</div><div class="url">www.w3schools.com/css/</div></a>
+</section>
+
+<footer>Materiale didattico basato su "Hashtag 2", Modulo B, Linguaggi per il web · Realizzato con l'assistenza di Claude (Anthropic)</footer>
+
+<script>
+(function(){
+  "use strict";
+  function $(id){ return document.getElementById(id); }
+  function esc(s){ return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
+
+  /* ---------- Evidenziatori di sintassi ---------- */
+  function hc(src){ /* CSS */
+    return esc(src).replace(/(\/\*[\s\S]*?\*\/)|([^{}]+)(\{)|([a-z-]+)(\s*:\s*)([^;}]+)(;?)/gi, function(m,c,sel,br,p,col,v,sc){
+      if(c) return '<span class="cm">'+c+'</span>';
+      if(sel) return '<span class="tg">'+sel+'</span>'+br;
+      return '<span class="at">'+p+'</span>'+col+'<span class="vl">'+v+'</span>'+sc;
+    });
+  }
+  function hh(src){ /* HTML */
+    return src.replace(/<(\/?)([a-zA-Z0-9]+)([^>]*)>/g, function(m,sl,tag,attrs){
+      var a = esc(attrs).replace(/([a-z-]+)=(&quot;[^&]*&quot;|"[^"]*")/g,'<span class="at">$1</span>=<span class="vl">$2</span>');
+      return '<span class="tg">&lt;'+sl+tag+'</span>'+a+'<span class="tg">&gt;</span>';
+    });
+  }
+  function hhSafe(src){
+    /* testo fuori dai tag senza < né & : sicuro; escape dei soli caratteri speciali nel testo */
+    return hh(src);
+  }
+
+  /* ---------- Nav ---------- */
+  var navButtons = Array.prototype.slice.call(document.querySelectorAll('#wireNav button'));
+  var sections = navButtons.map(function(b){ return $(b.getAttribute('data-target')); });
+  navButtons.forEach(function(btn){
+    btn.addEventListener('click', function(){
+      var el = $(btn.getAttribute('data-target'));
+      if(el) el.scrollIntoView({ behavior:'smooth', block:'start' });
+    });
+  });
+  function setActive(id){ navButtons.forEach(function(b){ b.classList.toggle('active', b.getAttribute('data-target') === id); }); }
+  if('IntersectionObserver' in window){
+    var obs = new IntersectionObserver(function(entries){
+      var best = null, bestRatio = 0;
+      entries.forEach(function(e){ if(e.isIntersecting && e.intersectionRatio > bestRatio){ bestRatio = e.intersectionRatio; best = e.target; } });
+      if(best) setActive(best.id);
+    }, { threshold:[0.2,0.4,0.6,0.8], rootMargin:'-10% 0px -10% 0px' });
+    sections.forEach(function(s){ if(s) obs.observe(s); });
+  }
+  setActive('hero');
+
+  /* ---------- Anatomia ---------- */
+  function initAnatomy(barId, capId){
+    var bar = $(barId), cap = $(capId);
+    if(!bar || !cap) return;
+    var name = cap.querySelector('.name'), expl = cap.querySelector('.expl');
+    var segs = Array.prototype.slice.call(bar.querySelectorAll('.seg'));
+    segs.forEach(function(seg){
+      function activate(){
+        segs.forEach(function(s){ s.classList.remove('active'); });
+        seg.classList.add('active');
+        name.textContent = seg.getAttribute('data-name');
+        expl.textContent = seg.getAttribute('data-expl');
+      }
+      seg.addEventListener('mouseenter', activate);
+      seg.addEventListener('click', activate);
+    });
+  }
+  initAnatomy('anatomyCss','anatomyCssCaption');
+  $('anatCode').innerHTML = hc('h1 {\n  color: blue; /* Colore del testo blu */\n  text-align: right; /* Testo allineato a destra */\n}');
+
+  /* ---------- Hero ---------- */
+  (function(){
+    var t = $('heroTitle'), code = $('heroCode');
+    var color = '#14213D', names = {'#14213D':'black','#1f6eb3':'blue','#B23327':'red'}, align = 'left';
+    function render(){
+      t.style.color = color; t.style.textAlign = align;
+      code.innerHTML = hc('h1 {\n  color: '+names[color]+';\n  text-align: '+align+';\n}');
+    }
+    function wire(id, set){
+      var btns = Array.prototype.slice.call($(id).querySelectorAll('button'));
+      btns.forEach(function(b){ b.addEventListener('click', function(){
+        btns.forEach(function(x){ x.classList.remove('on'); }); b.classList.add('on');
+        set(b.getAttribute('data-v')); render();
+      }); });
+    }
+    wire('heroColor', function(v){ color = v; });
+    wire('heroAlign', function(v){ align = v; });
+    render();
+  })();
+
+  /* ---------- Perché CSS: tre stili ---------- */
+  (function(){
+    var html = '<h1>Il mio sito</h1>\n<p>Benvenuti nella pagina.</p>\n<ul>\n  <li>Home</li>\n  <li>Contatti</li>\n</ul>';
+    var css = {
+      '': '/* nessun foglio di stile:\n   il browser usa lo stile predefinito */',
+      'a': 'h1 {\n  color: #1f6eb3;\n  border-bottom: 3px solid #1f6eb3;\n}\nbody {\n  font-family: Arial, sans-serif;\n}\nli {\n  color: #1f6eb3;\n}',
+      'b': 'body {\n  background-color: #14213D;\n  color: #FBF9F3;\n}\nh1 {\n  color: #E9C88E;\n  text-align: center;\n  text-transform: uppercase;\n}\nul {\n  display: flex;\n  list-style: none;\n}'
+    };
+    $('pvHtml').innerHTML = hh(html);
+    var stage = $('pvStage'), cssEl = $('pvCss');
+    function show(v){ stage.className = 'pv' + (v ? ' '+v : ''); cssEl.innerHTML = hc(css[v]); }
+    var btns = Array.prototype.slice.call($('pvBtns').querySelectorAll('button'));
+    btns.forEach(function(b){ b.addEventListener('click', function(){
+      btns.forEach(function(x){ x.classList.remove('on'); }); b.classList.add('on'); show(b.getAttribute('data-v'));
+    }); });
+    show('');
+  })();
+
+  /* ---------- Tre modi ---------- */
+  (function(){
+    var data = {
+      inline: {
+        text: 'Lo stile si scrive direttamente nell'+"'"+'attributo style del singolo tag. Vale solo per quell'+"'"+'elemento.',
+        codes: [['index.html','<p style="color: blue; font-weight: bold;">Ciao, mondo!</p>']],
+        note: 'Comodo per una prova veloce, ma poco ordinato: lo stile resta mescolato al contenuto.'
+      },
+      interno: {
+        text: 'Le regole si scrivono nel tag <style>, dentro <head>. Valgono per tutta la pagina.',
+        codes: [['index.html','<head>\n  <style>\n    p {\n      color: blue;\n      font-weight: bold;\n    }\n  </style>\n</head>\n<body>\n  <p>Ciao, mondo!</p>\n</body>']],
+        note: 'Lo stile vale solo per questa pagina: per un sito di molte pagine non è la scelta migliore.'
+      },
+      esterno: {
+        text: 'Le regole stanno in un file separato con estensione .css, collegato alla pagina con il tag <link>. Lo stesso file può servire a tutte le pagine del sito.',
+        codes: [['index.html','<head>\n  <link rel="stylesheet" href="style.css">\n</head>\n<body>\n  <p>Ciao, mondo!</p>\n</body>'],['style.css','p {\n  color: blue;\n  font-weight: bold;\n}']],
+        note: 'È il modo consigliato: contenuto e presentazione restano in file separati.'
+      }
+    };
+    var wrap = $('waysCodes');
+    function show(k){
+      var d = data[k];
+      $('waysText').textContent = d.text; $('waysNote').textContent = d.note;
+      wrap.innerHTML = d.codes.map(function(c){
+        var body = c[0].slice(-4) === '.css' ? hc(c[1]) : (k === 'interno' ? hhStyle(c[1]) : hh(c[1]));
+        return '<div><p class="code-label">'+c[0]+'</p><pre class="code-block">'+body+'</pre></div>';
+      }).join('');
+    }
+    function hhStyle(src){ /* html con blocco <style> colorato come css */
+      var parts = src.split(/(<style>[\s\S]*?<\/style>)/);
+      return parts.map(function(p){
+        var m = p.match(/^<style>([\s\S]*)<\/style>$/);
+        return m ? '<span class="tg">&lt;style&gt;</span>'+hc(m[1])+'<span class="tg">&lt;/style&gt;</span>' : hh(p);
+      }).join('');
+    }
+    var btns = Array.prototype.slice.call($('waysTabs').querySelectorAll('button'));
+    btns.forEach(function(b){ b.addEventListener('click', function(){
+      btns.forEach(function(x){ x.classList.remove('on'); }); b.classList.add('on'); show(b.getAttribute('data-tab'));
+    }); });
+    show('inline');
+  })();
+
+  /* ---------- Selettori ---------- */
+  (function(){
+    var html = '<h2>Titolo</h2>\n<p>Un paragrafo normale.</p>\n<p class="evidenziato">Un paragrafo evidenziato.</p>\n<span class="evidenziato">Uno span evidenziato</span>\n<button id="bottone-invio">Invia</button>';
+    $('selHtml').innerHTML = hh(html);
+    var stage = $('selStage'), cap = $('selCap');
+    var btns = Array.prototype.slice.call($('selTabs').querySelectorAll('button'));
+    function show(b){
+      var sel = b.getAttribute('data-sel');
+      btns.forEach(function(x){ x.classList.toggle('on', x === b); });
+      Array.prototype.forEach.call(stage.querySelectorAll('.hit'), function(e){ e.classList.remove('hit'); });
+      Array.prototype.forEach.call(stage.querySelectorAll(sel), function(e){ e.classList.add('hit'); });
+      $('selCss').innerHTML = hc(sel+' {\n  background-color: yellow;\n}');
+      cap.querySelector('.name').textContent = b.getAttribute('data-name');
+      cap.querySelector('.expl').textContent = b.getAttribute('data-text');
+    }
+    btns.forEach(function(b){ b.addEventListener('click', function(){ show(b); }); });
+    show(btns[0]);
+  })();
+
+  /* ---------- Prova tu ---------- */
+  (function(){
+    var presets = {
+      tipo:  { html:'<h1>Benvenuti</h1>\n<p>Questo è un paragrafo.</p>\n<p>Anche questo è un paragrafo.</p>', css:'p {\n  color: blue;\n  font-style: italic;\n}' },
+      classe:{ html:'<p>Un paragrafo normale.</p>\n<p class="evidenziato">Un paragrafo evidenziato.</p>\n<span class="evidenziato">Anche uno span.</span>', css:'.evidenziato {\n  background-color: yellow;\n  font-weight: bold;\n}' },
+      id:    { html:'<p>Un paragrafo.</p>\n<button id="bottone-invio">Invia</button>', css:'#bottone-invio {\n  background-color: #1f6eb3;\n  color: white;\n  padding: 8px 16px;\n  border: none;\n}' },
+      pagina:{ html:'<h1>La mia pagina</h1>\n<p>Un testo di prova.</p>\n<ul>\n  <li>Uno</li>\n  <li>Due</li>\n</ul>', css:'body {\n  background-color: #f4efe0;\n  font-family: Arial, sans-serif;\n}\nh1 {\n  color: #8F5A0C;\n  text-align: center;\n}\nli {\n  margin-bottom: 6px;\n}' }
+    };
+    var h = $('labHtml'), c = $('labCss'), hp = $('labHtmlHl'), cp = $('labCssHl'), fr = $('labFrame');
+    function sync(ta, pre){ pre.scrollTop = ta.scrollTop; pre.scrollLeft = ta.scrollLeft; }
+    function update(){
+      hp.innerHTML = hh(h.value) + '\n'; cp.innerHTML = hc(c.value) + '\n';
+      fr.srcdoc = '<!doctype html><meta charset="utf-8"><style>body{font-family:Georgia,serif;margin:18px;font-size:16px}</style><style>'+c.value+'</style>'+h.value;
+    }
+    function fix(s){ return s.replace(/&lt;/g,'<'); }
+    [[h,hp],[c,cp]].forEach(function(p){
+      p[0].addEventListener('input', update);
+      p[0].addEventListener('scroll', function(){ sync(p[0], p[1]); });
+    });
+    var btns = Array.prototype.slice.call($('labPresets').querySelectorAll('button'));
+    btns.forEach(function(b){ b.addEventListener('click', function(){
+      btns.forEach(function(x){ x.classList.remove('on'); }); b.classList.add('on');
+      var p = presets[b.getAttribute('data-p')]; h.value = p.html; c.value = p.css; update();
+    }); });
+    h.value = presets.tipo.html; c.value = presets.tipo.css; update();
+  })();
+
+  /* ---------- div e span ---------- */
+  (function(){
+    var html = '<div class="contenitore">\n  <div>Menu</div>\n  <div>Contenuto principale</div>\n  <div>Info</div>\n</div>\n<p>Una frase con <span>due</span> <span>span</span> dentro.</p>';
+    $('dsHtml').innerHTML = hh(html);
+    var st = { outl:false, flex:false, blk:false };
+    var box = $('dsBox'), p = $('dsP');
+    function render(){
+      box.classList.toggle('outl', st.outl); box.classList.toggle('flex', st.flex);
+      p.classList.toggle('outl', st.outl); p.classList.toggle('blk', st.blk);
+      var css = '.contenitore {\n  display: ' + (st.flex ? 'flex' : 'block') + ';\n}';
+      if(st.blk) css += '\nspan {\n  display: block;\n}';
+      $('dsCss').innerHTML = hc(css);
+    }
+    Array.prototype.forEach.call($('dsBtns').querySelectorAll('button'), function(b){
+      b.addEventListener('click', function(){
+        var k = b.getAttribute('data-k'); st[k] = !st[k]; b.classList.toggle('on', st[k]); render();
+      });
+    });
+    render();
+  })();
+
+  /* ---------- Box model ---------- */
+  (function(){
+    var m = $('bmM'), b = $('bmB'), p = $('bmP');
+    function render(){
+      $('bmMv').textContent = m.value+'px'; $('bmBv').textContent = b.value+'px'; $('bmPv').textContent = p.value+'px';
+      $('bmMargin').style.padding = m.value+'px';
+      $('bmBorder').style.borderWidth = b.value+'px';
+      $('bmPadding').style.padding = p.value+'px';
+      $('bmCode').innerHTML = hc('.scatola {\n  margin: '+m.value+'px;\n  border: '+b.value+'px solid red;\n  padding: '+p.value+'px;\n}');
+    }
+    [m,b,p].forEach(function(e){ e.addEventListener('input', render); });
+    render();
+  })();
+
+  /* ---------- Cascata ---------- */
+  (function(){
+    var rules = [
+      { sel:'p', code:'p {\n  color: blue;\n}', color:'blue', name:'Selettore di tipo', label:'tipo' },
+      { sel:'.nota', code:'.nota {\n  color: green;\n}', color:'green', name:'Selettore di classe', label:'classe' },
+      { sel:'#msg', code:'#msg {\n  color: red;\n}', color:'red', name:'Selettore di id', label:'id' },
+      { sel:'inline', code:'<p class="nota" id="msg"\n   style="color: orange;">', color:'orange', name:'Stile inline', label:'inline' }
+    ];
+    var on = [true,true,true,true];
+    var codeEl = $('casCode'), pEl = $('casP'), cap = $('casCap');
+    function render(){
+      var win = -1; for(var i=3;i>=0;i--){ if(on[i]){ win = i; break; } }
+      codeEl.innerHTML = rules.map(function(r,i){
+        var cls = 'rule-row' + (!on[i] ? ' off' : (i === win ? ' win' : ' lose'));
+        var body = i === 3 ? hh(r.code) : hc(r.code);
+        return '<span class="'+cls+'">'+body+'</span>';
+      }).join('\n');
+      if(win < 0){
+        pEl.style.color = '#2b2b26';
+        cap.querySelector('.name').textContent = 'Nessuna regola attiva';
+        cap.querySelector('.expl').textContent = 'Il testo usa il colore predefinito del browser.';
+      } else {
+        pEl.style.color = rules[win].color;
+        cap.querySelector('.name').textContent = 'Vince: ' + rules[win].name;
+        cap.querySelector('.expl').textContent = 'Il testo è ' + rules[win].color + ': tra le regole attive, ' + rules[win].label + ' è la più specifica.';
+      }
+    }
+    Array.prototype.forEach.call($('casBtns').querySelectorAll('button'), function(b){
+      b.addEventListener('click', function(){
+        var k = +b.getAttribute('data-k'); on[k] = !on[k]; b.classList.toggle('on', on[k]); render();
+      });
+    });
+    render();
+  })();
+
+  /* ---------- Esempio guidato: aforismi ---------- */
+  (function(){
+    var html =
+      '<div id="title" class="important">Aforismi</div>\n' +
+      '<div class="aphorism">\n  Ogni <span class="important">tecnologia</span> sufficientemente avanzata\n  è indistinguibile dalla magia.\n  <div class="author important">Arthur C. Clarke</div>\n</div>\n' +
+      '<div class="aphorism">\n  Se fai solo quello che sai fare\n  <span class="important">non sarai mai più</span>\n  di quello che sei ora.\n  <div class="author">Maestro Shifu, Kung Fu Panda 3, 2016</div>\n</div>';
+    var steps = [
+      { css:'', cap:'<b>Solo HTML.</b> La pagina contiene un titolo, due aforismi e due autori, ma nessuno stile: il browser usa quello predefinito.' },
+      { css:'#title {\n  font-size: 1.5em;\n}', cap:'<b>Un id.</b> Il titolo è unico nella pagina: lo si seleziona con <span class="mono">#title</span> e si ingrandisce il carattere.' },
+      { css:'.aphorism {\n  color: #32516b;\n  background-color: #cce6fa;\n  border: 1px solid #1f6eb3;\n  border-left: 20px solid #1f6eb3;\n  margin: 1em;\n  padding: 1em;\n}', cap:'<b>Una classe e un div.</b> Entrambi gli aforismi hanno <span class="mono">class="aphorism"</span>: una sola regola li stilizza insieme, con colori, bordo, margin e padding.' },
+      { css:'.author {\n  font-style: italic;\n  padding-left: 1em;\n  margin-top: 0.5em;\n}', cap:'<b>Un\'altra classe.</b> Gli autori diventano corsivi e vengono distanziati dal testo.' },
+      { css:'.important {\n  font-weight: bolder;\n}', cap:'<b>Una classe su elementi diversi.</b> <span class="mono">.important</span> colpisce il titolo, un autore e due span: tutti diventano più marcati.' },
+      { css:'span.important {\n  background-color: rgb(252, 230, 120);\n  padding: 0 2px 2px 2px;\n  border: 1px dashed rgb(135, 135, 134);\n  border-radius: 3px;\n}', cap:'<b>Selettore più specifico.</b> <span class="mono">span.important</span> si applica solo agli span con quella classe: le parole importanti vengono evidenziate.' }
+    ];
+    var i = 0;
+    $('stHtml').innerHTML = hh(html);
+    function render(){
+      var all = steps.slice(0, i+1).map(function(s){ return s.css; }).filter(Boolean);
+      var out = all.map(function(c, k){
+        var h = hc(c);
+        return (k === all.length-1 && i > 0) ? '<span class="part hl">'+h+'</span>' : h;
+      }).join('\n');
+      $('stCss').innerHTML = out || '<span class="cm">/* vuoto */</span>';
+      $('stCap').innerHTML = steps[i].cap;
+      $('stCount').textContent = 'Passo ' + (i+1) + ' di ' + steps.length;
+      $('stPrev').disabled = i === 0; $('stNext').disabled = i === steps.length-1;
+      $('stPrev').style.opacity = i === 0 ? .4 : 1; $('stNext').style.opacity = i === steps.length-1 ? .4 : 1;
+      var css = steps.slice(0, i+1).map(function(s){ return s.css; }).join('\n');
+      $('stFrame').srcdoc = '<!doctype html><meta charset="utf-8"><style>body{font-family:Georgia,serif;margin:12px;font-size:15px}</style><style>'+css+'</style>'+html;
+    }
+    $('stPrev').addEventListener('click', function(){ if(i > 0){ i--; render(); } });
+    $('stNext').addEventListener('click', function(){ if(i < steps.length-1){ i++; render(); } });
+    render();
+  })();
+
+})();
+</script>
+</body>
+</html>
