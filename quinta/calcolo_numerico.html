@@ -435,7 +435,7 @@ footer{padding:3em 2em; text-align:center; color:var(--ink-soft); font-family:'I
   <div class="panel">
     <div class="bisec-controls">
       <select id="funcSelect">
-        <option value="f1">f(x) = x² − 2 &nbsp;·&nbsp; [1, 2]</option>
+        <option value="f4">f(x) = x² − 2 &nbsp;·&nbsp; [−0.5, 2]</option>
         <option value="f2">f(x) = x³ − x − 2 &nbsp;·&nbsp; [1, 2]</option>
         <option value="f3">f(x) = cos(x) − x &nbsp;·&nbsp; [0, 1]</option>
       </select>
@@ -470,15 +470,15 @@ footer{padding:3em 2em; text-align:center; color:var(--ink-soft); font-family:'I
 
   <h3>L'idea del metodo</h3>
   <ul class="bullets">
-    <li>Dividi [a, b] in n parti: Δx = <span class="frac"><span class="num">b − a</span><span class="den">n</span></span></li>
-    <li>Rettangoli di base Δx:
+    <li>Dividi [a, b] in n parti: h = <span class="frac"><span class="num">b − a</span><span class="den">n</span></span></li>
+    <li>Rettangoli di base h:
       <ul>
         <li><strong>inscritti</strong> (altezza = minimo di f) → somma per difetto</li>
         <li><strong>circoscritti</strong> (altezza = massimo di f) → somma per eccesso</li>
       </ul></li>
     <li>Al crescere di n le due somme si avvicinano a S.</li>
     <li><strong>Integrale di Riemann</strong> (c<sub>i</sub> = punto qualunque dell'i-esimo sottointervallo):
-      <div class="formula-line">S = <span class="lim"><span>lim</span><span class="lim-sub">n→∞</span></span> <span class="sigma">Σ<span class="lim-top">n</span><span class="lim-bot">i=1</span></span> Δx · f(c<sub>i</sub>)</div></li>
+      <div class="formula-line">S = <span class="lim"><span>lim</span><span class="lim-sub">n→∞</span></span> <span class="sigma">Σ<span class="lim-top">n</span><span class="lim-bot">i=1</span></span> h · f(c<sub>i</sub>)</div></li>
   </ul>
 
   <h3>Scelta di c<sub>i</sub> in [x<sub>i</sub>, x<sub>i+1</sub>]</h3>
@@ -525,19 +525,6 @@ footer{padding:3em 2em; text-align:center; color:var(--ink-soft); font-family:'I
       <span class="leg">Errore relativo</span><span class="val mono" id="integRelVal">–</span>
     </div>
   </div>
-
-  <div class="teacher-note"><strong>#NotaBene · Stima dell'errore di approssimazione</strong>
-    <ul class="bullets" style="margin:.6em 0 0">
-      <li>Integrale indefinito: <span class="sigma">∫</span> <span class="frac"><span class="num">x</span><span class="den">1 + x²</span></span> dx = <span class="frac"><span class="num">1</span><span class="den">2</span></span> log(x² + 1) + costante</li>
-      <li>Posto F(x) = <span class="frac"><span class="num">1</span><span class="den">2</span></span> log(x² + 1), l'integrale definito in [0, 3] è:
-        <div class="formula-line"><span class="sigma">∫<span class="lim-top">3</span><span class="lim-bot">0</span></span> f(x) dx = F(3) − F(0) = <span class="frac"><span class="num">log(10)</span><span class="den">2</span></span> ≈ 1.151292546497023</div></li>
-      <li>Con il Programma 3 e n = 10.000 si ottiene S ≈ 1.1512475383970227, molto vicino al valore esatto.</li>
-      <li>Errore relativo:
-        <div class="formula-line"><span class="frac"><span class="num">|valore esatto − valore approssimato|</span><span class="den">valore esatto</span></span> = 0.00391%</div></li>
-    </ul>
-  </div>
-
-  <div class="teacher-note"><strong>#ProvaOra · Somma destra e media di Riemann</strong>Partendo dal programma della somma sinistra (<code>riemann_sum1.py</code>), crea <code>riemann_sum2.py</code> (o un notebook <code>riemann_sum2.ipynb</code>) per calcolare la somma destra e la somma media (punto centrale) di Riemann, visualizzando i grafici di Figura 22.</div>
 </div></section>
 
 <section id="confronto">
@@ -547,6 +534,7 @@ footer{padding:3em 2em; text-align:center; color:var(--ink-soft); font-family:'I
 
   <div class="bisec-controls" style="margin-bottom:1.6em">
     <select id="cmpFuncSelect">
+      <option value="g0">f(x) = x / (1 + x²) &nbsp;·&nbsp; [0, 3] &nbsp;(Figura 21)</option>
       <option value="g1">f(x) = 3x² + 2x + 1 &nbsp;·&nbsp; [1, 5]</option>
       <option value="g2">f(x) = x² − sin(x) &nbsp;·&nbsp; [2, 10]</option>
       <option value="g3">f(x) = sin(x) &nbsp;·&nbsp; [0, 1]</option>
@@ -812,9 +800,9 @@ footer{padding:3em 2em; text-align:center; color:var(--ink-soft); font-family:'I
 /* ---------- Bisection & Newton ---------- */
 (function(){
   const functions = {
-    f1:{label:'f(x) = x² − 2', fn:x=>x*x-2, df:x=>2*x, a:1, b:2},
-    f2:{label:'f(x) = x³ − x − 2', fn:x=>x*x*x-x-2, df:x=>3*x*x-1, a:1, b:2},
-    f3:{label:'f(x) = cos(x) − x', fn:x=>Math.cos(x)-x, df:x=>-Math.sin(x)-1, a:0, b:1}
+    f2:{label:'f(x) = x³ − x − 2', fn:x=>x*x*x-x-2, df:x=>3*x*x-1, a:1, b:2, yView:[-2.5,5.2]},
+    f3:{label:'f(x) = cos(x) − x', fn:x=>Math.cos(x)-x, df:x=>-Math.sin(x)-1, a:0, b:1, yView:[-0.8,1.3]},
+    f4:{label:'f(x) = x² − 2', fn:x=>x*x-2, df:x=>2*x, a:-0.5, b:2, yView:[-2.2,2.6]}
   };
   const select = document.getElementById('funcSelect');
   const stepBtn = document.getElementById('stepBtn');
@@ -872,11 +860,13 @@ footer{padding:3em 2em; text-align:center; color:var(--ink-soft); font-family:'I
     const {def} = state;
     const w=canvas.width, h=canvas.height, padL=54, padR=22, padT=18, padB=18;
     ctx.clearRect(0,0,w,h);
-    const span = def.b-def.a;
-    const x0 = def.a - VIEW_MARGIN*span, x1 = def.b + VIEW_MARGIN*span;
-    const N=240; let ys=[]; let yMin=Infinity, yMax=-Infinity;
-    for(let i=0;i<=N;i++){ const y=def.fn(x0+(x1-x0)*i/N); ys.push(y); if(y<yMin)yMin=y; if(y>yMax)yMax=y; }
-    const pad=(yMax-yMin)*0.12||1; yMin-=pad; yMax+=pad;
+    // stessa scala su x e y (1 unità in x = 1 unità in y, in pixel)
+    let yMin = def.yView[0], yMax = def.yView[1];
+    const unit = (h-padT-padB)/(yMax-yMin);
+    const xspan = (w-padL-padR)/unit, xmid = (def.a+def.b)/2;
+    const x0 = xmid - xspan/2, x1 = xmid + xspan/2;
+    const N=300; let ys=[];
+    for(let i=0;i<=N;i++){ ys.push(def.fn(x0+(x1-x0)*i/N)); }
     const xToPx = x => padL + ((x-x0)/(x1-x0))*(w-padL-padR);
     const yToPx = y => padT + (1-(y-yMin)/(yMax-yMin))*(h-padT-padB);
     const axisY = Math.min(h-padB, Math.max(padT, yToPx(0)));   // asse x (y = 0)
@@ -937,11 +927,26 @@ footer{padding:3em 2em; text-align:center; color:var(--ink-soft); font-family:'I
     }
 
     if(state.method === 'bisezione'){
-      [[state.a,'#2f6fed','a'],[state.b,'#c4432c','b'],[state.m,'#d98c1f','m']].forEach(([x,c,l])=>{
-        if(x===null) return;
-        dot(x, def.fn(x), c);
-        label(l, xToPx(x), yToPx(def.fn(x))-10, '#15213b');
-      });
+      // disegna prima m, poi a e b sopra: i due estremi restano sempre visibili
+      const pa = xToPx(state.a), pb = xToPx(state.b);
+      const close = Math.abs(pb-pa) < 16;           // estremi molto vicini: etichette ai lati
+      const ptsB = [];
+      if(state.m!==null){
+        const same = (state.m===state.a) ? 'a' : (state.m===state.b ? 'b' : '');
+        dot(state.m, def.fn(state.m), '#d98c1f');
+        if(!same) label('m', xToPx(state.m), yToPx(def.fn(state.m))-10, '#15213b');
+        state.mSame = same;
+      } else state.mSame = '';
+      dot(state.a, def.fn(state.a), '#2f6fed');
+      dot(state.b, def.fn(state.b), '#c4432c');
+      const la = 'a' + (state.mSame==='a' ? '=m' : ''), lb = 'b' + (state.mSame==='b' ? '=m' : '');
+      if(close){
+        label(la, pa-8, yToPx(def.fn(state.a))-10, '#15213b', 'right');
+        label(lb, pb+8, yToPx(def.fn(state.b))-10, '#15213b', 'left');
+      } else {
+        label(la, pa, yToPx(def.fn(state.a))-10, '#15213b');
+        label(lb, pb, yToPx(def.fn(state.b))-10, '#15213b');
+      }
       ctx.restore();
       return;
     }
@@ -1144,7 +1149,7 @@ footer{padding:3em 2em; text-align:center; color:var(--ink-soft); font-family:'I
       ctx.beginPath(); ctx.moveTo(px,axisY-4); ctx.lineTo(px,axisY+4); ctx.stroke();
       label(v.toFixed(tx.dec), px, axisY+17);
     });
-    // a, b e Δx
+    // a, b e h
     ctx.save();
     ctx.setLineDash([4,3]); ctx.strokeStyle='#d98c1f'; ctx.lineWidth=1.3;
     [x0,x1].forEach(v=>{ const px=xToPx(v); ctx.beginPath(); ctx.moveTo(px,padT); ctx.lineTo(px,axisY+36); ctx.stroke(); });
@@ -1161,7 +1166,7 @@ footer{padding:3em 2em; text-align:center; color:var(--ink-soft); font-family:'I
       const ah=(px,dir)=>{ ctx.beginPath(); ctx.moveTo(px,ay); ctx.lineTo(px+dir*5,ay-3.5); ctx.lineTo(px+dir*5,ay+3.5); ctx.closePath(); ctx.fill(); };
       if(pb-pa>12){ ah(pa,1); ah(pb,-1); }
       ctx.font='bold 12px "IBM Plex Mono", monospace'; ctx.textAlign='left';
-      ctx.fillText('Δx = '+fmt(dx), Math.max(pb,pa+14)+8, ay+4);
+      ctx.fillText('h = '+fmt(dx), Math.max(pb,pa+14)+8, ay+4);
       ctx.restore();
     }
     label('x', w-padR-6, axisY-8, 'right');
@@ -1236,6 +1241,7 @@ footer{padding:3em 2em; text-align:center; color:var(--ink-soft); font-family:'I
 /* ---------- Confronto: 4 metodi di integrazione ---------- */
 (function(){
   const funcs = {
+    g0:{label:'x/(1+x²)', fn:x=>x/(1+x*x), a:0, b:3, exact:Math.log(10)/2},
     g1:{label:'3x² + 2x + 1', fn:x=>3*x*x+2*x+1, a:1, b:5, exact:152},
     g2:{label:'x² − sin(x)', fn:x=>x*x-Math.sin(x), a:2, b:10, exact:null},
     g3:{label:'sin(x)', fn:x=>Math.sin(x), a:0, b:1, exact:(1-Math.cos(1))-(1-Math.cos(0))}
