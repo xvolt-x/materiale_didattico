@@ -1,0 +1,130 @@
+/* =====================================================================
+   stile.css — tema comune del corso "Programmazione web"
+   Da collegare in ogni pagina, nella <head>:
+     <link rel="stylesheet" href="stile.css">
+   ===================================================================== */
+
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Space+Grotesk:wght@500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap');
+
+/* ---------- 1. Colori e caratteri (cambiali qui per tutto il sito) ---------- */
+:root{
+  --bg:#F7F8FA;          /* sfondo pagina */
+  --panel:#FFFFFF;       /* riquadri bianchi */
+  --panel-2:#F2F4F8;     /* riquadri grigi */
+  --line:#DCE1E9;        /* bordi */
+  --line-soft:#E9EDF3;
+  --text:#0F172A;        /* testo principale */
+  --text-dim:#556070;    /* testo secondario */
+  --signal:#1D4ED8;      /* colore d'accento (blu) */
+  --signal-dark:#1E40AF;
+  --signal-soft:#DCE7FE;
+  --note-bg:#F0F5FF;     /* sfondo riquadri "Ricorda" */
+  --note-line:#C9D8F7;
+  --alert:#B42318;       /* rosso */
+  --ok:#067647;          /* verde */
+  --code-bg:#0F172A;     /* blocchi di codice scuri */
+  --code-text:#CBD5E1;
+  --shadow:0 1px 2px rgba(15,23,42,.04), 0 6px 20px rgba(15,23,42,.05);
+  --font-title:'Space Grotesk', 'Inter', system-ui, sans-serif;
+  --font-body:'Inter', system-ui, -apple-system, 'Segoe UI', Arial, sans-serif;
+  --font-mono:'JetBrains Mono', Consolas, monospace;
+}
+
+/* ---------- 2. Base ---------- */
+*{ box-sizing:border-box; }
+html{ scroll-behavior:smooth; }
+body{ margin:0; background:var(--bg); color:var(--text); font-family:var(--font-body); font-size:16px; line-height:1.6; -webkit-font-smoothing:antialiased; }
+a{ color:var(--signal); }
+::selection{ background:var(--signal); color:#fff; }
+img{ max-width:100%; }
+
+/* ---------- 3. Barra di navigazione in alto ---------- */
+.topbar{ position:fixed; top:0; left:0; right:0; z-index:60; background:rgba(255,255,255,.88); -webkit-backdrop-filter:blur(8px); backdrop-filter:blur(8px); border-bottom:1px solid var(--line); }
+.topbar-in{ max-width:1280px; margin:0 auto; display:flex; align-items:center; gap:18px; padding:0 24px; height:58px; }
+.topbar .brand{ font-family:var(--font-body); font-weight:700; font-size:14px; color:var(--text); text-decoration:none; white-space:nowrap; display:flex; align-items:center; gap:8px; }
+.topbar .brand::before{ content:""; width:10px; height:10px; border-radius:3px; background:var(--signal); }
+.topbar .links{ display:flex; gap:2px; overflow-x:auto; flex:1; scrollbar-width:none; }
+.topbar .links::-webkit-scrollbar{ display:none; }
+.topbar .links a{ font-size:13px; font-weight:500; color:var(--text-dim); text-decoration:none; white-space:nowrap; padding:6px 9px; border-radius:6px; transition:color .2s, background .2s; }
+.topbar .links a:hover{ color:var(--text); background:var(--panel-2); }
+.topbar .links a.active{ color:var(--signal); background:#EEF4FF; }
+.topbar .back{ font-size:13px; font-weight:500; color:var(--text); text-decoration:none; white-space:nowrap; border:1px solid var(--line); border-radius:8px; padding:6px 13px; background:var(--panel); }
+.topbar .back:hover{ border-color:var(--signal); color:var(--signal); }
+@media (max-width:600px){ .topbar-in{ padding:0 12px; gap:10px; } .topbar .brand{ display:none; } }
+
+/* ---------- 4. Sezioni e titoli ---------- */
+section{ position:relative; max-width:1160px; margin:0 auto; padding:120px 6vw 90px; scroll-margin-top:40px; }
+section + section{ border-top:1px solid var(--line-soft); }
+h1, h2, h3{ font-family:var(--font-title); color:var(--text); margin:0; }
+.hero{ min-height:88svh; display:flex; flex-direction:column; justify-content:center; padding-top:96px; padding-bottom:40px; }
+.hero h1{ font-weight:700; font-size:clamp(40px,5.4vw,64px); letter-spacing:-.03em; line-height:1.05; max-width:14ch; }
+.hero .lede{ font-size:clamp(18px,1.8vw,20px); }
+
+.sec-num{ display:block; font-size:12px; font-weight:600; text-transform:uppercase; letter-spacing:.12em; color:var(--signal); margin-bottom:12px; }
+h2{ position:relative; font-weight:600; font-size:clamp(28px,3.2vw,36px); letter-spacing:-.02em; line-height:1.18;
+    border-left:5px solid var(--signal); padding:2px 0 2px 16px; margin-bottom:17px; }
+h2::after{ content:""; position:absolute; left:-5px; right:0; bottom:-17px; height:1px; background:var(--line); }
+h3{ font-weight:600; font-size:20px; margin:40px 0 10px; }
+h2 + .lede, h2 + p{ margin-top:36px; }   /* spazio sotto la linea del titolo */
+
+.lede{ font-size:17px; line-height:1.65; color:var(--text-dim); max-width:68ch; margin:22px 0 0; }
+.page-ref{ display:inline-block; font-size:12.5px; font-weight:500; color:var(--text-dim); padding:4px 10px; background:var(--panel-2); border:1px solid var(--line); border-radius:100px; margin-top:14px; }
+.tags{ display:flex; gap:10px; flex-wrap:wrap; margin-top:30px; }
+.tags span{ font-size:13px; font-weight:500; color:var(--text-dim); border:1px solid var(--line); border-radius:6px; padding:6px 12px; background:var(--panel); }
+
+/* codice dentro il testo */
+p code, li code, td code, .lede code, .tip code{ font-family:var(--font-mono); font-size:.88em; background:var(--panel-2); border:1px solid var(--line); border-radius:4px; padding:1px 5px; color:#1E3A8A; }
+
+/* ---------- 5. Riquadri ---------- */
+.panel{ background:var(--panel); border:1px solid var(--line); border-radius:12px; box-shadow:var(--shadow); padding:24px; }
+.grid2{ display:grid; grid-template-columns:1fr 1fr; gap:28px; align-items:start; margin-top:28px; }
+.grid3{ display:grid; grid-template-columns:repeat(3,1fr); gap:16px; margin-top:28px; }
+@media (max-width:860px){ .grid2, .grid3{ grid-template-columns:1fr; } }
+
+/* riquadro "Ricorda / Nota" */
+.tip{ margin-top:26px; padding:16px 20px; background:var(--note-bg); border:1px solid var(--note-line); border-radius:10px; font-size:15px; color:var(--text-dim); max-width:72ch; }
+.tip b:first-child{ color:var(--signal); font-size:13px; text-transform:uppercase; letter-spacing:.06em; }
+
+/* ---------- 6. Pulsanti ---------- */
+.btn{ display:inline-block; font-family:var(--font-body); font-size:14px; font-weight:500; color:var(--text); background:var(--panel); border:1px solid var(--line); border-radius:8px; padding:9px 15px; cursor:pointer; text-decoration:none; box-shadow:0 1px 2px rgba(15,23,42,.05); transition:border-color .2s, background .2s, color .2s; }
+.btn:hover{ border-color:var(--signal); color:var(--signal); }
+.btn.primary, .btn.on{ background:var(--signal); border-color:var(--signal); color:#fff; }
+.btn.primary:hover, .btn.on:hover{ background:var(--signal-dark); color:#fff; }
+.toggle-row{ display:flex; gap:10px; flex-wrap:wrap; margin-top:22px; }
+
+/* ---------- 7. Codice ---------- */
+.file-label{ font-size:11.5px; font-weight:600; color:var(--text-dim); text-transform:uppercase; letter-spacing:.08em; margin:0 0 8px; display:flex; justify-content:space-between; gap:10px; }
+.file-label em{ font-style:normal; font-weight:500; color:var(--signal); text-transform:none; letter-spacing:0; }
+.code-block{ background:var(--code-bg); color:var(--code-text); border:1px solid #1E293B; border-radius:10px; padding:20px 22px; font-family:var(--font-mono); font-size:13px; line-height:1.75; overflow-x:auto; white-space:pre; margin:0; }
+.code-block .tg, .code-block .sel{ color:#93C5FD; }   /* tag HTML, selettori CSS */
+.code-block .at, .code-block .prop{ color:#6EE7B7; }  /* attributi, proprietà */
+.code-block .vl, .code-block .val{ color:#FCD34D; }   /* valori */
+.code-block .cm{ color:#7C8BA1; font-style:italic; }  /* commenti */
+
+/* finestra del browser per le anteprime */
+.browser{ border:1px solid var(--line); border-radius:12px; overflow:hidden; background:#fff; box-shadow:var(--shadow); }
+.browser .bar{ background:var(--panel-2); padding:9px 14px; display:flex; gap:8px; align-items:center; border-bottom:1px solid var(--line); }
+.browser .dotb{ width:9px; height:9px; border-radius:50%; }
+.browser .dotb:nth-child(1){ background:#F87171; } .browser .dotb:nth-child(2){ background:#FBBF24; } .browser .dotb:nth-child(3){ background:#34D399; }
+.browser .addr{ margin-left:8px; font-family:var(--font-mono); font-size:12px; color:var(--text-dim); }
+.browser .stage{ padding:24px 28px; min-height:100px; }
+
+/* ---------- 8. Tabelle ---------- */
+.table-scroll{ overflow-x:auto; }
+.table{ width:100%; border-collapse:separate; border-spacing:0; margin-top:16px; font-size:14px; background:var(--panel); border:1px solid var(--line); border-radius:12px; overflow:hidden; box-shadow:var(--shadow); }
+.table th, .table td{ text-align:left; padding:11px 14px; border-bottom:1px solid var(--line-soft); vertical-align:top; }
+.table th{ background:var(--panel-2); font-size:11.5px; text-transform:uppercase; letter-spacing:.05em; color:var(--text-dim); font-weight:600; }
+.table tbody tr:nth-child(even) td{ background:#FAFBFC; }
+.table tbody tr:hover td{ background:#F0F5FF; }
+.table tr:last-child td{ border-bottom:none; }
+
+/* ---------- 9. Schede link ---------- */
+.link-card{ display:block; background:var(--panel); border:1px solid var(--line); border-radius:12px; box-shadow:var(--shadow); padding:22px; text-decoration:none; color:var(--text); transition:border-color .2s, transform .2s; }
+.link-card:hover{ border-color:var(--signal); transform:translateY(-2px); }
+.link-card b{ display:block; font-family:var(--font-title); font-size:17px; font-weight:600; margin-bottom:6px; }
+.link-card span{ font-size:13px; color:var(--text-dim); }
+
+/* ---------- 10. Piè di pagina ---------- */
+footer{ text-align:center; padding:36px 20px 56px; font-size:12.5px; color:var(--text-dim); border-top:1px solid var(--line); }
+
+@media (max-width:600px){ section{ padding:100px 16px 70px; } }
