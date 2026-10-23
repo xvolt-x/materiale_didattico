@@ -1,0 +1,701 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Percorso interattivo sui CSS: modalità di inclusione, selettori, div e span, box model, cascata">
+  <title>Fogli di stile CSS</title>
+  <!-- Tema comune a tutte le pagine del corso -->
+  <link rel="stylesheet" href="stile.css">
+  <style>
+  /* =========================================================
+     Stili specifici di QUESTA pagina (parti interattive).
+     Il tema comune è in stile.css.
+     ========================================================= */
+  .skip{ position:absolute; left:-9999px; top:8px; z-index:70; background:var(--signal); color:#fff; padding:8px 14px; border-radius:6px; font-size:13px; }
+  .skip:focus{ left:12px; }
+  em.accent, h2 em{ font-style:normal; color:var(--signal); }
+
+  /* navigazione a puntini sulla destra */
+  nav.wire-nav{ position:fixed; right:26px; top:50%; transform:translateY(-50%); z-index:50; display:flex; flex-direction:column; align-items:center; }
+  nav.wire-nav .seg{ width:1px; height:20px; background:var(--line); }
+  nav.wire-nav button{ appearance:none; border:none; background:none; padding:7px 0; margin:0; cursor:pointer; display:block; position:relative; }
+  nav.wire-nav button .dot{ width:9px; height:9px; border-radius:50%; border:1.5px solid var(--text-dim); display:block; transition:background .25s, border-color .25s, transform .25s; }
+  nav.wire-nav button.active .dot{ background:var(--signal); border-color:var(--signal); transform:scale(1.35); }
+  nav.wire-nav button .label{ position:absolute; right:22px; top:50%; transform:translateY(-50%); font-size:12px; color:var(--text); background:var(--panel); border:1px solid var(--line); box-shadow:var(--shadow); padding:5px 10px; border-radius:6px; white-space:nowrap; opacity:0; pointer-events:none; transition:opacity .15s; }
+  nav.wire-nav button:hover .label{ opacity:1; }
+  @media (max-width:860px){ nav.wire-nav{ display:none; } }
+
+  /* hero */
+  .hero-grid{ display:grid; grid-template-columns:1.1fr .9fr; gap:48px; align-items:center; }
+  @media (max-width:960px){ .hero-grid{ grid-template-columns:1fr; } }
+  .scrollcue{ margin-top:48px; display:flex; align-items:center; gap:12px; font-size:13px; color:var(--text-dim); }
+  .scrollcue svg{ animation:bob 1.8s ease-in-out infinite; }
+  @keyframes bob{ 0%,100%{ transform:translateY(0); } 50%{ transform:translateY(6px); } }
+  @media (prefers-reduced-motion: reduce){ .scrollcue svg{ animation:none; } }
+  .hero-demo{ padding:22px; }
+  .hero-demo .browser{ margin-top:14px; }
+  .hero-demo .stage h4{ margin:0; font-family:var(--font-title); font-size:28px; font-weight:600; transition:color .25s; }
+  .ctrl-row{ display:flex; align-items:center; gap:8px; flex-wrap:wrap; margin-top:14px; font-family:var(--font-mono); font-size:12.5px; color:var(--text-dim); }
+  .ctrl-row .lbl{ min-width:82px; }
+  .swatch{ width:26px; height:26px; border-radius:50%; border:2px solid var(--panel); outline:1px solid var(--line); cursor:pointer; padding:0; }
+  .swatch.on{ outline:2px solid var(--text); }
+  .pill{ font-family:var(--font-body); font-size:12.5px; font-weight:500; border:1px solid var(--line); background:var(--panel); color:var(--text); border-radius:6px; padding:5px 12px; cursor:pointer; }
+  .pill.on{ background:var(--signal); border-color:var(--signal); color:#fff; }
+
+  /* 01 — stesso HTML, stili diversi */
+  .style-stage{ min-height:250px; font-family:Georgia, serif; color:#222; }
+  .demo-site h4{ margin:0 0 10px; font-size:24px; }
+  .demo-site nav{ display:flex; gap:10px; margin-bottom:10px; flex-wrap:wrap; }
+  .demo-site nav a{ color:#0000EE; }
+  .demo-site p{ margin:0; }
+  .demo-site.s-a{ font-family:var(--font-body); background:#14213D; color:#F6F1E3; padding:22px; border-radius:6px; }
+  .demo-site.s-a h4{ color:#E9B44C; text-transform:uppercase; letter-spacing:.08em; font-size:20px; border-bottom:2px solid #E9B44C; padding-bottom:8px; }
+  .demo-site.s-a nav a{ background:#E9B44C; color:#14213D; padding:4px 10px; border-radius:100px; text-decoration:none; font-size:13px; }
+  .demo-site.s-a p{ line-height:1.6; }
+  .demo-site.s-b{ font-family:'Source Serif 4', Georgia, serif; background:#FFF9EC; padding:22px; border:3px double #8F5A0C; text-align:center; }
+  .demo-site.s-b h4{ font-size:30px; font-style:italic; color:#8F5A0C; font-weight:400; }
+  .demo-site.s-b nav{ justify-content:center; }
+  .demo-site.s-b nav a{ color:#B23327; margin:0 6px; }
+  .demo-site.s-b p{ font-size:17px; color:#4A3B22; }
+
+  /* 02 — tre modi */
+  .way-desc{ font-size:15.5px; color:var(--text-dim); }
+  .way-desc p{ margin-top:0; }
+  .proscons{ display:grid; grid-template-columns:1fr 1fr; gap:12px; margin-top:16px; }
+  .proscons div{ background:var(--panel-2); border-radius:8px; padding:12px 14px; font-size:13.5px; }
+  .proscons b{ font-family:var(--font-mono); font-size:11.5px; display:block; margin-bottom:4px; text-transform:uppercase; letter-spacing:.05em; }
+  .proscons .p b{ color:var(--ok); } .proscons .c b{ color:var(--alert); }
+
+  /* 03 — anatomia della regola */
+  .anat-bar{ margin-top:36px; padding:20px 24px; border-radius:12px; background:var(--panel); border:1px solid var(--line); box-shadow:var(--shadow); font-family:var(--font-mono); font-size:clamp(14px,2.2vw,19px); display:flex; flex-direction:column; align-items:flex-start; gap:4px; }
+  .anat-bar .seg{ padding:3px 2px; border-bottom:2px solid transparent; cursor:pointer; transition:border-color .15s, background .15s; border-radius:2px; font-weight:600; }
+  .anat-bar .seg:hover, .anat-bar .seg.active{ border-color:var(--signal); background:var(--signal-soft); }
+  .anat-bar .pl{ color:var(--text-dim); } .anat-bar .tg{ color:var(--signal); } .anat-bar .at{ color:var(--ok); } .anat-bar .vl{ color:var(--alert); } .anat-bar .ct{ color:var(--text-dim); font-weight:400; }
+  .anat-cap{ margin-top:16px; min-height:60px; padding:16px 20px; background:var(--note-bg); border:1px solid var(--note-line); border-radius:10px; }
+  .anat-cap .name{ font-family:var(--font-mono); font-size:13px; font-weight:600; color:var(--signal); margin-bottom:4px; }
+  .anat-cap .expl{ font-size:14.5px; color:var(--text-dim); }
+
+  /* 04 — selettori */
+  .sel-card{ text-align:left; font:inherit; color:inherit; cursor:pointer; transition:border-color .2s, box-shadow .2s; }
+  .sel-card:hover{ border-color:var(--signal); }
+  .sel-card.on{ border-color:var(--signal); box-shadow:0 0 0 3px var(--signal-soft), var(--shadow); }
+  .sel-card .big{ font-family:var(--font-mono); font-size:30px; color:var(--signal); font-weight:600; line-height:1; margin-bottom:12px; }
+  .sel-card h4{ margin:0 0 6px; font-size:16px; font-weight:600; }
+  .sel-card p{ font-size:14px; color:var(--text-dim); margin:0 0 12px; }
+  .sel-demo{ margin-top:22px; display:grid; grid-template-columns:1fr 1.3fr; gap:24px; }
+  @media (max-width:860px){ .sel-demo{ grid-template-columns:1fr; } }
+  .sel-dom{ padding:16px 18px; }
+  .sel-dom .node{ font-family:var(--font-mono); font-size:13px; padding:7px 12px; border-radius:6px; border:1px dashed transparent; margin:4px 0; color:var(--text-dim); transition:background .25s, border-color .25s; }
+  .sel-dom .node.hit{ background:#E3ECFF; border-style:solid; border-color:#93B4F5; color:var(--text); }
+  .sel-dom .node .tg{ color:var(--signal); } .sel-dom .node .at{ color:var(--ok); } .sel-dom .node .vl{ color:var(--alert); }
+  .sel-info .rule{ font-family:var(--font-mono); font-size:16px; color:var(--signal); font-weight:600; }
+  .sel-info p{ font-size:14.5px; color:var(--text-dim); margin:10px 0 0; }
+
+  /* 05 — laboratorio */
+  .lab{ margin-top:30px; display:grid; grid-template-columns:1fr 1fr; gap:18px; }
+  @media (max-width:960px){ .lab{ grid-template-columns:1fr; } }
+  .lab textarea{ width:100%; min-height:220px; resize:vertical; font-family:var(--font-mono); font-size:13px; line-height:1.65; color:#E2E8F0; background:var(--code-bg); border:1px solid #1E293B; border-radius:10px; padding:14px 16px; tab-size:2; caret-color:#93C5FD; }
+  .lab textarea:focus{ outline:none; border-color:var(--signal); box-shadow:0 0 0 3px rgba(29,78,216,.25); }
+  .lab .preview-col{ grid-column:1 / -1; }
+  .lab iframe, .ex-grid iframe{ width:100%; border:0; display:block; background:#fff; }
+  .lab iframe{ height:300px; } .ex-grid iframe{ height:260px; }
+
+  /* 06 — div e span */
+  .ds-wrap{ margin-top:30px; display:grid; grid-template-columns:1.25fr .75fr; gap:22px; align-items:start; }
+  @media (max-width:960px){ .ds-wrap{ grid-template-columns:1fr; } }
+  .ds-page{ padding:20px; font-size:15px; }
+  .ds-page .lay{ display:block; position:relative; }
+  .ds-page.flex .lay{ display:flex; gap:10px; }
+  .ds-page .blk{ background:var(--panel-2); border:1px solid var(--line-soft); border-radius:6px; padding:14px; margin-bottom:10px; position:relative; }
+  .ds-page.flex .blk{ margin-bottom:0; }
+  .ds-page.flex .blk.side{ flex:0 0 22%; }
+  .ds-page.flex .blk.main{ flex:1; }
+  .ds-page .lay + p{ margin-top:16px; }
+  .ds-page p{ line-height:1.7; margin:0; }
+  .ds-page .sp{ outline:2px dashed transparent; outline-offset:1px; border-radius:2px; transition:background .2s, outline-color .2s; }
+  .ds-page.show .blk{ outline:2px dashed var(--ok); outline-offset:-2px; }
+  .ds-page.show .sp{ outline-color:var(--alert); background:#F6DDD9; }
+  .ds-page .tagname{ display:none; position:absolute; top:-9px; right:8px; font-family:var(--font-mono); font-size:10px; background:var(--ok); color:#fff; padding:1px 6px; border-radius:3px; }
+  .ds-page.show .tagname{ display:block; }
+  .ds-legend{ display:flex; gap:14px; flex-wrap:wrap; margin-top:12px; font-family:var(--font-mono); font-size:12px; color:var(--text-dim); }
+  .ds-legend i{ display:inline-block; width:14px; height:10px; border:2px dashed; margin-right:6px; vertical-align:middle; }
+
+  /* 07 — box model */
+  .bm-demo{ margin-top:36px; padding:32px; }
+  .bm-controls{ display:flex; gap:30px; flex-wrap:wrap; margin-bottom:28px; font-family:var(--font-mono); font-size:12.5px; color:var(--text-dim); }
+  .bm-controls label{ display:flex; flex-direction:column; gap:8px; }
+  .bm-controls input[type=range]{ accent-color:var(--signal); width:140px; }
+  .bm-controls b{ color:var(--text); }
+  .bm-wrap{ display:grid; grid-template-columns:.8fr 1.2fr; gap:28px; align-items:center; }
+  @media (max-width:860px){ .bm-wrap{ grid-template-columns:1fr; } }
+  .bm-stage{ display:flex; justify-content:center; padding:10px; overflow:auto; }
+  .bm-margin{ background:var(--signal-soft); position:relative; }
+  .bm-border{ background:var(--panel); border-style:solid; border-color:var(--alert); position:relative; }
+  .bm-padding{ background:var(--panel-2); position:relative; }
+  .bm-content{ background:var(--panel); border:1px solid var(--line); width:140px; height:64px; display:flex; align-items:center; justify-content:center; font-family:var(--font-mono); font-size:12px; color:var(--text-dim); }
+  .bm-tag{ position:absolute; top:3px; left:7px; font-family:var(--font-mono); font-size:9px; color:var(--text-dim); text-transform:uppercase; letter-spacing:.06em; }
+  .bm-legend{ display:flex; gap:16px; flex-wrap:wrap; justify-content:center; margin-top:18px; font-family:var(--font-mono); font-size:12px; color:var(--text-dim); }
+  .bm-legend i{ display:inline-block; width:12px; height:12px; border-radius:3px; margin-right:6px; vertical-align:-1px; border:1px solid var(--line); }
+
+  /* 08 — cascata */
+  .ladder{ display:flex; align-items:center; gap:8px; flex-wrap:wrap; margin-top:22px; font-family:var(--font-mono); font-size:13px; }
+  .ladder span{ padding:6px 12px; border-radius:100px; border:1px solid var(--line); background:var(--panel); }
+  .ladder span:nth-child(7){ background:var(--signal); border-color:var(--signal); color:#fff; }
+  .ladder em{ font-style:normal; color:var(--text-dim); }
+  .cas-rule{ display:flex; align-items:center; gap:12px; padding:12px 14px; border:1px solid var(--line); border-radius:10px; background:var(--panel); box-shadow:var(--shadow); margin-bottom:10px; cursor:pointer; user-select:none; transition:border-color .2s, opacity .2s; }
+  .cas-rule input{ accent-color:var(--signal); width:17px; height:17px; flex:none; }
+  .cas-rule code{ font-family:var(--font-mono); font-size:13px; flex:1; }
+  .cas-rule .spec{ font-family:var(--font-mono); font-size:11px; color:var(--text-dim); border:1px solid var(--line); padding:2px 8px; border-radius:100px; white-space:nowrap; }
+  .cas-rule.off{ opacity:.5; }
+  .cas-rule.win{ border-color:var(--signal); box-shadow:0 0 0 2px var(--signal-soft); }
+  .cas-rule.win .spec{ background:var(--signal); color:#fff; border-color:var(--signal); }
+  .cas-target{ font-family:Georgia, serif; font-size:26px; padding:30px; text-align:center; transition:color .3s; }
+  .cas-why{ margin-top:12px; font-size:14.5px; color:var(--text-dim); min-height:44px; }
+
+  /* 09 — esempio guidato */
+  .steps-nav{ display:flex; align-items:center; gap:12px; margin-top:30px; flex-wrap:wrap; }
+  .step-dots{ display:flex; gap:6px; }
+  .step-dots span{ width:9px; height:9px; border-radius:50%; border:1.5px solid var(--text-dim); }
+  .step-dots span.on{ background:var(--signal); border-color:var(--signal); }
+  .step-caption{ font-size:15px; color:var(--text-dim); margin-top:14px; min-height:46px; max-width:70ch; }
+  .step-caption b{ color:var(--text); }
+  .ex-grid{ display:grid; grid-template-columns:1fr 1fr; gap:18px; margin-top:18px; }
+  @media (max-width:960px){ .ex-grid{ grid-template-columns:1fr; } }
+  .ex-grid .browser{ grid-column:1 / -1; }
+  .code-block .new{ display:inline-block; width:100%; background:rgba(96,165,250,.18); box-shadow:inset 3px 0 0 #60A5FA; border-radius:3px; }
+
+  /* 10-11 — tabelle e link */
+  .table td:first-child code{ color:var(--signal); font-weight:600; background:none; border:none; padding:0; }
+  .table td:nth-child(3){ color:var(--text-dim); }
+  .table-scroll .table{ min-width:640px; }
+  .cta{ margin-top:28px; }
+  .link-card .arr{ color:var(--signal); float:right; font-family:var(--font-mono); }
+  </style>
+</head>
+<body>
+
+<a class="skip" href="#perche">Vai al contenuto</a>
+<header class="topbar">
+  <div class="topbar-in">
+    <a class="brand" href="#hero">B2.3 · CSS</a>
+    <nav class="links" id="topLinks" aria-label="Sezioni">
+      <a href="#perche">Perché CSS</a><a href="#modi">Tre modi</a><a href="#anatomia">Sintassi</a><a href="#selettori">Selettori</a><a href="#prova">Prova</a><a href="#divspan">div e span</a><a href="#box">Box model</a><a href="#cascata">Cascata</a><a href="#esempio">Esempio</a><a href="#proprieta">Proprietà CSS</a><a href="#link">Link</a>
+    </nav>
+    <a class="back" href="https://mariaserafini-ldv.github.io/programmazioneWeb/index.html">← Indice</a>
+  </div>
+</header>
+
+<nav class="wire-nav" id="wireNav" aria-label="Navigazione sezioni">
+  <button data-target="hero"><span class="dot"></span><span class="label">Inizio</span></button><div class="seg"></div>
+  <button data-target="perche"><span class="dot"></span><span class="label">Perché CSS</span></button><div class="seg"></div>
+  <button data-target="modi"><span class="dot"></span><span class="label">Tre modi</span></button><div class="seg"></div>
+  <button data-target="anatomia"><span class="dot"></span><span class="label">Sintassi</span></button><div class="seg"></div>
+  <button data-target="selettori"><span class="dot"></span><span class="label">Selettori</span></button><div class="seg"></div>
+  <button data-target="prova"><span class="dot"></span><span class="label">Prova tu</span></button><div class="seg"></div>
+  <button data-target="divspan"><span class="dot"></span><span class="label">div e span</span></button><div class="seg"></div>
+  <button data-target="box"><span class="dot"></span><span class="label">Box model</span></button><div class="seg"></div>
+  <button data-target="cascata"><span class="dot"></span><span class="label">Cascata</span></button><div class="seg"></div>
+  <button data-target="esempio"><span class="dot"></span><span class="label">Esempio guidato</span></button><div class="seg"></div>
+  <button data-target="proprieta"><span class="dot"></span><span class="label">Proprietà CSS</span></button><div class="seg"></div>
+  <button data-target="link"><span class="dot"></span><span class="label">Per approfondire</span></button>
+</nav>
+
+<!-- HERO -->
+<section class="hero" id="hero">
+  <div class="hero-grid">
+    <div>
+      <h1>Dai uno stile al Web.</h1>
+      <p class="page-ref hero-ref">Unità B2 · Linguaggio CSS — pp. 177-182</p>
+      <p class="lede">L'HTML costruisce la pagina, i CSS la vestono: colori, spazi, bordi, disposizione degli elementi.</p>
+      <div class="tags"><span>selettori</span><span>div · span</span><span>box model</span><span>cascata</span></div>
+      <div class="scrollcue">
+        <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M2 5L8 11L14 5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        scorri per iniziare
+      </div>
+    </div>
+    <div class="panel hero-demo">
+      <p class="file-label">style.css <em>prova a cambiare i valori</em></p>
+      <pre class="code-block" id="heroCode"></pre>
+      <div class="ctrl-row"><span class="lbl">color</span>
+        <button class="swatch on" style="background:#14213D" data-c="#14213D" aria-label="blu notte"></button>
+        <button class="swatch" style="background:#8F5A0C" data-c="#8F5A0C" aria-label="ocra"></button>
+        <button class="swatch" style="background:#B23327" data-c="#B23327" aria-label="rosso"></button>
+        <button class="swatch" style="background:#1F7A52" data-c="#1F7A52" aria-label="verde"></button>
+      </div>
+      <div class="ctrl-row"><span class="lbl">text-align</span>
+        <button class="pill on" data-a="left">left</button><button class="pill" data-a="center">center</button><button class="pill" data-a="right">right</button>
+      </div>
+      <div class="browser">
+        <div class="bar"><span class="dotb"></span><span class="dotb"></span><span class="dotb"></span><span class="addr">index.html</span></div>
+        <div class="stage"><h4 id="heroTitle">Titolo del sito</h4></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- 01 PERCHÉ -->
+<section id="perche">
+  <span class="sec-num">01 · a cosa servono</span>
+  <h2>HTML dice <em>cosa</em>, CSS dice <em>come</em></h2>
+  <p class="page-ref">p. 177</p>
+  <p class="lede">I <b>CSS</b> (<i>Cascading Style Sheets</i>, fogli di stile) definiscono l'aspetto delle pagine web. Qui sotto l'HTML resta sempre lo stesso: cambia solo il foglio di stile.</p>
+  <div class="toggle-row" id="styleToggle">
+    <button class="btn on" data-s="">Nessun CSS</button>
+    <button class="btn" data-s="s-a">Stile A</button>
+    <button class="btn" data-s="s-b">Stile B</button>
+  </div>
+  <div class="grid2" style="margin-top:22px">
+    <div>
+      <p class="file-label">index.html <em>invariato</em></p>
+<pre class="code-block"><span class="tg">&lt;h4&gt;</span>Il mio sito<span class="tg">&lt;/h4&gt;</span>
+<span class="tg">&lt;nav&gt;</span>
+  <span class="tg">&lt;a</span> <span class="at">href</span>=<span class="vl">"#"</span><span class="tg">&gt;</span>Home<span class="tg">&lt;/a&gt;</span>
+  <span class="tg">&lt;a</span> <span class="at">href</span>=<span class="vl">"#"</span><span class="tg">&gt;</span>Galleria<span class="tg">&lt;/a&gt;</span>
+  <span class="tg">&lt;a</span> <span class="at">href</span>=<span class="vl">"#"</span><span class="tg">&gt;</span>Contatti<span class="tg">&lt;/a&gt;</span>
+<span class="tg">&lt;/nav&gt;</span>
+<span class="tg">&lt;p&gt;</span>Benvenuti! Qui racconto i miei
+progetti di programmazione.<span class="tg">&lt;/p&gt;</span></pre>
+      <p class="file-label" style="margin-top:16px">CSS <em id="cssName">nessuno</em></p>
+    </div>
+    <div class="browser">
+      <div class="bar"><span class="dotb"></span><span class="dotb"></span><span class="dotb"></span><span class="addr">anteprima nel browser</span></div>
+      <div class="stage style-stage"><div class="demo-site" id="demoSite"><h4>Il mio sito</h4><nav><a href="#" onclick="return false">Home</a><a href="#" onclick="return false">Galleria</a><a href="#" onclick="return false">Contatti</a></nav><p>Benvenuti! Qui racconto i miei progetti di programmazione.</p></div></div>
+    </div>
+  </div>
+  <div class="tip"><b>Ricorda →</b> è il principio già visto nell'unità B1, la <i>separation of concerns</i>: contenuto e struttura da una parte (HTML), presentazione dall'altra (CSS). Si può cambiare uno senza toccare l'altro.</div>
+</section>
+
+<!-- 02 TRE MODI -->
+<section id="modi">
+  <span class="sec-num">02 · tre modi</span>
+  <h2>Dove si scrive il CSS?</h2>
+  <p class="page-ref">p. 178</p>
+  <p class="lede">Ci sono tre modalità: <b>inline</b>, <b>interno</b> (embedded) ed <b>esterno</b>. Scegline una per vedere dove va il codice.</p>
+  <div class="toggle-row" id="wayTabs">
+    <button class="btn on" data-w="0">1 · Inline</button>
+    <button class="btn" data-w="1">2 · Interno (embedded)</button>
+    <button class="btn" data-w="2">3 · Esterno (file .css)</button>
+  </div>
+  <div class="grid2 way-body">
+    <div><p class="file-label" id="wayFile">index.html</p><pre class="code-block" id="wayCode"></pre><pre class="code-block" id="wayCode2" style="margin-top:12px;display:none"></pre></div>
+    <div class="panel"><div class="way-desc" id="wayDesc"></div></div>
+  </div>
+</section>
+
+<!-- 03 ANATOMIA -->
+<section id="anatomia">
+  <span class="sec-num">03 · sintassi</span>
+  <h2>Anatomia di una regola CSS</h2>
+  <p class="page-ref">p. 178</p>
+  <p class="lede">Ogni regola ha sempre la stessa forma. Tocca le parti qui sotto per scoprirne il nome.</p>
+  <div class="anat-bar" id="anatomyRule">
+    <div><span class="seg" data-name="Selettore" data-expl="Indica a quali elementi della pagina si applica la regola: qui a tutti i titoli h1."><span class="tg">h1</span></span> <span class="seg" data-name="Blocco di dichiarazioni" data-expl="Tutto ciò che sta tra le parentesi graffe: l'elenco delle dichiarazioni della regola."><span class="pl">{</span></span></div>
+    <div style="padding-left:2em"><span class="seg" data-name="Dichiarazione" data-expl="Una coppia proprietà: valore, chiusa dal punto e virgola."><span class="seg" data-name="Proprietà" data-expl="La caratteristica che vogliamo modificare (colore, allineamento, dimensione…)."><span class="at">color</span></span><span class="pl">:</span> <span class="seg" data-name="Valore" data-expl="Il valore assegnato alla proprietà. Ogni proprietà ammette solo certi valori."><span class="vl">blue</span></span><span class="pl">;</span></span> <span class="seg" data-name="Commento" data-expl="Testo ignorato dal browser, scritto tra /* e */. Serve a chi legge il codice."><span class="ct">/* Colore del testo blu */</span></span></div>
+    <div style="padding-left:2em"><span class="seg" data-name="Dichiarazione" data-expl="Una coppia proprietà: valore, chiusa dal punto e virgola."><span class="at">text-align</span><span class="pl">:</span> <span class="vl">right</span><span class="pl">;</span></span> <span class="ct">/* Testo allineato a destra */</span></div>
+    <div><span class="seg" data-name="Blocco di dichiarazioni" data-expl="La parentesi graffa chiusa termina il blocco."><span class="pl">}</span></span></div>
+  </div>
+  <div class="anat-cap" id="anatomyRuleCaption"><div class="name">Tocca una parte qui sopra</div><div class="expl">Selettore, blocco, dichiarazione, proprietà, valore, commento.</div></div>
+  <div class="tip"><b>Ricorda →</b> proprietà e valore sono separati da <code>:</code>; ogni dichiarazione finisce con <code>;</code>; il blocco sta tra <code>{ }</code>. Dimenticare un <code>;</code> è l'errore più frequente.</div>
+</section>
+
+<!-- 04 SELETTORI -->
+<section id="selettori">
+  <span class="sec-num">04 · selettori</span>
+  <h2>A chi si applica lo stile?</h2>
+  <p class="page-ref">p. 179</p>
+  <p class="lede">Il <b>selettore</b> sceglie gli elementi a cui applicare lo stile. Clicca un selettore per vedere quali elementi colpisce.</p>
+  <div class="grid3">
+    <button class="panel sel-card" data-k="tipo"><div class="big">h1</div><h4>Tipo (tag)</h4><p>Colpisce <b>tutti</b> gli elementi di quel tipo.</p><code>h1 { color: blue; }</code></button>
+    <button class="panel sel-card" data-k="classe"><div class="big">.</div><h4>Classe</h4><p>Colpisce <b>più elementi</b>, anche di tipo diverso. Nell'HTML: <code>class="..."</code></p><code>.evidenziato { ... }</code></button>
+    <button class="panel sel-card" data-k="id"><div class="big">#</div><h4>Id</h4><p>Colpisce <b>un solo elemento</b>: l'id è unico nella pagina (serve anche per i link interni).</p><code>#bottone-invio { ... }</code></button>
+  </div>
+  <div class="sel-demo">
+    <div class="panel sel-dom">
+      <p class="file-label">index.html</p>
+      <div class="node" data-m="tipo"><span class="tg">&lt;h1&gt;</span>Notizie<span class="tg">&lt;/h1&gt;</span></div>
+      <div class="node" data-m="classe"><span class="tg">&lt;p</span> <span class="at">class</span>=<span class="vl">"evidenziato"</span><span class="tg">&gt;</span>Oggi si parla di CSS<span class="tg">&lt;/p&gt;</span></div>
+      <div class="node" data-m=""><span class="tg">&lt;p&gt;</span>Un paragrafo normale<span class="tg">&lt;/p&gt;</span></div>
+      <div class="node" data-m="tipo"><span class="tg">&lt;h1&gt;</span>Eventi<span class="tg">&lt;/h1&gt;</span></div>
+      <div class="node" data-m="classe"><span class="tg">&lt;li</span> <span class="at">class</span>=<span class="vl">"evidenziato"</span><span class="tg">&gt;</span>Gita a Verona<span class="tg">&lt;/li&gt;</span></div>
+      <div class="node" data-m="id"><span class="tg">&lt;button</span> <span class="at">id</span>=<span class="vl">"bottone-invio"</span><span class="tg">&gt;</span>Invia<span class="tg">&lt;/button&gt;</span></div>
+    </div>
+    <div class="panel sel-info" id="selInfo"><div class="rule">scegli un selettore</div><p>Gli elementi colpiti dalla regola si illumineranno qui a fianco.</p></div>
+  </div>
+</section>
+
+<!-- 05 PROVA -->
+<section id="prova">
+  <span class="sec-num">05 · laboratorio</span>
+  <h2>Prova tu!</h2>
+  <p class="lede">Scegli un esempio e cambia colori, valori, selettori: l'anteprima si aggiorna mentre scrivi.</p>
+  <div class="toggle-row" id="labPresets">
+    <button class="btn on" data-p="0">Selettore di tipo</button>
+    <button class="btn" data-p="1">Selettore di classe</button>
+    <button class="btn" data-p="2">Selettore id</button>
+    <button class="btn" data-p="3">Pagina intera</button>
+  </div>
+  <div class="lab">
+    <div><p class="file-label">HTML <em>modificabile</em></p><textarea id="labHtml" spellcheck="false" aria-label="Codice HTML"></textarea></div>
+    <div><p class="file-label">CSS <em>modificabile</em></p><textarea id="labCss" spellcheck="false" aria-label="Codice CSS"></textarea></div>
+    <div class="preview-col browser"><div class="bar"><span class="dotb"></span><span class="dotb"></span><span class="dotb"></span><span class="addr">anteprima</span></div><iframe id="labFrame" title="Anteprima" sandbox=""></iframe></div>
+  </div>
+</section>
+
+<!-- 06 DIV SPAN -->
+<section id="divspan">
+  <span class="sec-num">06 · div e span</span>
+  <h2>Integrazione HTML: i tag div e span</h2>
+  <p class="page-ref">p. 179-180</p>
+  <p class="lede"><code>&lt;div&gt;</code> è un elemento <b>di blocco</b>: occupa tutta la larghezza e va a capo. <code>&lt;span&gt;</code> è <b>in linea</b>: resta dentro il testo. Da soli non fanno nulla: servono per applicare stili.</p>
+  <div class="toggle-row">
+    <button class="btn" id="dsShow">Mostra i riquadri</button>
+    <button class="btn on" data-d="block">contenitore display: block</button>
+    <button class="btn" data-d="flex">display: flex</button>
+  </div>
+  <div class="ds-wrap">
+    <div>
+      <div class="panel ds-page" id="dsPage">
+        <div class="lay" style="position:relative">
+          <div class="blk side"><span class="tagname">div</span>Menu</div>
+          <div class="blk main"><span class="tagname">div</span>Contenuto principale</div>
+          <div class="blk side"><span class="tagname">div</span>Info</div>
+        </div>
+        <p>Questo testo contiene <span class="sp">uno span</span> e <span class="sp">un altro span</span>: restano nella stessa riga del paragrafo.</p>
+      </div>
+      <div class="ds-legend"><span><i style="border-color:var(--ok)"></i>div (blocco)</span><span><i style="border-color:var(--alert)"></i>span (in linea)</span></div>
+    </div>
+    <div><p class="file-label">CSS applicato</p><pre class="code-block" id="dsCode"></pre></div>
+  </div>
+  <div class="tip"><b>Layout moderno →</b> i <code>div</code> si usano al posto delle tabelle per disporre la pagina: con <code>display: flex</code> (o <code>grid</code>) le colonne si adattano alla larghezza. Le tabelle restano per i <i>dati tabellari</i>.</div>
+</section>
+
+<!-- 07 BOX MODEL -->
+<section id="box">
+  <span class="sec-num">07 · box model</span>
+  <h2>Ogni elemento è una scatola</h2>
+  <p class="page-ref">p. 181</p>
+  <p class="lede">Nel CSS ogni elemento è un rettangolo fatto di quattro strati: <b>contenuto</b>, <b>padding</b> (dentro), <b>border</b> (bordo), <b>margin</b> (fuori). Muovi i cursori.</p>
+  <div class="panel bm-demo">
+    <div class="bm-controls">
+      <label>margin <b id="vM">20px</b><input type="range" id="rM" min="0" max="50" value="20"></label>
+      <label>border <b id="vB">6px</b><input type="range" id="rB" min="0" max="20" value="6"></label>
+      <label>padding <b id="vP">18px</b><input type="range" id="rP" min="0" max="50" value="18"></label>
+    </div>
+    <div class="bm-wrap">
+      <div><p class="file-label">style.css</p><pre class="code-block" id="bmCode"></pre></div>
+      <div>
+        <div class="bm-stage">
+          <div class="bm-margin" id="bmM"><span class="bm-tag">margin</span>
+            <div class="bm-border" id="bmB">
+              <div class="bm-padding" id="bmP"><span class="bm-tag">padding</span>
+                <div class="bm-content">contenuto</div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="bm-legend"><span><i style="background:var(--signal-soft)"></i>margin</span><span><i style="background:var(--alert)"></i>border</span><span><i style="background:var(--panel-2)"></i>padding</span><span><i style="background:var(--panel)"></i>contenuto</span></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- 08 CASCATA -->
+<section id="cascata">
+  <span class="sec-num">08 · cascading</span>
+  <h2>Il concetto di cascata</h2>
+  <p class="page-ref">p. 181-182</p>
+  <p class="lede">Più regole possono influenzare lo stesso elemento. Prevale la più <b>specifica</b> e, a parità, quella scritta <b>per ultima</b>. Attiva e disattiva le regole: che colore avrà il paragrafo?</p>
+  <div class="ladder"><span>tipo</span><em>&lt;</em><span>classe</span><em>&lt;</em><span>id</span><em>&lt;</em><span>inline</span><em style="margin-left:6px">(semplificando)</em></div>
+  <div class="cas-wrap">
+    <div id="casRules">
+      <label class="cas-rule" data-i="0"><input type="checkbox" checked><code><span style="color:var(--signal)">p</span> { color: <span style="color:#1F7A52">green</span>; }</code><span class="spec">tipo</span></label>
+      <label class="cas-rule" data-i="1"><input type="checkbox" checked><code><span style="color:var(--signal)">p</span> { color: <span style="color:#8F5A0C">orange</span>; }</code><span class="spec">tipo · ultima</span></label>
+      <label class="cas-rule" data-i="2"><input type="checkbox" checked><code><span style="color:var(--signal)">.nota</span> { color: <span style="color:#2D5DA8">blue</span>; }</code><span class="spec">classe</span></label>
+      <label class="cas-rule" data-i="3"><input type="checkbox"><code><span style="color:var(--signal)">#intro</span> { color: <span style="color:#7B3FA0">purple</span>; }</code><span class="spec">id</span></label>
+      <label class="cas-rule" data-i="4"><input type="checkbox"><code>style="color: <span style="color:#B23327">red</span>"</code><span class="spec">inline</span></label>
+    </div>
+    <div>
+      <p class="file-label">index.html</p>
+      <pre class="code-block" id="casHtml"></pre>
+      <div class="browser" style="margin-top:14px"><div class="bar"><span class="dotb"></span><span class="dotb"></span><span class="dotb"></span><span class="addr">Che colore ho?</span></div><div class="cas-target" id="casTarget">Che colore ho?</div></div>
+      <p class="cas-why" id="casWhy"></p>
+    </div>
+  </div>
+  <div class="tip"><b>Nota →</b> esiste anche <code>!important</code>, che forza una regola a vincere: meglio usarlo il meno possibile, perché rende il CSS difficile da correggere.</div>
+</section>
+
+<!-- 09 ESEMPIO -->
+<section id="esempio">
+  <span class="sec-num">09 · esempio guidato</span>
+  <h2>Costruiamo la pagina degli aforismi</h2>
+  <p class="page-ref">p. 180</p>
+  <p class="lede">Come nell'esempio del libro: un <code>div</code>, uno <code>span</code>, una classe, un id. Avanza una regola alla volta e guarda cosa cambia.</p>
+  <div class="steps-nav">
+    <button class="btn" id="exPrev">← Indietro</button>
+    <div class="step-dots" id="exDots"></div>
+    <button class="btn primary" id="exNext">Avanti →</button>
+  </div>
+  <p class="step-caption" id="exCaption"></p>
+  <div class="ex-grid">
+    <div><p class="file-label">HTML <em>non cambia</em></p><pre class="code-block" id="exHtml"></pre></div>
+    <div><p class="file-label">CSS <em>le righe nuove sono evidenziate</em></p><pre class="code-block" id="exCss"></pre></div>
+    <div class="browser"><div class="bar"><span class="dotb"></span><span class="dotb"></span><span class="dotb"></span><span class="addr">aforismi.html</span></div><iframe id="exFrame" title="Anteprima aforismi" sandbox=""></iframe></div>
+  </div>
+</section>
+
+<!-- 10 PROPRIETÀ -->
+<section id="proprieta">
+  <span class="sec-num">10 · proprietà CSS</span>
+  <h2>Le principali proprietà CSS</h2>
+  <p class="lede">Queste proprietà permettono di modificare l'aspetto del testo, gli spazi, le dimensioni e i bordi degli elementi.</p>
+
+  <h3>Proprietà per il testo</h3>
+  <div class="table-scroll"><table class="table">
+    <thead><tr><th>Proprietà</th><th>Valori ammessi</th><th>Significato</th></tr></thead>
+    <tbody>
+      <tr><td><code>color</code></td><td>Nome colori / <code>rgb(n1,n2,n3)</code> / esadecimale</td><td>Colore del testo</td></tr>
+      <tr><td><code>background-color</code></td><td>Nome colori / <code>rgb(n1,n2,n3)</code> / esadecimale</td><td>Colore di sfondo</td></tr>
+      <tr><td><code>text-align</code></td><td><code>left</code> / <code>right</code> / <code>center</code></td><td>Allineamento orizzontale del testo nel contenitore (solo per <code>span</code> e <code>p</code>)</td></tr>
+      <tr><td><code>text-transform</code></td><td><code>uppercase</code> / <code>lowercase</code> / <code>capitalize</code></td><td>Forza maiuscolo o minuscolo</td></tr>
+      <tr><td><code>font-size</code></td><td>Misura in pixel (es. <code>18px</code>), percentuale (es. <code>120%</code>), rispetto al testo genitore (es. <code>1.5em</code>) / <code>small</code> / <code>large</code></td><td>Dimensione del carattere</td></tr>
+      <tr><td><code>font-weight</code></td><td><code>normal</code> / <code>bold</code> / numero da 100 a 900</td><td>Spessore del carattere (grassetto)</td></tr>
+      <tr><td><code>font-style</code></td><td><code>normal</code> / <code>italic</code> / <code>oblique</code></td><td>Corsivo</td></tr>
+      <tr><td><code>font-family</code></td><td><code>Arial</code> / <code>Calibri</code> / <code>Garamond</code> … (anche più di un valore, in caso non fosse disponibile)</td><td>Tipo di carattere</td></tr>
+    </tbody>
+  </table></div>
+
+  <h3>Proprietà per spazi e bordi</h3>
+  <div class="table-scroll"><table class="table">
+    <thead><tr><th>Proprietà</th><th>Valori ammessi</th><th>Significato</th></tr></thead>
+    <tbody>
+      <tr><td><code>padding</code></td><td>Misura in pixel (es. <code>10px</code>) o rispetto al testo (es. <code>1.5em</code>), da 1 a 4 valori (top/right/bottom/left)</td><td>Distanza tra il contenuto e il bordo del contenitore (verso l'interno)</td></tr>
+      <tr><td><code>margin</code></td><td>Misura in pixel, anche negativa, oppure <code>auto</code>, da 1 a 4 valori</td><td>Distanza del contenitore dagli altri elementi (verso l'esterno)</td></tr>
+      <tr><td><code>width</code></td><td>Misura in pixel / <code>em</code> / percentuale / <code>rem</code> (pagina) / <code>vw</code> (finestra browser) oppure <code>auto</code></td><td>Larghezza del contenitore</td></tr>
+      <tr><td><code>border</code> (<code>border-left</code>)</td><td>3 valori: spessore, stile, colore</td><td>Formattazione di tutto il bordo del contenitore</td></tr>
+      <tr><td><code>border-radius</code></td><td>Misura in pixel / in percentuale</td><td>Arrotondamento degli angoli</td></tr>
+      <tr><td><code>border-style</code></td><td><code>solid</code> / <code>dashed</code> / <code>dotted</code> / <code>double</code> / <code>none</code></td><td>Stile del bordo (solido, tratteggiato, ecc.)</td></tr>
+      <tr><td><code>display</code></td><td><code>block</code> / <code>inline</code> / <code>inline-block</code> / <code>flex</code> / <code>none</code></td><td>Come l'elemento si comporta nella pagina (a capo, in linea, allineato agli altri, …)</td></tr>
+    </tbody>
+  </table></div>
+  <a class="btn primary cta" href="https://mariaserafini-ldv.github.io/programmazioneWeb/05-LayoutPronti.html">Esercitati su queste proprietà con i layout di esempio →</a>
+</section>
+
+<!-- 11 LINK -->
+<section id="link" style="padding-bottom:80px">
+  <span class="sec-num">11 · link utili</span>
+  <h2>Per approfondire</h2>
+  <div class="grid3">
+    <a class="link-card" href="https://developer.mozilla.org/it/docs/Web/CSS/Reference" target="_blank" rel="noopener"><span class="arr">↗</span><b>Elenco delle proprietà CSS</b><span>MDN · riferimento completo</span></a>
+    <a class="link-card" href="https://developer.mozilla.org/it/docs/Learn_web_development/Core/Styling_basics" target="_blank" rel="noopener"><span class="arr">↗</span><b>Tutorial base su CSS</b><span>MDN · le basi dello stile</span></a>
+    <a class="link-card" href="https://www.w3schools.com/css/" target="_blank" rel="noopener"><span class="arr">↗</span><b>Tutorial completo su CSS</b><span>W3Schools · con esempi da provare</span></a>
+  </div>
+</section>
+
+<footer>Materiale didattico basato su "Hashtag 2", Modulo B, Linguaggi per il web · Realizzato con l'assistenza di Claude (Anthropic)</footer>
+
+<script>
+(function(){
+  "use strict";
+  function $(s,r){ return (r||document).querySelector(s); }
+  function $$(s,r){ return Array.prototype.slice.call((r||document).querySelectorAll(s)); }
+  function esc(s){ return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
+  /* evidenziazione CSS semplice */
+  function hlCss(src){
+    return src.split('\n').map(function(line){
+      var e = esc(line);
+      var m = e.match(/^(\s*)([^{}:;]+?)(\s*\{\s*)$/);
+      if(m) return m[1]+'<span class="sel">'+m[2]+'</span>'+m[3];
+      e = e.replace(/(\/\*.*?\*\/)/g,'<span class="cm">$1</span>');
+      e = e.replace(/^(\s*)([a-z-]+)(\s*:\s*)([^;]+)(;)/,'$1<span class="prop">$2</span>$3<span class="val">$4</span>$5');
+      return e;
+    }).join('\n');
+  }
+  function hlHtml(src){
+    return esc(src).replace(/(&lt;\/?)([a-zA-Z0-9]+)([^&]*?)(\/?&gt;)/g,function(_,a,t,attrs,b){
+      attrs = attrs.replace(/([a-z-]+)=("[^"]*")/g,'<span class="at">$1</span>=<span class="vl">$2</span>');
+      return '<span class="tg">'+a+t+'</span>'+attrs+'<span class="tg">'+b+'</span>';
+    }).replace(/(&lt;!--.*?--&gt;)/g,'<span class="cm">$1</span>');
+  }
+  function setOn(group, btn){ group.forEach(function(b){ b.classList.toggle('on', b===btn); }); }
+
+  /* ---------- Nav ---------- */
+  var navButtons = $$('#wireNav button');
+  var sections = navButtons.map(function(b){ return document.getElementById(b.getAttribute('data-target')); });
+  navButtons.forEach(function(btn){ btn.addEventListener('click', function(){ var el = document.getElementById(btn.getAttribute('data-target')); if(el) el.scrollIntoView({behavior:'smooth', block:'start'}); }); });
+  var topLinks = $$('#topLinks a');
+  function setActive(id){
+    navButtons.forEach(function(b){ b.classList.toggle('active', b.getAttribute('data-target')===id); });
+    topLinks.forEach(function(a){ var on = a.getAttribute('href')==='#'+id; a.classList.toggle('active', on); if(on && a.scrollIntoView){ var p=a.parentNode; p.scrollLeft = a.offsetLeft - p.clientWidth/2 + a.clientWidth/2; } });
+  }
+  if('IntersectionObserver' in window){
+    var obs = new IntersectionObserver(function(entries){ var best=null, r=0; entries.forEach(function(e){ if(e.isIntersecting && e.intersectionRatio>r){ r=e.intersectionRatio; best=e.target; } }); if(best) setActive(best.id); }, {threshold:[0.2,0.4,0.6,0.8], rootMargin:'-10% 0px -10% 0px'});
+    sections.forEach(function(s){ if(s) obs.observe(s); });
+  }
+  setActive('hero');
+
+  /* ---------- Hero ---------- */
+  (function(){
+    var color='#14213D', align='left', code=$('#heroCode'), title=$('#heroTitle');
+    var names={'#14213D':'#14213D','#8F5A0C':'#8F5A0C','#B23327':'#B23327','#1F7A52':'#1F7A52'};
+    function render(){ code.innerHTML = hlCss('h1 {\n  color: '+names[color]+';\n  text-align: '+align+';\n}'); title.style.color=color; title.style.textAlign=align; }
+    var sw=$$('.swatch'), pl=$$('.hero-demo .pill');
+    sw.forEach(function(b){ b.addEventListener('click', function(){ color=b.getAttribute('data-c'); setOn(sw,b); render(); }); });
+    pl.forEach(function(b){ b.addEventListener('click', function(){ align=b.getAttribute('data-a'); setOn(pl,b); render(); }); });
+    render();
+  })();
+
+  /* ---------- Stili A/B ---------- */
+  (function(){
+    var btns=$$('#styleToggle .btn'), site=$('#demoSite'), nm=$('#cssName');
+    var label={'':'nessuno','s-a':'stile-a.css','s-b':'stile-b.css'};
+    btns.forEach(function(b){ b.addEventListener('click', function(){ var s=b.getAttribute('data-s'); site.className='demo-site'+(s?' '+s:''); nm.textContent=label[s]; setOn(btns,b); }); });
+  })();
+
+  /* ---------- Tre modi ---------- */
+  (function(){
+    var ways=[
+      { file:'index.html', code:'<p style="color: blue;">Testo blu</p>', code2:null,
+        desc:'<p>Lo stile si scrive <b>direttamente nel tag</b>, con l\'attributo <code>style</code>.</p><div class="proscons"><div class="p"><b>pro</b>Rapido per una singola modifica.</div><div class="c"><b>contro</b>Va ripetuto su ogni elemento: mescola contenuto e presentazione.</div></div>' },
+      { file:'index.html', code:'<head>\n  <style>\n    p { color: blue; }\n  </style>\n</head>\n<body>\n  <p>Testo blu</p>\n</body>', code2:null,
+        desc:'<p>Le regole stanno in un tag <code>&lt;style&gt;</code> dentro l\'<b>intestazione</b> (<code>&lt;head&gt;</code>) della pagina.</p><div class="proscons"><div class="p"><b>pro</b>Una regola vale per tutti gli elementi della pagina.</div><div class="c"><b>contro</b>Vale solo per quella pagina: un sito con tante pagine va aggiornato pagina per pagina.</div></div>' },
+      { file:'index.html', code:'<head>\n  <link rel="stylesheet" href="style.css">\n</head>\n<body>\n  <p>Testo blu</p>\n</body>', code2:'/* style.css */\np {\n  color: blue;\n}',
+        desc:'<p>Le regole stanno in un <b>file separato</b> con estensione <code>.css</code>, collegato con il tag <code>&lt;link&gt;</code> nella <code>&lt;head&gt;</code>.</p><div class="proscons"><div class="p"><b>pro</b>Un solo file dà lo stile a tutto il sito: è la modalità consigliata.</div><div class="c"><b>contro</b>Un file in più da gestire (e da caricare).</div></div>' }
+    ];
+    var btns=$$('#wayTabs .btn');
+    function show(i){
+      var w=ways[i]; $('#wayFile').textContent=w.file;
+      var c=hlHtml(w.code); c=c.replace(/(p \{ color: blue; \})/,'<span class="sel">p</span> { <span class="prop">color</span>: <span class="val">blue</span>; }');
+      $('#wayCode').innerHTML=c;
+      var c2=$('#wayCode2'); if(w.code2){ c2.style.display='block'; c2.innerHTML=hlCss(w.code2); } else c2.style.display='none';
+      $('#wayDesc').innerHTML=w.desc;
+    }
+    btns.forEach(function(b){ b.addEventListener('click', function(){ setOn(btns,b); show(+b.getAttribute('data-w')); }); });
+    show(0);
+  })();
+
+  /* ---------- Anatomia ---------- */
+  (function(){
+    var bar=$('#anatomyRule'), cap=$('#anatomyRuleCaption'), name=$('.name',cap), expl=$('.expl',cap), segs=$$('.seg',bar);
+    segs.forEach(function(seg){
+      function act(ev){ if(ev) ev.stopPropagation(); segs.forEach(function(s){ s.classList.remove('active'); }); seg.classList.add('active'); name.textContent=seg.getAttribute('data-name'); expl.textContent=seg.getAttribute('data-expl'); }
+      seg.addEventListener('mouseover', act); seg.addEventListener('click', act);
+    });
+  })();
+
+  /* ---------- Selettori ---------- */
+  (function(){
+    var info={
+      tipo:['h1 { color: blue; }','Il selettore di tipo colpisce tutti gli h1 della pagina, ovunque si trovino.'],
+      classe:['.evidenziato { background: yellow; }','La classe colpisce ogni elemento con class="evidenziato": qui un paragrafo e una voce di lista, cioè elementi di tipo diverso.'],
+      id:['#bottone-invio { color: white; }','L\'id colpisce un solo elemento: nella pagina non possono esistere due elementi con lo stesso id.']
+    };
+    var cards=$$('.sel-card'), nodes=$$('.sel-dom .node');
+    cards.forEach(function(c){ c.addEventListener('click', function(){
+      var k=c.getAttribute('data-k'); setOn(cards,c);
+      nodes.forEach(function(n){ n.classList.toggle('hit', n.getAttribute('data-m')===k); });
+      $('#selInfo').innerHTML='<div class="rule">'+esc(info[k][0])+'</div><p>'+esc(info[k][1])+'</p>';
+    }); });
+  })();
+
+  /* ---------- Laboratorio ---------- */
+  (function(){
+    var presets=[
+      ['<h1>Benvenuti</h1>\n<p>Primo paragrafo.</p>\n<p>Secondo paragrafo.</p>','h1 {\n  color: darkblue;\n  text-align: center;\n}\n\np {\n  color: gray;\n  font-size: 18px;\n}'],
+      ['<p class="evidenziato">Questo è importante.</p>\n<p>Questo no.</p>\n<ul>\n  <li class="evidenziato">Anche questo!</li>\n  <li>Questo no.</li>\n</ul>','.evidenziato {\n  background-color: yellow;\n  font-weight: bold;\n}'],
+      ['<form>\n  <input type="text" placeholder="Il tuo nome">\n  <button id="bottone-invio">Invia</button>\n</form>','#bottone-invio {\n  background-color: #8F5A0C;\n  color: white;\n  border: none;\n  border-radius: 6px;\n  padding: 8px 16px;\n}'],
+      ['<div id="testata">\n  <h1>Il mio blog</h1>\n</div>\n<div class="articolo">\n  <h2>Primo articolo</h2>\n  <p>Oggi ho imparato i <span class="parola">selettori</span> CSS.</p>\n</div>','body {\n  font-family: Arial, sans-serif;\n  background-color: #FBF9F3;\n}\n\n#testata {\n  background-color: #14213D;\n  color: white;\n  padding: 10px 20px;\n}\n\n.articolo {\n  border: 2px solid #CBBFA0;\n  border-radius: 8px;\n  padding: 15px;\n  margin-top: 15px;\n}\n\n.parola {\n  color: #B23327;\n  font-weight: bold;\n}']
+    ];
+    var h=$('#labHtml'), c=$('#labCss'), f=$('#labFrame'), btns=$$('#labPresets .btn'), t=null;
+    function render(){ f.srcdoc='<!doctype html><html><head><meta charset="utf-8"><style>body{font-family:Georgia,serif;margin:18px;}'+c.value+'</style></head><body>'+h.value+'</body></html>'; }
+    function sched(){ clearTimeout(t); t=setTimeout(render,250); }
+    h.addEventListener('input',sched); c.addEventListener('input',sched);
+    [h,c].forEach(function(ta){ ta.addEventListener('keydown', function(e){ if(e.key==='Tab'){ e.preventDefault(); var s=ta.selectionStart; ta.value=ta.value.slice(0,s)+'  '+ta.value.slice(ta.selectionEnd); ta.selectionStart=ta.selectionEnd=s+2; sched(); } }); });
+    btns.forEach(function(b){ b.addEventListener('click', function(){ setOn(btns,b); var p=presets[+b.getAttribute('data-p')]; h.value=p[0]; c.value=p[1]; render(); }); });
+    h.value=presets[0][0]; c.value=presets[0][1]; render();
+  })();
+
+  /* ---------- div e span ---------- */
+  (function(){
+    var page=$('#dsPage'), code=$('#dsCode'), show=$('#dsShow'), modes=$$('#divspan [data-d]'), mode='block';
+    function render(){
+      var s = mode==='flex'
+        ? '.contenitore {\n  display: flex;\n  gap: 10px;\n}\n\n.laterale {\n  width: 22%;\n}\n\n.principale {\n  flex: 1;\n}'
+        : '.contenitore {\n  display: block;\n}\n/* ogni div va a capo\n   e occupa tutta la riga */';
+      s += '\n\n.evidenzia {\n  background-color: #F6DDD9;\n}';
+      code.innerHTML=hlCss(s); page.classList.toggle('flex', mode==='flex');
+    }
+    show.addEventListener('click', function(){ var on=page.classList.toggle('show'); show.classList.toggle('on',on); show.textContent= on?'Nascondi i riquadri':'Mostra i riquadri'; });
+    modes.forEach(function(b){ b.addEventListener('click', function(){ mode=b.getAttribute('data-d'); setOn(modes,b); render(); }); });
+    render();
+  })();
+
+  /* ---------- Box model ---------- */
+  (function(){
+    var rM=$('#rM'), rB=$('#rB'), rP=$('#rP');
+    function render(){
+      var m=+rM.value, b=+rB.value, p=+rP.value;
+      $('#vM').textContent=m+'px'; $('#vB').textContent=b+'px'; $('#vP').textContent=p+'px';
+      $('#bmM').style.padding=m+'px'; $('#bmB').style.borderWidth=b+'px'; $('#bmP').style.padding=p+'px';
+      $('#bmCode').innerHTML=hlCss('.scatola {\n  width: 140px;\n  padding: '+p+'px;\n  border: '+b+'px solid #B23327;\n  margin: '+m+'px;\n}')+'\n\n<span class="cm">/* larghezza totale occupata:\n   140 + 2·'+p+' + 2·'+b+' + 2·'+m+'\n   = '+(140+2*(p+b+m))+'px */</span>';
+    }
+    [rM,rB,rP].forEach(function(r){ r.addEventListener('input',render); });
+    render();
+  })();
+
+  /* ---------- Cascata ---------- */
+  (function(){
+    var rules=[
+      {color:'#1F7A52', name:'green', spec:1, why:'la regola sul tag p'},
+      {color:'#8F5A0C', name:'orange', spec:1, why:'la seconda regola sul tag p: stessa specificità della prima, ma scritta per ultima'},
+      {color:'#2D5DA8', name:'blue', spec:2, why:'la regola sulla classe .nota, più specifica del tag'},
+      {color:'#7B3FA0', name:'purple', spec:3, why:'la regola sull\'id #intro, più specifica della classe'},
+      {color:'#B23327', name:'red', spec:4, why:'lo stile inline, scritto direttamente nel tag: batte tutte le regole dei fogli di stile'}
+    ];
+    var labels=$$('#casRules .cas-rule');
+    function render(){
+      var win=-1;
+      labels.forEach(function(l,i){ var on=$('input',l).checked; l.classList.toggle('off',!on); if(on && (win<0 || rules[i].spec>=rules[win].spec)) win=i; });
+      labels.forEach(function(l,i){ l.classList.toggle('win', i===win); });
+      var inline = $('input',labels[4]).checked ? ' <span class="at">style</span>=<span class="vl">"color: red"</span>' : '';
+      $('#casHtml').innerHTML='<span class="tg">&lt;p</span> <span class="at">id</span>=<span class="vl">"intro"</span> <span class="at">class</span>=<span class="vl">"nota"</span>'+inline+'<span class="tg">&gt;</span>\n  Che colore ho?\n<span class="tg">&lt;/p&gt;</span>';
+      var t=$('#casTarget');
+      if(win<0){ t.style.color='#1B2333'; t.textContent='Che colore ho? (nero, il predefinito)'; $('#casWhy').textContent='Nessuna regola attiva: il browser usa il colore predefinito.'; }
+      else { t.style.color=rules[win].color; t.textContent='Che colore ho? '+rules[win].name+'!'; $('#casWhy').textContent='Vince '+rules[win].why+'.'; }
+    }
+    labels.forEach(function(l){ $('input',l).addEventListener('change',render); });
+    render();
+  })();
+
+  /* ---------- Esempio guidato ---------- */
+  (function(){
+    var html='<div id="cornice">\n  <h1>Aforismi</h1>\n  <p class="aforisma">Non è perché le cose sono difficili\n  che non osiamo, è perché non osiamo\n  che sono difficili. <span>— Seneca</span></p>\n  <p class="aforisma">Il tempo è la cosa più preziosa\n  che un uomo possa spendere.\n  <span>— Teofrasto</span></p>\n</div>';
+    var steps=[
+      {css:[], cap:'<b>Punto di partenza.</b> Solo HTML: il browser usa gli stili predefiniti.'},
+      {css:['body {','  font-family: Georgia, serif;','  background-color: #FBF9F3;','}'], cap:'<b>Selettore di tipo.</b> La regola su <code>body</code> vale per tutta la pagina: cambiano carattere e sfondo.'},
+      {css:['#cornice {','  width: 70%;','  margin: 20px auto;','  padding: 10px 25px;','  border: 3px double #8F5A0C;','}'], cap:'<b>Selettore id.</b> Il <code>div</code> con id <code>cornice</code> diventa un riquadro centrato (<code>margin: auto</code>) con bordo doppio.'},
+      {css:['h1 {','  color: #8F5A0C;','  text-align: center;','  text-transform: uppercase;','}'], cap:'<b>Il titolo.</b> Colore, centratura e maiuscolo forzato con <code>text-transform</code>.'},
+      {css:['.aforisma {','  font-style: italic;','  font-size: 18px;','  border-left: 4px solid #E9D3AC;','  padding-left: 12px;','}'], cap:'<b>Selettore di classe.</b> Entrambi i paragrafi con <code>class="aforisma"</code> ricevono lo stesso stile.'},
+      {css:['.aforisma span {','  font-style: normal;','  font-weight: bold;','  color: #B23327;','}'], cap:'<b>Lo span.</b> Il selettore <code>.aforisma span</code> colpisce solo gli <code>span</code> dentro gli aforismi: gli autori restano nella riga ma cambiano aspetto.'}
+    ];
+    var i=0, dots=$('#exDots');
+    steps.forEach(function(){ dots.appendChild(document.createElement('span')); });
+    $('#exHtml').innerHTML=hlHtml(html);
+    function render(){
+      var all=[], hl=[];
+      for(var k=1;k<=i;k++){ if(all.length) { all.push(''); hl.push(false); } steps[k].css.forEach(function(l){ all.push(l); hl.push(k===i); }); }
+      $('#exCss').innerHTML = all.length ? all.map(function(l,j){ var h=hlCss(l)||' '; return hl[j]?'<span class="new">'+h+'</span>':h; }).join('\n') : '<span class="cm">/* ancora nessuna regola */</span>';
+      $('#exFrame').srcdoc='<!doctype html><html><head><meta charset="utf-8"><style>'+all.join('\n')+'</style></head><body>'+html+'</body></html>';
+      $('#exCaption').innerHTML=steps[i].cap;
+      $$('span',dots).forEach(function(d,j){ d.classList.toggle('on', j<=i); });
+      $('#exPrev').disabled = i===0; $('#exNext').disabled = i===steps.length-1;
+      $('#exPrev').style.opacity = i===0?.4:1; $('#exNext').style.opacity = i===steps.length-1?.4:1;
+    }
+    $('#exPrev').addEventListener('click', function(){ if(i>0){ i--; render(); } });
+    $('#exNext').addEventListener('click', function(){ if(i<steps.length-1){ i++; render(); } });
+    render();
+  })();
+})();
+</script>
+</body>
+</html>
