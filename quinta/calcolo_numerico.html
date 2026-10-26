@@ -43,6 +43,7 @@ code, .mono{font-family:'IBM Plex Mono',monospace;}
 .bullets{max-width:70ch; padding-left:1.2em; margin:0 0 1.4em;}
 .bullets li{margin-bottom:.4em;}
 .bullets .formula-line{margin:.5em 0 .3em;}
+.bullets .formula-line + .formula-line{margin-top:.6em;}
 .formula-line{font-size:1.1rem;}
 .lim{display:inline-flex; flex-direction:column; align-items:center; vertical-align:middle; line-height:1.15; margin:0 .3em;}
 .lim .lim-sub{font-size:.7em;}
@@ -214,6 +215,30 @@ tbody tr:last-child{background:var(--blue-dim);}
 .resource{border-left:3px solid var(--amber); background:var(--amber-dim); padding:1em 1.3em; margin-bottom:1em;}
 .resource .tag{font-family:'IBM Plex Mono',monospace; font-size:.75rem; color:var(--amber); font-weight:600;}
 
+/* ---- Codice Python (sezione 9) ---- */
+pre.code{background:var(--ink); color:#e8e6df; font-family:'IBM Plex Mono',monospace; font-size:.82rem; line-height:1.55; padding:1.1em 1.3em; overflow-x:auto; margin:1em 0 1.4em; border-left:3px solid var(--blue);}
+pre.code .c{color:#8fb5a8;}
+pre.code .k{color:#8db3ff;}
+pre.code .s{color:#f0c27a;}
+.code-caption{font-family:'IBM Plex Mono',monospace; font-size:.75rem; color:var(--ink-soft); margin:1.4em 0 -.6em;}
+.slice-demo{display:grid; grid-template-columns:auto 1fr; gap:.55em 1em; align-items:center; font-family:'IBM Plex Mono',monospace; font-size:.85rem; margin:1em 0;}
+.slice-row{display:flex; gap:.3em; flex-wrap:wrap;}
+.slice-cell{width:2.6em; height:2em; display:flex; align-items:center; justify-content:center; border:1px solid var(--line); background:#fff; color:#b8b2a2;}
+.slice-cell.on-l{background:var(--blue-dim); border-color:var(--blue); color:var(--ink);}
+.slice-cell.on-r{background:var(--teal-dim); border-color:var(--teal); color:var(--ink);}
+.slice-cell.on-a{background:#fff; border-color:var(--ink); color:var(--ink);}
+.table-scroll{overflow-x:auto; max-width:100%;}
+select{max-width:100%;}
+.table-scroll > table{margin-top:1em;}
+.method-dot{display:inline-block; width:.75em; height:.75em; margin-right:.45em; vertical-align:baseline;}
+table.err-table td.ratio{font-weight:600;}
+table.err-table td.ratio.r2{color:var(--blue);}
+table.err-table td.ratio.r4{color:var(--amber);}
+table.err-table tbody tr:last-child{background:none;}
+#python-integrali .formula-table td{text-align:left;}
+#python-integrali .formula-table td.mono{text-align:right;}
+.teacher-note b{font-weight:600;}
+
 footer{padding:3em 2em; text-align:center; color:var(--ink-soft); font-family:'IBM Plex Mono',monospace; font-size:.8rem;}
 </style>
 </head>
@@ -228,7 +253,8 @@ footer{padding:3em 2em; text-align:center; color:var(--ink-soft); font-family:'I
   <a href="#bisezione"><span class="n">06</span>Zeri di funzione</a>
   <a href="#integrazione"><span class="n">07</span>Integrazione numerica</a>
   <a href="#confronto"><span class="n">08</span>Confronto: 4 metodi</a>
-  <a href="#montecarlo"><span class="n">09</span>Metodo Monte Carlo</a>
+  <a href="#python-integrali"><span class="n">09</span>Rettangoli e trapezi in Python</a>
+  <a href="#montecarlo"><span class="n">10</span>Metodo Monte Carlo</a>
 </nav>
 
 <header class="hero">
@@ -570,10 +596,172 @@ footer{padding:3em 2em; text-align:center; color:var(--ink-soft); font-family:'I
   <div class="teacher-note"><strong>Da notare</strong>A parità di n, l'ordine di precisione tipico è: rettangoli (meno precisi) → trapezi → Cavalieri-Simpson (molto più preciso, perché una parabola segue la curvatura della funzione meglio di una linea retta). Nota anche che per una funzione che cresce sempre (o decresce sempre) su <code>[a, b]</code>, l'errore dei rettangoli a sinistra e a destra ha segno opposto: uno sovrastima, l'altro sottostima — è per questo che il trapezio, che è in un certo senso la loro "media", è già più accurato di entrambi.</div>
 </section>
 
+<section id="python-integrali" class="alt"><div class="inner">
+  <div class="kicker"><span class="num">9</span>Dal confronto al codice<span class="badge extra">Materiale extra · notebook 05</span></div>
+  <h2>Rettangoli e trapezi in Python, passo per passo</h2>
+  <p>Scriviamo noi in Python le tre funzioni che calcolano l'integrale con i rettangoli sinistri, i rettangoli destri e i trapezi, e le confrontiamo su uno stesso esempio. In tutti e tre i casi si divide [a, b] in n sottointervalli di ampiezza h = <span class="frac"><span class="num">b − a</span><span class="den">n</span></span>, con punti x<sub>i</sub> = a + i · h (i = 0, 1, …, n), e si sommano le aree delle figure costruite su ciascun sottointervallo.</p>
+
+  <h3>Riepilogo dei tre metodi</h3>
+  <div class="table-scroll"><table class="formula-table">
+    <thead><tr><th>metodo</th><th>area sopra [x<sub>i</sub>, x<sub>i+1</sub>]</th><th>stima dell'integrale</th></tr></thead>
+    <tbody>
+      <tr><td><span class="method-dot" style="background:#2f6fed"></span>rettangoli sinistri</td><td>h · f(x<sub>i</sub>)</td><td><span class="sigma">Σ<span class="lim-top">n−1</span><span class="lim-bot">i=0</span></span> h · f(x<sub>i</sub>)</td></tr>
+      <tr><td><span class="method-dot" style="background:#1f8f7d"></span>rettangoli destri</td><td>h · f(x<sub>i+1</sub>)</td><td><span class="sigma">Σ<span class="lim-top">n</span><span class="lim-bot">i=1</span></span> h · f(x<sub>i</sub>)</td></tr>
+      <tr><td><span class="method-dot" style="background:#d98c1f"></span>trapezi</td><td><span class="frac"><span class="num">f(x<sub>i</sub>) + f(x<sub>i+1</sub>)</span><span class="den">2</span></span> · h</td><td><span class="sigma">Σ<span class="lim-top">n−1</span><span class="lim-bot">i=0</span></span> <span class="frac"><span class="num">f(x<sub>i</sub>) + f(x<sub>i+1</sub>)</span><span class="den">2</span></span> · h</td></tr>
+    </tbody>
+  </table></div>
+  <ul class="bullets">
+    <li>Se f è <strong>crescente</strong>, i rettangoli sinistri danno una stima per difetto e quelli destri per eccesso (il contrario se è decrescente).</li>
+    <li>L'area di ogni trapezio è la <strong>media</strong> tra il rettangolo sinistro e quello destro, quindi la stima dei trapezi è la media delle due stime con i rettangoli.</li>
+  </ul>
+
+  <h3>Esempio: <span class="sigma">∫<span class="lim-top">5</span><span class="lim-bot">1</span></span> (3x² + 2x + 1) dx</h3>
+  <ul class="bullets">
+    <li>Primitiva: F(x) = x³ + x² + x, quindi il valore esatto è F(5) − F(1) = 155 − 3 = <strong>152</strong>.</li>
+    <li>Con n = 10 i tre metodi danno:</li>
+  </ul>
+  <div class="table-scroll"><table class="formula-table" style="width:auto; min-width:min(100%,420px)">
+    <thead><tr><th>metodo</th><th>stima</th><th>errore</th></tr></thead>
+    <tbody>
+      <tr><td>rettangoli sinistri</td><td class="mono">136.32</td><td class="mono">15.68</td></tr>
+      <tr><td>rettangoli destri</td><td class="mono">168.32</td><td class="mono">16.32</td></tr>
+      <tr><td>trapezi</td><td class="mono">152.32</td><td class="mono">0.32</td></tr>
+    </tbody>
+  </table></div>
+  <p>La funzione è crescente in [1, 5]: i rettangoli sinistri stanno sotto la curva, quelli destri la superano. La media (136.32 + 168.32) / 2 = 152.32 è proprio la stima dei trapezi, che sbaglia di appena 0.32. Puoi ritrovare gli stessi numeri nella sezione 8 scegliendo f(x) = 3x² + 2x + 1 e n = 10.</p>
+
+  <h3>Il codice con NumPy</h3>
+  <p>Invece di costruire le liste con un ciclo <code>for</code>, usiamo la <strong>vettorizzazione</strong> di NumPy, come nel libro (Programma 5): un'operazione scritta una sola volta viene applicata a tutti gli elementi di un array.</p>
+  <ul class="bullets">
+    <li><code>x = np.linspace(a, b, n+1)</code> crea in un colpo solo gli n + 1 punti della suddivisione x<sub>0</sub> = a, x<sub>1</sub>, …, x<sub>n</sub> = b.</li>
+    <li><code>y = f(x)</code> calcola f su <strong>tutti</strong> i punti (per questo dentro <code>f</code> bisogna usare le funzioni di NumPy, ad esempio <code>np.sin</code> e non <code>math.sin</code>).</li>
+    <li>Con lo <strong>slicing</strong> scegliamo quali valori usare: <code>y[:-1]</code> sono tutti tranne l'ultimo (estremi sinistri), <code>y[1:]</code> tutti tranne il primo (estremi destri).</li>
+    <li><code>np.sum(...)</code> somma tutte le aree.</li>
+  </ul>
+
+  <div class="panel">
+    <div style="font-family:'IBM Plex Mono',monospace; font-size:.8rem; color:var(--ink-soft); margin-bottom:.4em">Esempio con n = 4: l'array y ha 5 valori</div>
+    <div class="slice-demo">
+      <span><code>y</code></span>
+      <div class="slice-row"><span class="slice-cell on-a">y0</span><span class="slice-cell on-a">y1</span><span class="slice-cell on-a">y2</span><span class="slice-cell on-a">y3</span><span class="slice-cell on-a">y4</span></div>
+      <span><code>y[:-1]</code></span>
+      <div class="slice-row"><span class="slice-cell on-l">y0</span><span class="slice-cell on-l">y1</span><span class="slice-cell on-l">y2</span><span class="slice-cell on-l">y3</span><span class="slice-cell">y4</span><span style="align-self:center; color:var(--ink-soft); margin-left:.6em">→ altezze dei rettangoli sinistri</span></div>
+      <span><code>y[1:]</code></span>
+      <div class="slice-row"><span class="slice-cell">y0</span><span class="slice-cell on-r">y1</span><span class="slice-cell on-r">y2</span><span class="slice-cell on-r">y3</span><span class="slice-cell on-r">y4</span><span style="align-self:center; color:var(--ink-soft); margin-left:.6em">→ altezze dei rettangoli destri</span></div>
+    </div>
+    <p style="font-size:.9rem; margin:.6em 0 0">Sommando <code>y[:-1] + y[1:]</code> posizione per posizione si ottiene [y0+y1, y1+y2, y2+y3, y3+y4]: sono proprio le coppie di basi dei 4 trapezi.</p>
+  </div>
+
+  <div class="code-caption">le tre funzioni</div>
+<pre class="code"><span class="k">import</span> numpy <span class="k">as</span> np
+
+<span class="k">def</span> rettangoli_sx(a,b,n):
+  h = (b-a)/n
+  x = np.linspace(a, b, n+1)   <span class="c"># tutti i punti della suddivisione: x_0 = a, ..., x_n = b</span>
+  y = f(x)                     <span class="c"># f calcolata su tutti i punti</span>
+  aree = y[:-1] * h            <span class="c"># estremi sinistri: tutti i valori tranne l'ultimo</span>
+  stimaAree = np.sum(aree)
+  <span class="k">return</span> x,y,aree,stimaAree
+
+<span class="k">def</span> rettangoli_dx(a,b,n):
+  h = (b-a)/n
+  x = np.linspace(a, b, n+1)
+  y = f(x)
+  aree = y[1:] * h             <span class="c"># estremi destri: tutti i valori tranne il primo</span>
+  stimaAree = np.sum(aree)
+  <span class="k">return</span> x,y,aree,stimaAree
+
+<span class="k">def</span> trapezi(a,b,n):
+  h = (b-a)/n
+  x = np.linspace(a, b, n+1)
+  y = f(x)
+  aree = (y[:-1] + y[1:]) / 2 * h   <span class="c"># (base sinistra + base destra) / 2 * altezza</span>
+  stimaAree = np.sum(aree)
+  <span class="k">return</span> x,y,aree,stimaAree</pre>
+
+  <div class="code-caption">confronto sull'esempio</div>
+<pre class="code"><span class="k">def</span> f(x):
+  <span class="k">return</span> 3*x**2 + 2*x + 1
+
+a, b, n = 1, 5, 10
+esatto = 152
+<span class="k">for</span> nome, metodo <span class="k">in</span> [(<span class="s">"rettangoli sx"</span>, rettangoli_sx), (<span class="s">"rettangoli dx"</span>, rettangoli_dx), (<span class="s">"trapezi"</span>, trapezi)]:
+  stima = metodo(a,b,n)[3]       <span class="c"># [3] = la stima, quarto valore restituito</span>
+  print(f<span class="s">"{nome:&lt;16} {stima:&gt;12.4f}   errore = {abs(stima - esatto):.4f}"</span>)</pre>
+
+  <div class="teacher-note"><strong>La funzione già pronta</strong>NumPy applica direttamente il metodo dei trapezi con <code>np.trapezoid(y, x)</code> (nelle versioni meno recenti si chiama <code>np.trapz</code>). Con <code>x = np.linspace(1, 5, 11)</code> e <code>y = f(x)</code> restituisce 152.32, lo stesso risultato della nostra funzione <code>trapezi</code>.</div>
+
+  <h3>Quale metodo converge più velocemente?</h3>
+  <p>Raddoppiamo n più volte e guardiamo di quanto si riduce l'errore. Il grafico usa una scala <strong>logaritmica</strong> su entrambi gli assi (in Python si ottiene con <code>plt.loglog</code>): in questa scala una retta indica che l'errore diminuisce come una potenza di n, e più la retta è ripida più il metodo è veloce.</p>
+
+  <div class="panel">
+    <div class="bisec-controls">
+      <select id="convFuncSelect">
+        <option value="g1">f(x) = 3x² + 2x + 1 &nbsp;·&nbsp; [1, 5] &nbsp;(esempio di questa sezione)</option>
+        <option value="g0">f(x) = x / (1 + x²) &nbsp;·&nbsp; [0, 3] &nbsp;(Figura 21)</option>
+        <option value="g2">f(x) = x² − sin(x) &nbsp;·&nbsp; [2, 10]</option>
+        <option value="g3">f(x) = sin(x) &nbsp;·&nbsp; [0, 1]</option>
+      </select>
+    </div>
+    <canvas id="convCanvas" width="900" height="340" style="width:100%; height:auto; border:1px solid var(--line); background:#fff;"></canvas>
+    <div class="pi-readouts" style="margin-top:.6em">
+      <span class="leg"><span class="dot" style="background:#2f6fed"></span>rettangoli sinistri</span>
+      <span class="leg"><span class="dot" style="background:#1f8f7d"></span>rettangoli destri (tratteggiata)</span>
+      <span class="leg"><span class="dot" style="background:#d98c1f"></span>trapezi</span>
+    </div>
+    <div class="table-scroll"><table class="err-table" id="convTable">
+      <thead><tr><th>n</th><th>errore sx</th><th>÷</th><th>errore dx</th><th>÷</th><th>errore trapezi</th><th>÷</th></tr></thead>
+      <tbody></tbody>
+    </table></div>
+    <p style="font-size:.85rem; color:var(--ink-soft); margin:.6em 0 0">Le colonne ÷ indicano di quante volte si è ridotto l'errore rispetto alla riga precedente, cioè raddoppiando n.</p>
+  </div>
+
+  <div class="teacher-note"><strong>Osservazioni</strong>Con i rettangoli (sinistri o destri), quando n raddoppia l'errore circa si <b>dimezza</b> (÷ ≈ 2): l'errore è proporzionale a 1/n. Con i trapezi, quando n raddoppia l'errore diventa circa <b>un quarto</b> (÷ ≈ 4): l'errore è proporzionale a 1/n². Per questo, a parità di calcoli, il metodo dei trapezi è molto più preciso. Nell'esempio di questa sezione l'errore dei trapezi vale esattamente 0.32 · (10/n)²: 0.32 con n = 10, 0.0032 con n = 100, 0.000032 con n = 1000.</div>
+</div></section>
+
 <section id="montecarlo">
-  <div class="kicker"><span class="num">9</span>Quando il caso diventa un algoritmo<span class="badge extra">Materiale extra</span> <span class="badge onbook">π citato a p. 126</span></div>
+  <div class="kicker"><span class="num">10</span>Quando il caso diventa un algoritmo<span class="badge extra">Materiale extra · notebook 06 e 07</span> <span class="badge onbook">π citato a p. 126</span></div>
   <h2>Il metodo Monte Carlo: far "piovere" punti a caso</h2>
-  <p>Il libro nomina il metodo Monte Carlo come alternativa statistica per stimare π (p. 126), rimandando all'Unità A3 senza svolgerlo — i due notebook Colab lo sviluppano concretamente, sia per π sia per un integrale. L'idea è sempre la stessa: generare punti a caso e contare quale frazione cade in una certa regione.</p>
+  <p>I <strong>metodi Monte Carlo</strong> sono una famiglia di metodi del calcolo numerico che si basano su <strong>stime statistiche</strong>. Il libro li nomina come alternativa per stimare π (p. 126), senza svolgerli: qui li usiamo sia per π sia per calcolare un integrale.</p>
+
+  <h3>L'idea: la pioggia non sceglie dove cadere</h3>
+  <ul class="bullets">
+    <li>Immaginiamo una regione R (la "figura" di cui vogliamo l'area) disegnata dentro un'area più grande e semplice, per esempio un quadrato o un rettangolo, di cui conosciamo l'area.</li>
+    <li>Facciamo "piovere" gocce piccolissime in modo <strong>casuale e uniforme</strong> su tutto il quadrato: nessun punto è favorito rispetto agli altri.</li>
+    <li>La probabilità che una goccia cada dentro R è il rapporto tra le due aree:
+      <div class="formula-line">P(goccia in R) = <span class="frac"><span class="num">Area(R)</span><span class="den">Area(quadrato)</span></span></div></li>
+    <li>Se facciamo cadere N gocce e ne contiamo N<sub>R</sub> dentro la regione, per la <strong>legge dei grandi numeri</strong> la frazione <span class="frac"><span class="num">N<sub>R</sub></span><span class="den">N</span></span> si avvicina a quella probabilità quando N cresce. Quindi:
+      <div class="formula-line">Area(R) ≈ Area(quadrato) · <span class="frac"><span class="num">N<sub>R</sub></span><span class="den">N</span></span></div></li>
+  </ul>
+  <p>Tutto il metodo si riduce a tre passi: <strong>generare</strong> N punti casuali, <strong>contare</strong> quanti soddisfano una condizione, <strong>moltiplicare</strong> la frazione ottenuta per l'area nota.</p>
+
+  <h3>1 · Stimare π con un quarto di cerchio</h3>
+  <ul class="bullets">
+    <li>Nel quadrato [−1, 1] × [−1, 1] (lato 2) è inscritto il cerchio di raggio r = 1:
+      <div class="formula-line">A<sub>quadrato</sub> = (2r)² = 4</div>
+      <div class="formula-line">A<sub>cerchio</sub> = π r² = π</div>
+      <div class="formula-line">⇒ &nbsp;<span class="frac"><span class="num">A<sub>cerchio</sub></span><span class="den">A<sub>quadrato</sub></span></span> = <span class="frac"><span class="num">π</span><span class="den">4</span></span></div></li>
+    <li>Basta lavorare nel primo quadrante: punti con x e y in [0, 1]. Il quadratino ha area 1, il quarto di cerchio ha area <span class="frac"><span class="num">π</span><span class="den">4</span></span>, e il rapporto resta <span class="frac"><span class="num">π</span><span class="den">4</span></span>.</li>
+    <li>Un punto (x, y) è <strong>dentro</strong> il cerchio se la sua distanza dall'origine non supera il raggio:
+      <div class="formula-line">x² + y² ≤ 1</div></li>
+    <li>Contando N<sub>dentro</sub> punti su N:
+      <div class="formula-line"><span class="frac"><span class="num">N<sub>dentro</sub></span><span class="den">N</span></span> ≈ <span class="frac"><span class="num">π</span><span class="den">4</span></span></div>
+      <div class="formula-line">⇒ &nbsp;<strong>π ≈ 4 · <span class="frac"><span class="num">N<sub>dentro</sub></span><span class="den">N</span></span></strong></div></li>
+  </ul>
+
+  <div class="code-caption">stima di π</div>
+<pre class="code"><span class="k">import</span> numpy
+
+<span class="k">def</span> pi_iter(N):
+  x = numpy.random.ranf(N)          <span class="c"># N numeri casuali in [0, 1): le ascisse</span>
+  y = numpy.random.ranf(N)          <span class="c"># N numeri casuali in [0, 1): le ordinate</span>
+  dentro = list()
+  <span class="k">for</span> i <span class="k">in</span> range(N):
+    d = x[i]**2 + y[i]**2 &lt;= 1      <span class="c"># d è un booleano: True se il punto è nel cerchio</span>
+    dentro.append(d)
+  stima = 4*sum(dentro)/N           <span class="c"># sum conta i True (True = 1, False = 0)</span>
+  <span class="k">return</span> stima</pre>
+  <p style="font-size:.95rem">Con la libreria standard si può usare <code>random.random()</code>, che genera un numero alla volta e quindi richiede un ciclo; <code>numpy.random.ranf(N)</code> genera invece tutti gli N numeri in un colpo solo.</p>
 
   <div class="panel">
     <div class="bisec-controls">
@@ -591,6 +779,38 @@ footer{padding:3em 2em; text-align:center; color:var(--ink-soft); font-family:'I
     <p style="text-align:center; font-size:.85rem; color:var(--ink-soft); margin:.6em 0 0">4 · (punti verdi dentro al quarto di cerchio) / N ≈ π</p>
   </div>
 
+  <h3>2 · Calcolare un integrale definito</h3>
+  <ul class="bullets">
+    <li>Vogliamo <span class="sigma">∫<span class="lim-top">b</span><span class="lim-bot">a</span></span> f(x) dx con f continua e non negativa in [a, b].</li>
+    <li>Racchiudiamo il grafico in un rettangolo di base [a, b] e altezza M, dove M è il <strong>massimo</strong> di f in [a, b] (se f è crescente M = f(b), se è decrescente M = f(a)):
+      <div class="formula-line">A<sub>rettangolo</sub> = (b − a) · M</div></li>
+    <li>Generiamo N punti con x ∈ [a, b] e y ∈ [0, M]. Un punto è <strong>sotto la curva</strong> se
+      <div class="formula-line">y ≤ f(x)</div></li>
+    <li>La frazione dei punti sotto la curva approssima il rapporto tra l'area cercata e quella del rettangolo:
+      <div class="formula-line"><span class="frac"><span class="num">N<sub>sotto</sub></span><span class="den">N</span></span> ≈ <span class="frac"><span class="num"><span class="sigma">∫<span class="lim-top">b</span><span class="lim-bot">a</span></span> f(x) dx</span><span class="den">(b − a) · M</span></span> &nbsp;&nbsp;⇒&nbsp;&nbsp; <strong><span class="sigma">∫<span class="lim-top">b</span><span class="lim-bot">a</span></span> f(x) dx ≈ (b − a) · M · <span class="frac"><span class="num">N<sub>sotto</sub></span><span class="den">N</span></span></strong></div></li>
+  </ul>
+  <p>Esempio: <span class="sigma">∫<span class="lim-top">5</span><span class="lim-bot">1</span></span> (3x² + 2x + 1) dx = 152. La funzione è crescente, quindi M = f(5) = 86 e il rettangolo ha area (5 − 1) · 86 = 344. Ci aspettiamo che cada sotto la curva circa <span class="frac"><span class="num">152</span><span class="den">344</span></span> ≈ 44% dei punti.</p>
+
+  <div class="code-caption">stima dell'integrale</div>
+<pre class="code"><span class="k">import</span> numpy <span class="k">as</span> np
+N = 10000
+a = 1
+b = 5
+
+<span class="k">def</span> funz(x):
+  <span class="k">return</span> 3*x**2 + 2*x + 1
+
+x = np.random.uniform(a, b, N)           <span class="c"># ascisse casuali in [a, b)</span>
+y = np.random.uniform(0, funz(b), N)     <span class="c"># ordinate casuali in [0, M) con M = f(b)</span>
+
+sotto = list()
+<span class="k">for</span> i <span class="k">in</span> range(N):
+  s = y[i] &lt;= funz(x[i])                 <span class="c"># True se il punto è sotto la curva</span>
+  sotto.append(s)
+
+stima = (b-a) * funz(b) * sum(sotto) / N
+print(stima)</pre>
+
   <div class="panel">
     <div class="bisec-controls">
       <span class="mono">N punti = </span>
@@ -604,10 +824,30 @@ footer{padding:3em 2em; text-align:center; color:var(--ink-soft); font-family:'I
       <span class="leg">Valore esatto</span><span class="val mono">152.00000</span>
       <span class="leg">Errore</span><span class="val mono" id="mcIntErr">–</span>
     </div>
-    <p style="font-size:.85rem; color:var(--ink-soft); margin:.6em 0 0">f(x) = 3x² + 2x + 1 su [1, 5] — stessa funzione ed esempio della sezione 7, ora stimati "facendo piovere" punti invece che con i rettangoli.</p>
+    <p style="font-size:.85rem; color:var(--ink-soft); margin:.6em 0 0">f(x) = 3x² + 2x + 1 su [1, 5]: lo stesso integrale delle sezioni 7–9, ora stimato "facendo piovere" punti invece che con rettangoli e trapezi.</p>
   </div>
 
-  <div class="teacher-note"><strong>Confronto con i rettangoli</strong>Qui non serve conoscere l'andamento della funzione punto per punto come nei rettangoli: basta poter valutare f in punti casuali. È per questo che Monte Carlo funziona bene anche in dimensioni alte, dove i metodi "a griglia" diventano troppo costosi — un'anticipazione utile se in futuro incontrerai il machine learning.</div>
+  <h3>3 · Quanto è preciso?</h3>
+  <ul class="bullets">
+    <li>Il risultato è <strong>casuale</strong>: ripetendo il calcolo con lo stesso N si ottengono stime diverse, che oscillano attorno al valore vero.</li>
+    <li>L'errore tipico diminuisce come <span class="frac"><span class="num">1</span><span class="den"><span class="sqrt">√<span class="rad-inner">N</span></span></span></span>: per <strong>dimezzare</strong> l'errore servono <strong>4 volte</strong> i punti, per guadagnare <strong>una cifra decimale</strong> (errore diviso 10) ne servono <strong>100 volte</strong> tanti.</li>
+    <li>Per misurare la qualità della stima usiamo l'errore assoluto e quello relativo:
+      <div class="formula-line">e = |stima − valore vero| &nbsp;&nbsp;&nbsp; e<sub>rel</sub> = <span class="frac"><span class="num">|stima − valore vero|</span><span class="den">|valore vero|</span></span></div></li>
+  </ul>
+
+  <div class="panel">
+    <div class="bisec-controls">
+      <button id="mcConvBtn">Ripeti l'esperimento</button>
+      <span style="font-size:.9rem; color:var(--ink-soft)">Stima di π con N sempre più grande (ogni riga usa 10 volte i punti della precedente)</span>
+    </div>
+    <div class="table-scroll"><table class="err-table" id="mcConvTable">
+      <thead><tr><th>N</th><th>stima di π</th><th>errore</th><th>errore relativo</th><th>1/√N</th></tr></thead>
+      <tbody></tbody>
+    </table></div>
+    <p style="font-size:.85rem; color:var(--ink-soft); margin:.6em 0 0">Moltiplicando N per 10 l'errore si riduce in media di circa √10 ≈ 3.2 volte. Ripeti l'esperimento più volte: le singole righe possono "fortunatamente" uscire più precise o meno, ma l'ordine di grandezza dell'errore segue la colonna 1/√N.</p>
+  </div>
+
+  <div class="teacher-note"><strong>Confronto con rettangoli e trapezi</strong>In una dimensione Monte Carlo è molto meno efficiente dei trapezi: con 10 000 punti sbaglia in media ancora di 1–2 unità su 152, mentre i trapezi con 1 000 sottointervalli sbagliano di appena 0.00003. Il vantaggio è altrove: serve solo poter valutare f in punti casuali, e la velocità di convergenza 1/√N <b>non dipende dal numero di dimensioni</b>. Per questo Monte Carlo diventa il metodo preferito per integrali in molte dimensioni, dove i metodi "a griglia" diventano troppo costosi: un'anticipazione utile se in futuro incontrerai il machine learning.</div>
 </section>
 
 <footer>Materiale didattico basato su "Hashtag 3", Modulo B, Unità B1 — Calcolo numerico e algebra lineare · Realizzato con l'assistenza di Claude (Anthropic)</footer>
@@ -1354,6 +1594,112 @@ footer{padding:3em 2em; text-align:center; color:var(--ink-soft); font-family:'I
   update();
 })();
 
+/* ---------- Sezione 9: convergenza di rettangoli e trapezi ---------- */
+(function(){
+  const funcs = {
+    g0:{fn:x=>x/(1+x*x), a:0, b:3, exact:Math.log(10)/2},
+    g1:{fn:x=>3*x*x+2*x+1, a:1, b:5, exact:152},
+    g2:{fn:x=>x*x-Math.sin(x), a:2, b:10, exact:(1000/3+Math.cos(10))-(8/3+Math.cos(2))},
+    g3:{fn:x=>Math.sin(x), a:0, b:1, exact:1-Math.cos(1)}
+  };
+  const NS = [4, 8, 16, 32, 64, 128, 256, 512, 1024];
+  const COLORS = {sx:'#2f6fed', dx:'#1f8f7d', tr:'#d98c1f'};
+  const select = document.getElementById('convFuncSelect');
+  const canvas = document.getElementById('convCanvas');
+  const tbody = document.querySelector('#convTable tbody');
+  if(!select || !canvas || !tbody) return;
+
+  function stime(def, n){
+    const h = (def.b-def.a)/n;
+    let sx=0, dx=0;
+    for(let i=0;i<n;i++){
+      sx += def.fn(def.a+i*h)*h;
+      dx += def.fn(def.a+(i+1)*h)*h;
+    }
+    return {sx:sx, dx:dx, tr:(sx+dx)/2};
+  }
+
+  function update(){
+    const def = funcs[select.value];
+    const rows = NS.map(n=>{
+      const s = stime(def, n);
+      return {n:n, sx:Math.abs(s.sx-def.exact), dx:Math.abs(s.dx-def.exact), tr:Math.abs(s.tr-def.exact)};
+    });
+
+    // ---- grafico log-log
+    const ctx = canvas.getContext('2d');
+    const w=canvas.width, h=canvas.height, padL=70, padR=20, padT=20, padB=42;
+    ctx.clearRect(0,0,w,h);
+    let eMin=Infinity, eMax=0;
+    rows.forEach(r=>['sx','dx','tr'].forEach(k=>{ if(r[k]>0){ eMin=Math.min(eMin,r[k]); eMax=Math.max(eMax,r[k]); } }));
+    const lyMin=Math.floor(Math.log10(eMin)), lyMax=Math.ceil(Math.log10(eMax));
+    const lxMin=Math.log2(NS[0]), lxMax=Math.log2(NS[NS.length-1]);
+    const X = n => padL + (Math.log2(n)-lxMin)/(lxMax-lxMin)*(w-padL-padR);
+    const Y = e => padT + (1-(Math.log10(e)-lyMin)/(lyMax-lyMin))*(h-padT-padB);
+
+    ctx.font = "13px 'IBM Plex Mono', monospace";
+    ctx.fillStyle = '#4a5468';
+    ctx.strokeStyle = '#e5e1d4'; ctx.lineWidth = 1;
+    ctx.textAlign = 'right'; ctx.textBaseline = 'middle';
+    for(let p=lyMin;p<=lyMax;p++){
+      const y = Y(Math.pow(10,p));
+      ctx.beginPath(); ctx.moveTo(padL,y); ctx.lineTo(w-padR,y); ctx.stroke();
+      ctx.fillText('1e'+p, padL-8, y);
+    }
+    ctx.textAlign = 'center'; ctx.textBaseline = 'top';
+    NS.forEach(n=>{
+      const x = X(n);
+      ctx.beginPath(); ctx.moveTo(x,padT); ctx.lineTo(x,h-padB); ctx.stroke();
+      ctx.fillText(String(n), x, h-padB+6);
+    });
+    ctx.fillText('n (numero di sottointervalli)', (padL+w-padR)/2, h-18);
+    ctx.save(); ctx.translate(16, (padT+h-padB)/2); ctx.rotate(-Math.PI/2);
+    ctx.textBaseline = 'middle'; ctx.fillText('errore', 0, 0); ctx.restore();
+
+    ['sx','dx','tr'].forEach(k=>{
+      ctx.strokeStyle = COLORS[k]; ctx.fillStyle = COLORS[k]; ctx.lineWidth = k==='dx' ? 2 : 3;
+      ctx.setLineDash(k==='dx' ? [7,5] : []);   // dx tratteggiata: spesso si sovrappone a sx
+      ctx.beginPath();
+      let started=false;
+      rows.forEach(r=>{
+        if(r[k]<=0) return;
+        const x=X(r.n), y=Y(r[k]);
+        if(!started){ ctx.moveTo(x,y); started=true; } else ctx.lineTo(x,y);
+      });
+      ctx.stroke();
+      ctx.setLineDash([]);
+      rows.forEach(r=>{
+        if(r[k]<=0) return;
+        ctx.beginPath(); ctx.arc(X(r.n), Y(r[k]), k==='dx' ? 3 : 4.5, 0, 2*Math.PI); ctx.fill();
+      });
+    });
+
+    // ---- tabella
+    const fmt = e => e.toExponential(3);
+    const ratio = (cur, prev) => {
+      if(!prev || cur<=0) return {txt:'–', cls:''};
+      const q = prev/cur;
+      const cls = Math.abs(q-2)<0.35 ? 'r2' : (Math.abs(q-4)<0.6 ? 'r4' : '');
+      return {txt:q.toFixed(2), cls:cls};
+    };
+    tbody.innerHTML = '';
+    rows.forEach((r,i)=>{
+      const p = i>0 ? rows[i-1] : null;
+      const tr = document.createElement('tr');
+      const cells = [[String(r.n),'']];
+      ['sx','dx','tr'].forEach(k=>{
+        cells.push([fmt(r[k]),'']);
+        const q = ratio(r[k], p ? p[k] : null);
+        cells.push([q.txt, 'ratio '+q.cls]);
+      });
+      cells.forEach(c=>{ const td=document.createElement('td'); td.textContent=c[0]; if(c[1]) td.className=c[1]; tr.appendChild(td); });
+      tbody.appendChild(tr);
+    });
+  }
+  select.addEventListener('change', update);
+  update();
+})();
+
 /* ---------- Monte Carlo: stima di pi ---------- */
 (function(){
   const slider = document.getElementById('mcPiSlider');
@@ -1373,7 +1719,7 @@ footer{padding:3em 2em; text-align:center; color:var(--ink-soft); font-family:'I
 
     ctx.strokeStyle='#15213b'; ctx.strokeRect(pad,pad,w-2*pad,h-2*pad);
     ctx.strokeStyle='#c4432c'; ctx.lineWidth=1.5; ctx.beginPath();
-    ctx.arc(toPx(0), h-toPx(0), (w-2*pad), Math.PI, 1.5*Math.PI);
+    ctx.arc(toPx(0), h-toPx(0), (w-2*pad), 1.5*Math.PI, 2*Math.PI);  // da (0,1) a (1,0): primo quadrante
     ctx.stroke();
 
     let dentro = 0;
@@ -1439,6 +1785,28 @@ footer{padding:3em 2em; text-align:center; color:var(--ink-soft); font-family:'I
     errEl.textContent = Math.abs(stima-exact).toExponential(2);
   }
   slider.addEventListener('input', run);
+  btn.addEventListener('click', run);
+  run();
+})();
+
+/* ---------- Monte Carlo: errore al crescere di N ---------- */
+(function(){
+  const btn = document.getElementById('mcConvBtn');
+  const tbody = document.querySelector('#mcConvTable tbody');
+  if(!btn || !tbody) return;
+  const NS = [100, 1000, 10000, 100000, 1000000];
+  function run(){
+    tbody.innerHTML = '';
+    NS.forEach(N=>{
+      let dentro = 0;
+      for(let i=0;i<N;i++){ const x=Math.random(), y=Math.random(); if(x*x+y*y<=1) dentro++; }
+      const stima = 4*dentro/N, err = Math.abs(stima-Math.PI);
+      const tr = document.createElement('tr');
+      [N.toLocaleString('it-IT'), stima.toFixed(6), err.toExponential(2), (err/Math.PI*100).toFixed(4)+' %', (1/Math.sqrt(N)).toExponential(2)]
+        .forEach(t=>{ const td=document.createElement('td'); td.textContent=t; tr.appendChild(td); });
+      tbody.appendChild(tr);
+    });
+  }
   btn.addEventListener('click', run);
   run();
 })();
