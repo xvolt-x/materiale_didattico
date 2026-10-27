@@ -34,6 +34,7 @@ body{
 code, .mono{font-family:'IBM Plex Mono',monospace;}
 .sqrt{white-space:nowrap;}
 .sqrt .rad-inner{border-top:1.5px solid currentColor; padding:0 .12em 0 .04em;}
+.frac .den .sqrt .rad-inner{display:inline-block; line-height:1.05; margin-top:.3em; padding-top:.05em;}
 .frac{display:inline-flex; flex-direction:column; vertical-align:middle; text-align:center; font-size:.85em; line-height:1.15em; margin:0 .1em; position:relative; top:.05em;}
 .frac .num{border-bottom:1.3px solid currentColor; padding:0 .2em;}
 .frac .den{padding:0 .2em;}
@@ -841,13 +842,13 @@ print(stima)</pre>
       <span style="font-size:.9rem; color:var(--ink-soft)">Stima di π con N sempre più grande (ogni riga usa 10 volte i punti della precedente)</span>
     </div>
     <div class="table-scroll"><table class="err-table" id="mcConvTable">
-      <thead><tr><th>N</th><th>stima di π</th><th>errore</th><th>errore relativo</th><th>1/√N</th></tr></thead>
+      <thead><tr><th>N</th><th>stima di π</th><th>errore</th><th>errore relativo</th><th>1/<span class="sqrt">√<span class="rad-inner">N</span></span></th></tr></thead>
       <tbody></tbody>
     </table></div>
-    <p style="font-size:.85rem; color:var(--ink-soft); margin:.6em 0 0">Moltiplicando N per 10 l'errore si riduce in media di circa √10 ≈ 3.2 volte. Ripeti l'esperimento più volte: le singole righe possono "fortunatamente" uscire più precise o meno, ma l'ordine di grandezza dell'errore segue la colonna 1/√N.</p>
+    <p style="font-size:.85rem; color:var(--ink-soft); margin:.6em 0 0">Moltiplicando N per 10 l'errore si riduce in media di circa <span class="sqrt">√<span class="rad-inner">10</span></span> ≈ 3.2 volte. Ripeti l'esperimento più volte: le singole righe possono "fortunatamente" uscire più precise o meno, ma l'ordine di grandezza dell'errore segue la colonna 1/<span class="sqrt">√<span class="rad-inner">N</span></span>.</p>
   </div>
 
-  <div class="teacher-note"><strong>Confronto con rettangoli e trapezi</strong>In una dimensione Monte Carlo è molto meno efficiente dei trapezi: con 10 000 punti sbaglia in media ancora di 1–2 unità su 152, mentre i trapezi con 1 000 sottointervalli sbagliano di appena 0.00003. Il vantaggio è altrove: serve solo poter valutare f in punti casuali, e la velocità di convergenza 1/√N <b>non dipende dal numero di dimensioni</b>. Per questo Monte Carlo diventa il metodo preferito per integrali in molte dimensioni, dove i metodi "a griglia" diventano troppo costosi: un'anticipazione utile se in futuro incontrerai il machine learning.</div>
+  <div class="teacher-note"><strong>Confronto con rettangoli e trapezi</strong>In una dimensione Monte Carlo è molto meno efficiente dei trapezi: con 10 000 punti sbaglia in media ancora di 1–2 unità su 152, mentre i trapezi con 1 000 sottointervalli sbagliano di appena 0.00003. Il vantaggio è altrove: serve solo poter valutare f in punti casuali, e la velocità di convergenza 1/<span class="sqrt">√<span class="rad-inner">N</span></span> <b>non dipende dal numero di dimensioni</b>. Per questo Monte Carlo diventa il metodo preferito per integrali in molte dimensioni, dove i metodi "a griglia" diventano troppo costosi: un'anticipazione utile se in futuro incontrerai il machine learning.</div>
 </section>
 
 <footer>Materiale didattico basato su "Hashtag 3", Modulo B, Unità B1 — Calcolo numerico e algebra lineare · Realizzato con l'assistenza di Claude (Anthropic)</footer>
