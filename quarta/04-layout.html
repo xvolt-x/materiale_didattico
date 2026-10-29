@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Tre layout pronti da modificare, copiare e scaricare: pagina a blocchi, menu laterale, schede affiancate">
+  <title>Esempi di layout</title>
+  <!-- Tema comune a tutte le pagine del corso -->
+  <link rel="stylesheet" href="style.css">
+  <style>
+  /* =========================================================
+     Stili specifici di QUESTA pagina (laboratorio dei layout).
+     Il tema comune è in style.css.
+     ========================================================= */
+  .skip{ position:absolute; left:-9999px; top:8px; z-index:70; background:var(--signal); color:#fff; padding:8px 14px; border-radius:6px; font-size:13px; }
+  .skip:focus{ left:12px; }
+  .hero{ min-height:auto; padding-bottom:40px; }
+  .hero .page-ref, .hero .tags{ align-self:flex-start; }
+  .hero h1{ max-width:18ch; }
+  section.lab-sec{ padding-top:40px; }
+
+  /* scelta del layout */
+  .layout-pick{ display:grid; grid-template-columns:repeat(3,1fr); gap:14px; margin-top:28px; }
+  @media (max-width:760px){ .layout-pick{ grid-template-columns:1fr; } }
+  .pick{ text-align:left; font:inherit; color:inherit; cursor:pointer; padding:18px 20px; transition:border-color .2s, box-shadow .2s; }
+  .pick:hover{ border-color:var(--signal); }
+  .pick.on{ border-color:var(--signal); box-shadow:0 0 0 3px var(--signal-soft), var(--shadow); }
+  .pick .n{ font-family:var(--font-mono); font-size:13px; font-weight:600; color:var(--signal); }
+  .pick h4{ margin:4px 0 6px; font-family:var(--font-title); font-size:18px; font-weight:600; }
+  .pick p{ margin:0; font-size:14px; color:var(--text-dim); }
+  .pick .mini{ height:54px; margin-bottom:12px; border:1px solid var(--line); border-radius:6px; background:#fff; display:grid; gap:3px; padding:4px; }
+  .pick .mini i{ display:block; border-radius:2px; background:var(--panel-2); }
+  .mini.blocchi{ grid-template-rows:12px 6px 1fr 6px; }
+  .mini.blocchi i:nth-child(1){ background:#0b6e4f; } .mini.blocchi i:nth-child(4){ background:#201e1b; }
+  .mini.laterale{ grid-template-columns:28% 1fr; }
+  .mini.laterale i:nth-child(1){ background:#e4eaf6; }
+  .mini.schede{ grid-template-columns:repeat(3,1fr); align-items:center; padding:10px 6px; background:#f6f3ec; }
+  .mini.schede i{ height:100%; background:#fff; border:1px solid #d8d1c2; }
+
+  /* laboratorio */
+  .lab{ display:grid; grid-template-columns:1fr 1fr; gap:22px; margin-top:26px; align-items:start; }
+  .lab > *{ min-width:0; }
+  @media (max-width:960px){ .lab{ grid-template-columns:1fr; } }
+  .lab .file-label{ align-items:center; }
+  .lab .file-label + textarea{ margin-bottom:16px; }
+  .lab .acts{ display:flex; gap:6px; }
+  .btn.small{ font-size:12.5px; padding:5px 10px; text-transform:none; letter-spacing:0; }
+  .lab textarea{ width:100%; display:block; resize:vertical; font-family:var(--font-mono); font-size:13px; line-height:1.65; color:#E2E8F0; background:var(--code-bg); border:1px solid #1E293B; border-radius:10px; padding:14px 16px; tab-size:2; caret-color:#93C5FD; }
+  .lab textarea:focus{ outline:none; border-color:var(--signal); box-shadow:0 0 0 3px rgba(29,78,216,.25); }
+  .lab .browser iframe{ width:100%; height:520px; border:0; display:block; background:#fff; }
+  .lab .hint{ font-size:13.5px; color:var(--text-dim); margin:10px 0 0; }
+  </style>
+</head>
+<body>
+
+<a class="skip" href="#laboratorio">Vai al contenuto</a>
+<header class="topbar">
+  <div class="topbar-in">
+    <details class="pagesel">
+      <summary title="Cambia pagina"><b>04</b> Esempi di layout</summary>
+      <nav class="pagesel-menu" aria-label="Pagine del corso">
+        <a href="01-web.html"><b>01</b>Internet e Web</a>
+        <a href="02-html.html"><b>02</b>HTML</a>
+        <a href="03-css.html"><b>03</b>CSS</a>
+        <a href="04-layout.html" class="current" aria-current="page"><b>04</b>Esempi di layout</a>
+        <a href="05-form.html"><b>05</b>Form</a>
+        <a href="index.html" class="to-index">← Tutte le pagine (indice)</a>
+      </nav>
+    </details>
+    <nav class="links" id="topLinks" aria-label="Sezioni">
+      <a href="#laboratorio">Personalizza layout</a><a href="03-css.html#proprieta">Proprietà CSS</a>
+    </nav>
+    <a class="back" href="index.html">← Indice</a>
+  </div>
+</header>
+
+<!-- HERO -->
+<section class="hero" id="hero">
+  <h1>Tre layout da copiare e personalizzare.</h1>
+  <p class="page-ref hero-ref">Esempi di layout</p>
+  <p class="lede">Scegli un layout, cambia colori, spazi e bordi nel CSS e guarda subito il risultato. Quando ti piace, copia il codice o scarica i file e usali nel tuo sito.</p>
+  <div class="tags"><span>div</span><span>classi</span><span>box model</span><span>display: flex</span></div>
+</section>
+
+<!-- LABORATORIO -->
+<section class="lab-sec" id="laboratorio">
+  <span class="sec-num">01 · Personalizza layout</span>
+  <h2>Scegli un layout, modificalo, scaricalo</h2>
+  <p class="lede">Il codice qui sotto si può modificare: l'anteprima si aggiorna mentre scrivi. Se vuoi ripassare le proprietà, le trovi nella <a href="03-css.html#proprieta">tabella delle proprietà CSS →</a></p>
+
+  <div class="layout-pick" id="picks">
+    <button class="panel pick" data-i="0" type="button"><div class="mini blocchi"><i></i><i></i><i></i><i></i></div><span class="n">01</span><h4>Pagina a blocchi</h4><p>Intestazione, menu, contenuto e piè di pagina, uno sotto l'altro.</p></button>
+    <button class="panel pick" data-i="1" type="button"><div class="mini laterale"><i></i><i></i></div><span class="n">02</span><h4>Menu laterale</h4><p>Il menu resta a sinistra, accanto al contenuto (<code>display: flex</code>).</p></button>
+    <button class="panel pick" data-i="2" type="button"><div class="mini schede"><i></i><i></i><i></i></div><span class="n">03</span><h4>Schede affiancate</h4><p>Tre riquadri uno accanto all'altro, ad esempio per i tuoi progetti.</p></button>
+  </div>
+
+  <div class="lab">
+    <div>
+      <p class="file-label"><span>index.html <em>modificabile</em></span><span class="acts"><button class="btn small" data-copy="html" type="button">Copia</button><button class="btn small primary" data-dl="html" type="button">Scarica index.html</button></span></p>
+      <textarea id="html" rows="14" spellcheck="false" aria-label="Codice HTML"></textarea>
+      <p class="file-label"><span>style.css <em>modificabile</em></span><span class="acts"><button class="btn small" data-copy="css" type="button">Copia</button><button class="btn small primary" data-dl="css" type="button">Scarica style.css</button></span></p>
+      <textarea id="css" rows="18" spellcheck="false" aria-label="Codice CSS"></textarea>
+    </div>
+    <div>
+      <div class="browser">
+        <div class="bar"><span class="dotb"></span><span class="dotb"></span><span class="dotb"></span><span class="addr" id="addr">index.html</span></div>
+        <iframe id="frame" sandbox="" title="Anteprima del layout"></iframe>
+      </div>
+      <div class="toggle-row"><button class="btn" id="reset" type="button">↺ Ripristina il layout originale</button></div>
+      <p class="hint">Salva i due file scaricati nella <b>stessa cartella</b>: <code>index.html</code> richiama <code>style.css</code> con il tag <code>&lt;link&gt;</code>.</p>
+    </div>
+  </div>
+</section>
+
+<nav class="prevnext" aria-label="Pagina precedente e successiva"><a class="prev" href="03-css.html"><span>← Pagina precedente</span><b>03 · CSS</b></a><a class="next" href="05-form.html"><span>Pagina successiva →</span><b>05 · Form</b></a></nav>
+
+<footer><a class="btn" href="index.html" style="margin-bottom:18px">← Torna all'indice</a><br>Materiale didattico basato su "Hashtag 2", Modulo B, Linguaggi per il web · Realizzato con l'assistenza di Claude (Anthropic)</footer>
+
+<script>
+(function(){
+  "use strict";
+  var L = [
+    {
+      name: 'Pagina a blocchi',
+      html: '<div class="intestazione">\n  <h1>Il mio sito</h1>\n  <p>Una frase che descrive il sito</p>\n</div>\n\n<div class="menu">\n  <a class="voce" href="#">Home</a>\n  <a class="voce" href="#">Chi sono</a>\n  <a class="voce" href="#">Contatti</a>\n</div>\n\n<div class="contenuto">\n  <h2>Benvenuti</h2>\n  <p>Qui scrivi il testo della pagina.</p>\n  <p class="evidenziato">Un paragrafo importante.</p>\n</div>\n\n<div class="piede">© Il mio sito</div>',
+      css: 'body {\n  margin: 0;\n  color: #201e1b;\n  background-color: #ffffff;\n}\n\n.intestazione {\n  background-color: #0b6e4f;\n  color: #ffffff;\n  text-align: center;\n  padding: 30px;\n}\n\n.menu {\n  background-color: #e4f0ea;\n  text-align: center;\n  padding: 10px;\n}\n\n.voce {\n  display: inline-block;\n  margin: 5px 12px;\n  font-weight: bold;\n}\n\n.contenuto {\n  margin: 20px;\n  padding: 20px;\n}\n\n.evidenziato {\n  background-color: #fbf0ce;\n  border-left: 5px solid #e2a400;\n  padding: 10px;\n}\n\n.piede {\n  background-color: #201e1b;\n  color: #ffffff;\n  text-align: center;\n  font-size: 14px;\n  padding: 15px;\n}'
+    },
+    {
+      name: 'Menu laterale',
+      html: '<div class="pagina">\n\n  <div class="laterale">\n    <h3 class="titolo">Menu</h3>\n    <a class="voce" href="#">Home</a>\n    <a class="voce" href="#">Progetti</a>\n    <a class="voce" href="#">Contatti</a>\n  </div>\n\n  <div class="principale">\n    <h2 class="titolo">Titolo della pagina</h2>\n    <p>Qui scrivi il testo della pagina. Il menu resta sempre a sinistra, accanto al contenuto.</p>\n    <p>Puoi aggiungere quanti paragrafi vuoi.</p>\n  </div>\n\n</div>',
+      css: 'body {\n  margin: 0;\n  color: #201e1b;\n}\n\n.pagina {\n  display: flex;\n}\n\n.laterale {\n  width: 180px;\n  background-color: #e4eaf6;\n  padding: 20px;\n}\n\n.voce {\n  display: block;\n  margin: 10px 0;\n  font-weight: bold;\n}\n\n.principale {\n  margin: 10px;\n  padding: 20px;\n}\n\n.titolo {\n  color: #2451a3;\n  text-transform: uppercase;\n}'
+    },
+    {
+      name: 'Schede affiancate',
+      html: '<h1 class="titolo-pagina">I miei progetti</h1>\n\n<div class="riga">\n\n  <div class="scheda">\n    <div class="scheda-titolo">Progetto 1</div>\n    <p>Breve descrizione del progetto.</p>\n    <span class="etichetta">HTML</span>\n  </div>\n\n  <div class="scheda">\n    <div class="scheda-titolo">Progetto 2</div>\n    <p>Breve descrizione del progetto.</p>\n    <span class="etichetta">CSS</span>\n  </div>\n\n  <div class="scheda">\n    <div class="scheda-titolo">Progetto 3</div>\n    <p>Breve descrizione del progetto.</p>\n    <span class="etichetta">GitHub</span>\n  </div>\n\n</div>',
+      css: 'body {\n  margin: 0;\n  padding: 20px;\n  color: #201e1b;\n  background-color: #f6f3ec;\n}\n\n.titolo-pagina {\n  color: #0b6e4f;\n  text-align: center;\n}\n\n.riga {\n  display: flex;\n}\n\n.scheda {\n  width: 30%;\n  margin: 10px;\n  padding: 15px;\n  background-color: #ffffff;\n  border: 1px solid #d8d1c2;\n  border-radius: 10px;\n}\n\n.scheda-titolo {\n  color: #b7402f;\n  font-weight: bold;\n  text-transform: uppercase;\n}\n\n.etichetta {\n  background-color: #0b6e4f;\n  color: #ffffff;\n  font-size: 12px;\n  padding: 2px 8px;\n  border-radius: 10px;\n}'
+    }
+  ];
+
+  var cur = 0, h = document.getElementById('html'), c = document.getElementById('css'), f = document.getElementById('frame'), t;
+  var picks = Array.prototype.slice.call(document.querySelectorAll('#picks .pick'));
+
+  function update(){ f.srcdoc = '<!DOCTYPE html><html><head><meta charset="utf-8"><style>' + c.value + '</style></head><body>' + h.value + '</body></html>'; }
+  function later(){ clearTimeout(t); t = setTimeout(update, 150); }
+  function load(i){
+    cur = i;
+    h.value = L[i].html; c.value = L[i].css;
+    picks.forEach(function(b, k){ b.classList.toggle('on', k === i); b.setAttribute('aria-pressed', String(k === i)); });
+    update();
+  }
+  picks.forEach(function(b){ b.addEventListener('click', function(){ load(+b.getAttribute('data-i')); }); });
+  h.addEventListener('input', later); c.addEventListener('input', later);
+  document.getElementById('reset').addEventListener('click', function(){ load(cur); });
+
+  function page(){
+    return '<!DOCTYPE html>\n<html lang="it">\n<head>\n  <meta charset="utf-8">\n  <title>Il mio sito</title>\n  <link rel="stylesheet" href="style.css">\n</head>\n<body>\n' + h.value + '\n</body>\n</html>\n';
+  }
+  function save(name, text){
+    var a = document.createElement('a');
+    a.href = URL.createObjectURL(new Blob([text], { type: 'text/plain;charset=utf-8' }));
+    a.download = name; document.body.appendChild(a); a.click(); a.remove();
+  }
+  Array.prototype.forEach.call(document.querySelectorAll('[data-dl]'), function(b){
+    b.addEventListener('click', function(){ b.getAttribute('data-dl') === 'html' ? save('index.html', page()) : save('style.css', c.value); });
+  });
+  Array.prototype.forEach.call(document.querySelectorAll('[data-copy]'), function(b){
+    b.addEventListener('click', function(){
+      var txt = b.getAttribute('data-copy') === 'html' ? h.value : c.value, old = b.textContent;
+      (navigator.clipboard ? navigator.clipboard.writeText(txt) : Promise.reject()).then(function(){ b.textContent = 'Copiato ✓'; }, function(){ b.textContent = 'Non riuscito'; });
+      setTimeout(function(){ b.textContent = old; }, 1500);
+    });
+  });
+  load(0);
+})();
+</script>
+
+<script>
+/* menu delle pagine: si chiude cliccando fuori o con Esc */
+(function(){
+  var d = document.querySelector('.pagesel'); if(!d) return;
+  document.addEventListener('click', function(e){ if(d.open && !d.contains(e.target)) d.open = false; });
+  document.addEventListener('keydown', function(e){ if(e.key === 'Escape' && d.open){ d.open = false; d.querySelector('summary').focus(); } });
+})();
+</script>
+</body>
+</html>

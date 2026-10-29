@@ -4,51 +4,37 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Dentro a una pagina: il linguaggio HTML</title>
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Source+Serif+4:opsz,wght@8..60,400..700&family=IBM+Plex+Sans:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap">
+  <!-- Tema comune a tutte le pagine del corso -->
+  <link rel="stylesheet" href="style.css">
 <style>
-  :root{
-    --bg:#FBF9F3;
-    --ink:#14213D;
-    --panel:#FFFFFF;
-    --panel-2:#F1ECDD;
-    --paper:#FFFFFF;
-    --line:#CBBFA0;
-    --line-soft:#E7DFC8;
-    --text:#1B2333;
-    --text-dim:#5D6472;
-    --signal:#8F5A0C;
-    --signal-soft:#E9D3AC;
-    --alert:#B23327;
-    --ok:#1F7A52;
-    --font-display:'Source Serif 4', Georgia, serif;
-    --font-body:'IBM Plex Sans', Arial, sans-serif;
-    --font-mono:'IBM Plex Mono', 'Courier New', monospace;
-  }
-  @media (prefers-color-scheme: dark){ :root{ --bg:#FBF9F3; --panel:#FFFFFF; } }
-  :root[data-theme="dark"]{ --bg:#FBF9F3; --panel:#FFFFFF; }
+  /* =========================================================
+     Stili specifici di QUESTA pagina (parti interattive).
+     Il tema comune (colori, caratteri, titoli, pulsanti,
+     riquadri, codice, barra in alto) è in style.css.
+     ========================================================= */
+  :root{ --ink:var(--text); --paper:#FFFFFF; --font-display:var(--font-title); }
+  .skip{ position:absolute; left:-9999px; top:8px; z-index:70; background:var(--signal); color:#fff; padding:8px 14px; border-radius:6px; font-size:13px; }
+  .skip:focus{ left:12px; }
+  .browser .bar{ font-family:var(--font-mono); font-size:12px; color:var(--text-dim); }
+  .hero .page-ref, .hero .tags{ align-self:flex-start; }
+  .btn:disabled{ opacity:.55; cursor:default; }
+  .btn:disabled:hover{ border-color:var(--line); color:var(--text); }
+  .btn.primary:disabled:hover{ background:var(--signal); color:#fff; }
 
-  *{ box-sizing:border-box; }
-  html{ scroll-behavior:smooth; }
-  body{ margin:0; background:var(--bg); color:var(--text); font-family:var(--font-body); line-height:1.5; -webkit-font-smoothing:antialiased; }
-  a{ color:inherit; }
-  ::selection{ background:var(--signal); color:var(--bg); }
+  /* nelle anteprime del browser i titoli restano "normali" */
+  .browser .stage h1, .browser .stage h2, .browser .stage h3, .browser .stage h4{ font-family:Georgia, serif; border:none; padding:0; letter-spacing:normal; }
+  .browser .stage h2::after{ display:none; }
 
-  .bg-grid{
-    position:fixed; inset:0; z-index:0; pointer-events:none;
-    background-image:linear-gradient(var(--line-soft) 1px, transparent 1px), linear-gradient(90deg, var(--line-soft) 1px, transparent 1px);
-    background-size:56px 56px; opacity:.6;
-    -webkit-mask-image:radial-gradient(ellipse 90% 70% at 50% 10%, #000 40%, transparent 85%);
-            mask-image:radial-gradient(ellipse 90% 70% at 50% 10%, #000 40%, transparent 85%);
-  }
+  /* navigazione a puntini sulla destra */
+  nav.wire-nav{ position:fixed; right:26px; top:50%; transform:translateY(-50%); z-index:50; display:flex; flex-direction:column; align-items:center; }
+  nav.wire-nav .seg{ width:1px; height:20px; background:var(--line); }
+  nav.wire-nav button{ appearance:none; border:none; background:none; padding:7px 0; margin:0; cursor:pointer; display:block; position:relative; }
+  nav.wire-nav button .dot{ width:9px; height:9px; border-radius:50%; border:1.5px solid var(--text-dim); display:block; transition:background .25s, border-color .25s, transform .25s; }
+  nav.wire-nav button.active .dot{ background:var(--signal); border-color:var(--signal); transform:scale(1.35); }
+  nav.wire-nav button .label{ position:absolute; right:22px; top:50%; transform:translateY(-50%); font-size:12px; color:var(--text); background:var(--panel); border:1px solid var(--line); box-shadow:var(--shadow); padding:5px 10px; border-radius:6px; white-space:nowrap; opacity:0; pointer-events:none; transition:opacity .15s; }
+  nav.wire-nav button:hover .label{ opacity:1; }
+  @media (max-width:860px){ nav.wire-nav{ display:none; } }
 
-  section{ position:relative; z-index:1; padding:150px 8vw 110px; max-width:1180px; margin:0 auto; }
-  h1,h2,h3{ font-family:var(--font-display); font-weight:400; margin:0; color:var(--text); }
-  h2{ font-size:clamp(32px,4.2vw,50px); line-height:1.14; max-width:20ch; }
-  h3{ font-size:22px; font-weight:600; font-family:var(--font-body); margin:0 0 6px; }
-  .subtitle{ font-family:var(--font-body); font-size:18px; font-style:italic; color:var(--text-dim); margin:10px 0 0; max-width:50ch; }
-  .page-ref{ display:inline-flex; align-items:center; gap:8px; font-family:var(--font-mono); font-size:13px; color:var(--signal); margin-top:16px; padding-left:12px; border-left:2px solid var(--signal); }
-  .page-ref.hero-ref{ color:var(--text-dim); border-left-color:var(--line); margin-top:26px; }
-  .lede{ font-size:clamp(17px,1.9vw,20px); color:var(--text-dim); max-width:66ch; margin:22px 0 0; }
   .mono{ font-family:var(--font-mono); }
   p.note{ font-size:14px; color:var(--text-dim); margin-top:14px; }
   ul.note-list{ font-size:14px; color:var(--text-dim); margin:14px 0 0; padding-left:20px; }
@@ -57,47 +43,19 @@
   /* ---------- Esercizi ---------- */
   .ex-card{ margin-top:28px; padding:32px; }
   .ex-level{ display:inline-block; font-family:var(--font-mono); font-size:12px; font-weight:600; letter-spacing:.03em; padding:5px 12px; border-radius:100px; margin-bottom:14px; }
-  .ex-level.base{ background:var(--signal-soft); color:#7A4A08; }
-  .ex-level.intermedio{ background:#F0DDB8; color:#7A4A08; }
-  .ex-level.avanzato{ background:#E9C88E; color:#5C3705; }
+  .ex-level.base{ background:var(--signal-soft); color:#1E40AF; }
+  .ex-level.intermedio{ background:#C7D7FD; color:#1E40AF; }
+  .ex-level.avanzato{ background:#A5BEFB; color:#1E3A8A; }
   .ex-level.riepilogo{ background:var(--alert); color:#fff; }
   .ex-card h3{ font-size:19px; margin-bottom:8px; }
   .ex-card .ex-goal{ font-size:13.5px; font-style:italic; color:var(--text-dim); margin-top:18px; padding-top:16px; border-top:1px solid var(--line); }
 
-  /* ---------- Nav ---------- */
-  nav.wire-nav{ position:fixed; right:26px; top:50%; transform:translateY(-50%); z-index:50; display:flex; flex-direction:column; align-items:center; gap:0; }
-  nav.wire-nav .seg{ width:1px; height:20px; background:var(--line); }
-  nav.wire-nav button{ appearance:none; border:none; background:none; padding:7px 0; margin:0; cursor:pointer; display:block; position:relative; }
-  nav.wire-nav button .dot{ width:9px; height:9px; border-radius:50%; border:1.5px solid var(--text-dim); background:transparent; display:block; transition:background .25s, border-color .25s, transform .25s; }
-  nav.wire-nav button.active .dot{ background:var(--signal); border-color:var(--signal); transform:scale(1.35); }
-  nav.wire-nav button .label{ position:absolute; right:22px; top:50%; transform:translateY(-50%); font-family:var(--font-mono); font-size:12px; color:var(--text); background:var(--panel); border:1px solid var(--line); padding:5px 10px; border-radius:4px; white-space:nowrap; opacity:0; pointer-events:none; transition:opacity .15s; }
-  nav.wire-nav button:hover .label{ opacity:1; }
-  @media (max-width:860px){ nav.wire-nav{ display:none; } }
-
   /* ---------- Hero ---------- */
-  .hero{ min-height:92svh; display:flex; flex-direction:column; justify-content:center; padding-top:0; padding-bottom:0; max-width:1180px; }
-  .hero h1{ font-size:clamp(44px,7.4vw,88px); line-height:1.0; max-width:13ch; }
-  .hero .lede{ font-size:clamp(19px,2.1vw,23px); max-width:50ch; }
-  .scrollcue{ margin-top:56px; display:flex; align-items:center; gap:12px; font-family:var(--font-mono); font-size:14px; color:var(--text-dim); }
+
+  .scrollcue{ margin-top:48px; display:flex; align-items:center; gap:12px; font-size:13px; color:var(--text-dim); }
   .scrollcue svg{ animation:bob 1.8s ease-in-out infinite; }
   @keyframes bob{ 0%,100%{ transform:translateY(0); } 50%{ transform:translateY(6px); } }
-  @media (prefers-reduced-motion: reduce){ .scrollcue svg{ animation:none; } }
-
-  .hero-tags{ display:flex; gap:10px; flex-wrap:wrap; margin-top:38px; }
-  .hero-tags span{ font-family:var(--font-mono); font-size:13px; color:var(--text-dim); border:1px solid var(--line); border-radius:100px; padding:8px 16px; background:var(--panel); }
-
-  /* ---------- Panels & generic ---------- */
-  .panel{ background:var(--panel); border:1px solid var(--line); border-radius:10px; }
-  .grid2{ display:grid; grid-template-columns:1fr 1fr; gap:32px; align-items:start; }
-  @media (max-width:860px){ .grid2{ grid-template-columns:1fr; } }
-
-  .btn{ font-family:var(--font-mono); font-size:14px; color:var(--text); background:var(--panel-2); border:1px solid var(--line); border-radius:6px; padding:11px 16px; cursor:pointer; transition:border-color .2s, background .2s, color .2s; }
-  .btn:hover{ border-color:var(--signal); }
-  .btn:active{ transform:translateY(1px); }
-  .btn.primary{ border-color:var(--signal); color:var(--bg); background:var(--signal); font-weight:600; }
-  .btn.primary:hover{ background:#A8710F; }
-  .btn.on{ border-color:var(--signal); background:var(--signal); color:var(--bg); font-weight:600; }
-  .toggle-row{ display:flex; gap:10px; flex-wrap:wrap; margin-top:22px; }
+  @media (prefers-reduced-motion: reduce){ .scrollcue svg{ animation:none; }}
 
   /* ---------- Anatomy (hover) bar — riusata in più sezioni ---------- */
   .anat-bar{ margin-top:44px; padding:20px 24px; border-radius:8px; background:var(--panel); border:1px solid var(--line); font-family:var(--font-mono); font-size:clamp(14px,2.2vw,20px); display:flex; flex-wrap:wrap; align-items:baseline; }
@@ -108,23 +66,15 @@
   .anat-bar .at{ color:var(--ok); }
   .anat-bar .vl{ color:var(--alert); }
   .anat-bar .ct{ color:var(--text-dim); }
-  .anat-cap{ margin-top:18px; min-height:60px; padding:16px 20px; background:var(--panel-2); border-left:2px solid var(--signal); border-radius:0 8px 8px 0; }
+  .anat-cap{ margin-top:18px; min-height:60px; padding:16px 20px; background:var(--note-bg); border:1px solid var(--note-line); border-radius:10px; }
   .anat-cap .name{ font-family:var(--font-mono); font-size:13px; font-weight:600; color:var(--signal); margin-bottom:4px; }
   .anat-cap .expl{ font-size:14.5px; color:var(--text-dim); }
 
   /* ---------- Code block ---------- */
-  .code-block{ background:var(--panel-2); border:1px solid var(--line); border-radius:8px; padding:20px 22px; font-family:var(--font-mono); font-size:12.5px; line-height:1.75; overflow-x:auto; white-space:pre; color:var(--text-dim); }
-  .code-block .tg{ color:var(--signal); }
-  .code-block .at{ color:var(--ok); }
-  .code-block .vl{ color:var(--alert); }
-  .code-block .cm{ color:var(--text-dim); font-style:italic; }
-  .code-block .part{ transition:background .25s; border-radius:3px; }
-  .code-block .part.hl{ background:var(--signal-soft); }
 
-  .browser{ border:1px solid var(--line); border-radius:10px; overflow:hidden; background:var(--paper); }
-  .browser .bar{ background:var(--panel-2); padding:9px 14px; display:flex; gap:8px; align-items:center; border-bottom:1px solid var(--line); }
-  .browser .dotb{ width:9px; height:9px; border-radius:50%; background:var(--line); }
-  .browser .addr{ margin-left:8px; font-family:var(--font-mono); font-size:12px; color:var(--text-dim); }
+  .code-block .part{ transition:background .25s; border-radius:3px; }
+  .code-block .part.hl{ background:rgba(96,165,250,.22); }
+
   .browser .stage{ padding:28px 30px; min-height:120px; color:#2b2b26; font-family:Georgia, serif; font-size:16px; }
 
   /* ---------- DOM tree ---------- */
@@ -209,8 +159,7 @@
   .mini-table td:first-child{ color:var(--signal); }
 
   /* ---------- Finale ---------- */
-  .finale{ background:var(--panel); border:1px solid var(--line); border-radius:14px; padding:60px 6vw; margin:0 8vw 130px; max-width:1180px; position:relative; z-index:1; }
-  .finale h2{ max-width:16ch; }
+
   .glossary{ display:flex; flex-wrap:wrap; gap:10px; margin-top:32px; }
   .chip{ font-family:var(--font-mono); font-size:14px; color:var(--text); border:1px solid var(--line); border-radius:100px; padding:9px 16px; cursor:pointer; background:var(--panel-2); transition:border-color .2s; }
   .chip:hover{ border-color:var(--signal); }
@@ -218,13 +167,30 @@
   .glossary-def{ margin-top:18px; padding:16px 20px; background:var(--panel-2); border-radius:8px; font-size:15px; color:var(--text-dim); display:none; }
   .glossary-def.show{ display:block; }
   .glossary-def b{ color:var(--text); }
-
-  footer{ position:relative; z-index:1; text-align:center; padding:36px 20px 56px; font-family:var(--font-mono); font-size:13px; color:var(--text-dim); }
-</style>
+  </style>
 </head>
 <body>
 
-<div class="bg-grid" aria-hidden="true"></div>
+<a class="skip" href="#elemento-html">Vai al contenuto</a>
+<header class="topbar">
+  <div class="topbar-in">
+    <details class="pagesel">
+      <summary title="Cambia pagina"><b>02</b> HTML</summary>
+      <nav class="pagesel-menu" aria-label="Pagine del corso">
+        <a href="01-web.html"><b>01</b>Internet e Web</a>
+        <a href="02-html.html" class="current" aria-current="page"><b>02</b>HTML</a>
+        <a href="03-css.html"><b>03</b>CSS</a>
+        <a href="04-layout.html"><b>04</b>Esempi di layout</a>
+        <a href="05-form.html"><b>05</b>Form</a>
+        <a href="index.html" class="to-index">← Tutte le pagine (indice)</a>
+      </nav>
+    </details>
+    <nav class="links" id="topLinks" aria-label="Sezioni">
+      <a href="#elemento-html">Il linguaggio HTML</a><a href="#hello-world">Hello, World!</a><a href="#dom">Il DOM</a><a href="#testo">Strutturazione del testo</a><a href="#citazioni-codice">Citazioni e codice</a><a href="#immagini-link">Immagini e link</a><a href="#liste-tabelle">Liste e tabelle</a><a href="#div-generico">Il tag div</a><a href="#esercizi">Esercizi</a>
+    </nav>
+    <a class="back" href="index.html">← Indice</a>
+  </div>
+</header>
 
 <nav class="wire-nav" id="wireNav" aria-label="Navigazione sezioni">
   <button data-target="hero"><span class="dot"></span><span class="label">Inizio</span></button>
@@ -251,10 +217,10 @@
 <!-- HERO -->
 <section class="hero" id="hero">
   <h1>Dentro a una pagina</h1>
-  <p class="page-ref hero-ref">Unità B2 · Linguaggi HTML e CSS — pp. 166-174</p>
+  <p class="page-ref hero-ref">Linguaggi HTML e CSS — pp. 166-174</p>
   <p class="lede">Sappiamo già come una richiesta arriva al server. Ora apriamo il codice: come si scrive una pagina HTML e come si legge la sua struttura.</p>
   <p class="lede">HTML costruisce la <b>struttura</b> della pagina: titoli, paragrafi, testo enfatizzato, immagini, link, liste e tabelle — tutti organizzati in una precisa gerarchia, il DOM.</p>
-  <div class="hero-tags">
+  <div class="tags">
     <span>&lt;html&gt;</span><span>DOM</span><span>liste</span><span>immagini</span><span>link</span>
   </div>
   <div class="scrollcue">
@@ -265,9 +231,8 @@
 
 <!-- 1. IL LINGUAGGIO HTML -->
 <section id="elemento-html">
-  <h2>Il linguaggio HTML</h2>
-  <p class="subtitle">La struttura generale di un elemento</p>
-  <p class="page-ref">p. 166</p>
+  <span class="sec-num">01 · Il linguaggio HTML</span>
+  <h2>La struttura generale di un elemento</h2>
   <p class="lede"><b>HTML5</b> è la versione di riferimento del linguaggio ed è supportata da tutti i principali browser. Ogni elemento HTML segue sempre la stessa struttura: tocca le parti qui sotto per scoprirle.</p>
 
   <div class="anat-bar" id="anatomyElem">
@@ -278,9 +243,8 @@
 
 <!-- 2. HELLO WORLD -->
 <section id="hello-world">
-  <h2>Hello, World!</h2>
-  <p class="subtitle">La struttura minima di ogni pagina</p>
-  <p class="page-ref">p. 166-167</p>
+  <span class="sec-num">02 · Hello, World!</span>
+  <h2>La struttura minima di ogni pagina</h2>
   <p class="lede">Il tag radice <b>&lt;html&gt;</b> contiene sempre due elementi: l'<b>intestazione</b> (<span class="mono">&lt;head&gt;</span>), con le informazioni sulla pagina, e il <b>corpo</b> (<span class="mono">&lt;body&gt;</span>), con il contenuto vero e proprio.</p>
 
   <div class="toggle-row">
@@ -311,9 +275,8 @@
 
 <!-- 3. IL DOM -->
 <section id="dom">
-  <h2>Il DOM: la pagina come albero</h2>
-  <p class="subtitle">Document Object Model</p>
-  <p class="page-ref">p. 167-168</p>
+  <span class="sec-num">03 · Il DOM</span>
+  <h2>Document Object Model</h2>
   <p class="lede">Gli elementi HTML sono annidati uno nell'altro a costituire una <b>struttura ad albero</b>, chiamata <b>DOM</b>, che definisce una precisa gerarchia tra gli elementi.</p>
 
   <div class="tree-wrap">
@@ -381,9 +344,8 @@
 
 <!-- 4. STRUTTURAZIONE DEL TESTO -->
 <section id="testo">
-  <h2>Strutturazione del testo</h2>
-  <p class="subtitle">Titoli, paragrafi e spazi</p>
-  <p class="page-ref">p. 169</p>
+  <span class="sec-num">04 · Strutturazione del testo</span>
+  <h2>Titoli, paragrafi e spazi</h2>
   <p class="lede">Anche in HTML si può strutturare un testo in titoli, paragrafi e brevi enfasi. Ecco i tag principali:</p>
 
   <ul class="note-list" style="font-size:15px; margin-top:24px">
@@ -430,9 +392,8 @@
 
 <!-- 5. CITAZIONI E CODICE -->
 <section id="citazioni-codice">
-  <h2>Citazioni, abbreviazioni e codice</h2>
-  <p class="subtitle">Tag per contenuti speciali</p>
-  <p class="page-ref">p. 170-171</p>
+  <span class="sec-num">05 · Citazioni e codice</span>
+  <h2>Tag per contenuti speciali</h2>
   <p class="lede">Oltre ai tag di base, HTML offre elementi per marcare significati specifici: citazioni, codice sorgente, abbreviazioni, testo evidenziato o corretto.</p>
 
   <p class="lede" style="margin-top:8px; font-size:15px; font-style:italic; color:var(--text-dim)">Tocca una card per vedere il codice HTML che la genera.</p>
@@ -518,9 +479,8 @@ if is_a_good_day:
 
 <!-- 6. IMMAGINI E LINK -->
 <section id="immagini-link">
-  <h2>Immagini e link</h2>
-  <p class="subtitle">I tag &lt;img&gt; e &lt;a&gt;</p>
-  <p class="page-ref">p. 172</p>
+  <span class="sec-num">06 · Immagini e link</span>
+  <h2>I tag &lt;img&gt; e &lt;a&gt;</h2>
   <p class="lede">Per inserire un'immagine si usa il tag <span class="mono">&lt;img&gt;</span>; per trasformare testo o immagini in un collegamento si usa il tag <span class="mono">&lt;a&gt;</span> (anchor).</p>
 
   <h3 style="margin-top:40px; font-size:16px; color:var(--text-dim); font-weight:600">1. Il tag &lt;img&gt;</h3>
@@ -569,9 +529,8 @@ if is_a_good_day:
 
 <!-- 7. LISTE E TABELLE -->
 <section id="liste-tabelle">
-  <h2>Liste e tabelle</h2>
-  <p class="subtitle">Tre tipi di lista, e la struttura di una tabella</p>
-  <p class="page-ref">p. 172-174</p>
+  <span class="sec-num">07 · Liste e tabelle</span>
+  <h2>Tre tipi di lista, e la struttura di una tabella</h2>
   <p class="lede">HTML prevede liste puntate (<span class="mono">&lt;ul&gt;</span>), numerate (<span class="mono">&lt;ol&gt;</span>) e di definizione (<span class="mono">&lt;dl&gt;</span>), oltre alle tabelle (<span class="mono">&lt;table&gt;</span>). Scegli un tag per vedere codice e risultato.</p>
 
   <div class="toggle-row" id="ltTabs">
@@ -590,9 +549,8 @@ if is_a_good_day:
 
 <!-- DIV -->
 <section id="div-generico">
-  <h2>Il tag &lt;div&gt;</h2>
-  <p class="subtitle">Un contenitore generico per raggruppare contenuti</p>
-  <p class="page-ref">p. 179</p>
+  <span class="sec-num">08 · Il tag div</span>
+  <h2>Un contenitore generico per raggruppare contenuti</h2>
   <p class="lede"><span class="mono">&lt;div&gt;</span> non ha nessun significato proprio: serve solo per <b>raggruppare</b> altri elementi, così puoi trattarli come un unico blocco — ad esempio per organizzare meglio il codice, o per separare chiaramente le diverse parti di una pagina.</p>
 
   <div class="grid2" style="margin-top:22px">
@@ -625,8 +583,8 @@ if is_a_good_day:
 
 <!-- ESERCIZI -->
 <section id="esercizi">
-  <h2>Esercizi</h2>
-  <p class="subtitle">Tre pagine da realizzare, difficoltà crescente</p>
+  <span class="sec-num">09 · Esercizi</span>
+  <h2>Quattro esercizi, difficoltà crescente</h2>
   <p class="lede">Tre pagine web da realizzare in <b>HTML puro</b> (nessun CSS, per ora). Coprono gli argomenti visti finora: struttura del documento, tag di testo, immagini e link, liste e tabelle.</p>
   <p class="lede">Quando affronteremo i fogli di stile CSS, <b>riprenderemo questi stessi tre esercizi</b>: il codice HTML non cambierà (o cambierà pochissimo), ma aggiungeremo un foglio di stile esterno per vestirli. Conviene quindi, fin da ora, creare per ogni esercizio una cartella dedicata (es. <span class="mono">esercizio1/</span>) con un file <span class="mono">index.html</span> e una sottocartella <span class="mono">css/</span> (anche vuota, per ora).</p>
 
@@ -699,7 +657,9 @@ if is_a_good_day:
   <p class="lede" style="margin-top:32px">Prima di consegnare, controlla la tua pagina con il <b>W3C Markup Validation Service</b> (<a href="https://validator.w3.org" target="_blank" style="color:var(--signal); text-decoration:underline">validator.w3.org</a>) per verificare che il codice sia corretto e senza errori.</p>
 </section>
 
-<footer>Materiale didattico basato su "Hashtag 2", Modulo B, Linguaggi per il web · Realizzato con l'assistenza di Claude (Anthropic)</footer>
+<nav class="prevnext" aria-label="Pagina precedente e successiva"><a class="prev" href="01-web.html"><span>← Pagina precedente</span><b>01 · Internet e Web</b></a><a class="next" href="03-css.html"><span>Pagina successiva →</span><b>03 · CSS</b></a></nav>
+
+<footer><a class="btn" href="index.html" style="margin-bottom:18px">← Torna all'indice</a><br>Materiale didattico basato su "Hashtag 2", Modulo B, Linguaggi per il web · Realizzato con l'assistenza di Claude (Anthropic)</footer>
 
 <script>
 (function(){
@@ -855,6 +815,34 @@ if is_a_good_day:
     });
   })();
 
+})();
+</script>
+
+<script>
+/* barra in alto: evidenzia la sezione visibile */
+(function(){
+  var links = Array.prototype.slice.call(document.querySelectorAll('#topLinks a'));
+  if(!('IntersectionObserver' in window) || !links.length) return;
+  var secs = links.map(function(a){ return document.querySelector(a.getAttribute('href')); }).filter(Boolean);
+  var obs = new IntersectionObserver(function(entries){
+    var best=null, r=0;
+    entries.forEach(function(e){ if(e.isIntersecting && e.intersectionRatio>r){ r=e.intersectionRatio; best=e.target; } });
+    if(!best) return;
+    links.forEach(function(a){
+      var on = a.getAttribute('href')==='#'+best.id; a.classList.toggle('active', on);
+      if(on){ var p=a.parentNode; p.scrollLeft = a.offsetLeft - p.clientWidth/2 + a.clientWidth/2; }
+    });
+  }, {threshold:[0.2,0.4,0.6,0.8], rootMargin:'-10% 0px -10% 0px'});
+  secs.forEach(function(s){ obs.observe(s); });
+})();
+</script>
+
+<script>
+/* menu delle pagine: si chiude cliccando fuori o con Esc */
+(function(){
+  var d = document.querySelector('.pagesel'); if(!d) return;
+  document.addEventListener('click', function(e){ if(d.open && !d.contains(e.target)) d.open = false; });
+  document.addEventListener('keydown', function(e){ if(e.key === 'Escape' && d.open){ d.open = false; d.querySelector('summary').focus(); } });
 })();
 </script>
 </body>

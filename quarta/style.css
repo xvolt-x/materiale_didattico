@@ -1,7 +1,7 @@
 /* =====================================================================
-   stile.css — tema comune del corso "Programmazione web"
+   style.css — tema comune del corso "Programmazione web"
    Da collegare in ogni pagina, nella <head>:
-     <link rel="stylesheet" href="stile.css">
+     <link rel="stylesheet" href="style.css">
    ===================================================================== */
 
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Space+Grotesk:wght@500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap');
@@ -50,7 +50,32 @@ img{ max-width:100%; }
 .topbar .links a.active{ color:var(--signal); background:#EEF4FF; }
 .topbar .back{ font-size:13px; font-weight:500; color:var(--text); text-decoration:none; white-space:nowrap; border:1px solid var(--line); border-radius:8px; padding:6px 13px; background:var(--panel); }
 .topbar .back:hover{ border-color:var(--signal); color:var(--signal); }
-@media (max-width:600px){ .topbar-in{ padding:0 12px; gap:10px; } .topbar .brand{ display:none; } }
+/* menu a tendina delle pagine del corso (sul nome della pagina) */
+.pagesel{ position:relative; flex:none; }
+.pagesel summary{ list-style:none; cursor:pointer; display:flex; align-items:center; gap:7px; font-size:14px; font-weight:600; color:var(--text); white-space:nowrap;
+  padding:6px 10px 6px 12px; border:1px solid var(--line); border-radius:8px; background:var(--panel); transition:border-color .2s, color .2s; }
+.pagesel summary::-webkit-details-marker{ display:none; }
+.pagesel summary b{ font-family:var(--font-mono); font-size:12.5px; color:var(--signal); }
+.pagesel summary::after{ content:""; width:7px; height:7px; border-right:1.6px solid currentColor; border-bottom:1.6px solid currentColor; transform:translateY(-2px) rotate(45deg); margin-left:4px; transition:transform .2s; }
+.pagesel[open] summary::after{ transform:translateY(1px) rotate(-135deg); }
+.pagesel summary:hover, .pagesel[open] summary{ border-color:var(--signal); color:var(--signal); }
+.pagesel-menu{ position:absolute; top:calc(100% + 8px); left:0; min-width:250px; background:var(--panel); border:1px solid var(--line); border-radius:10px; box-shadow:0 10px 30px rgba(15,23,42,.12); padding:6px; display:flex; flex-direction:column; z-index:80; }
+.pagesel-menu a{ display:flex; gap:10px; align-items:baseline; padding:8px 10px; border-radius:6px; font-size:14px; color:var(--text); text-decoration:none; }
+.pagesel-menu a b{ font-family:var(--font-mono); font-size:12px; font-weight:600; color:var(--text-dim); min-width:34px; }
+.pagesel-menu a:hover{ background:var(--panel-2); }
+.pagesel-menu a.current{ background:var(--signal-soft); color:var(--signal-dark); font-weight:600; }
+.pagesel-menu a.current b{ color:var(--signal); }
+.pagesel-menu a.to-index{ margin-top:4px; border-top:1px solid var(--line-soft); border-radius:0 0 6px 6px; padding-top:10px; color:var(--text-dim); font-size:13px; }
+
+/* pagina precedente / successiva (in fondo alla pagina) */
+.prevnext{ max-width:1160px; margin:0 auto; padding:10px 6vw 50px; display:grid; grid-template-columns:1fr 1fr; gap:16px; }
+.prevnext a{ display:flex; flex-direction:column; gap:4px; padding:16px 20px; background:var(--panel); border:1px solid var(--line); border-radius:12px; box-shadow:var(--shadow); text-decoration:none; color:var(--text); transition:border-color .2s, transform .2s; }
+.prevnext a:hover{ border-color:var(--signal); transform:translateY(-2px); }
+.prevnext a span{ font-size:12.5px; color:var(--text-dim); }
+.prevnext a b{ font-family:var(--font-title); font-size:17px; font-weight:600; color:var(--signal); }
+.prevnext a.next{ text-align:right; grid-column:2; }
+@media (max-width:600px){ .prevnext{ padding:10px 16px 40px; gap:10px; } .prevnext a{ padding:12px 14px; } .prevnext a b{ font-size:15px; } }
+@media (max-width:600px){ .topbar-in{ padding:0 12px; gap:10px; } .topbar .brand{ display:none; } .pagesel summary{ font-size:13px; padding:5px 8px; } .topbar .back{ padding:6px 9px; } }
 
 /* ---------- 4. Sezioni e titoli ---------- */
 section{ position:relative; max-width:1160px; margin:0 auto; padding:120px 6vw 90px; scroll-margin-top:40px; }
@@ -60,10 +85,15 @@ h1, h2, h3{ font-family:var(--font-title); color:var(--text); margin:0; }
 .hero h1{ font-weight:700; font-size:clamp(40px,5.4vw,64px); letter-spacing:-.03em; line-height:1.05; max-width:14ch; }
 .hero .lede{ font-size:clamp(18px,1.8vw,20px); }
 
-.sec-num{ display:block; font-size:12px; font-weight:600; text-transform:uppercase; letter-spacing:.12em; color:var(--signal); margin-bottom:12px; }
-h2{ position:relative; font-weight:600; font-size:clamp(28px,3.2vw,36px); letter-spacing:-.02em; line-height:1.18;
-    border-left:5px solid var(--signal); padding:2px 0 2px 16px; margin-bottom:17px; }
-h2::after{ content:""; position:absolute; left:-5px; right:0; bottom:-17px; height:1px; background:var(--line); }
+/* titolo della sezione (blu, uguale alla voce del menu in alto) */
+.sec-num{ display:block; font-family:var(--font-title); font-size:clamp(24px,2.6vw,30px); font-weight:600; letter-spacing:-.02em; line-height:1.15;
+          color:var(--signal); border-left:5px solid var(--signal); padding:2px 0 2px 16px; margin-bottom:6px; }
+/* nella pagina iniziale (hero) resta una piccola etichetta */
+.hero .sec-num{ font-family:var(--font-body); font-size:12px; text-transform:uppercase; letter-spacing:.12em; line-height:1.6; border:none; padding:0; margin-bottom:12px; }
+/* sottotitolo della sezione */
+h2{ position:relative; font-family:var(--font-body); font-weight:500; font-size:17px; letter-spacing:0; line-height:1.4; color:var(--text-dim);
+    padding:0 0 0 21px; margin-bottom:17px; }
+h2::after{ content:""; position:absolute; left:0; right:0; bottom:-17px; height:1px; background:var(--line); }
 h3{ font-weight:600; font-size:20px; margin:40px 0 10px; }
 h2 + .lede, h2 + p{ margin-top:36px; }   /* spazio sotto la linea del titolo */
 

@@ -680,15 +680,6 @@ footer{padding:3em 2em; text-align:center; color:var(--ink-soft); font-family:'I
   stimaAree = np.sum(aree)
   <span class="k">return</span> x,y,aree,stimaAree</pre>
 
-  <div class="code-caption">confronto sull'esempio</div>
-<pre class="code"><span class="k">def</span> f(x):
-  <span class="k">return</span> 3*x**2 + 2*x + 1
-
-a, b, n = 1, 5, 10
-esatto = 152
-<span class="k">for</span> nome, metodo <span class="k">in</span> [(<span class="s">"rettangoli sx"</span>, rettangoli_sx), (<span class="s">"rettangoli dx"</span>, rettangoli_dx), (<span class="s">"trapezi"</span>, trapezi)]:
-  stima = metodo(a,b,n)[3]       <span class="c"># [3] = la stima, quarto valore restituito</span>
-  print(f<span class="s">"{nome:&lt;16} {stima:&gt;12.4f}   errore = {abs(stima - esatto):.4f}"</span>)</pre>
 
   <div class="teacher-note"><strong>La funzione già pronta</strong>NumPy applica direttamente il metodo dei trapezi con <code>np.trapezoid(y, x)</code> (nelle versioni meno recenti si chiama <code>np.trapz</code>). Con <code>x = np.linspace(1, 5, 11)</code> e <code>y = f(x)</code> restituisce 152.32, lo stesso risultato della nostra funzione <code>trapezi</code>.</div>
 

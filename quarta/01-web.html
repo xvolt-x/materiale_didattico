@@ -4,164 +4,68 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Dentro al Web</title>
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Source+Serif+4:opsz,wght@8..60,400..700&family=IBM+Plex+Sans:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap">
+  <!-- Tema comune a tutte le pagine del corso -->
+  <link rel="stylesheet" href="style.css">
 <style>
-  :root{
-    --bg:#FBF9F3;
-    --ink:#14213D;
-    --panel:#FFFFFF;
-    --panel-2:#F1ECDD;
-    --paper:#FFFFFF;
-    --line:#CBBFA0;
-    --line-soft:#E7DFC8;
-    --text:#1B2333;
-    --text-dim:#5D6472;
-    --signal:#8F5A0C;
-    --signal-soft:#E9D3AC;
-    --alert:#B23327;
-    --ok:#1F7A52;
-    --font-display:'Source Serif 4', Georgia, serif;
-    --font-body:'IBM Plex Sans', Arial, sans-serif;
-    --font-mono:'IBM Plex Mono', 'Courier New', monospace;
-  }
-  @media (prefers-color-scheme: dark){
-    :root{ --bg:#FBF9F3; --panel:#FFFFFF; }
-  }
-  :root[data-theme="dark"]{ --bg:#FBF9F3; --panel:#FFFFFF; }
+  /* =========================================================
+     Stili specifici di QUESTA pagina (parti interattive).
+     Il tema comune (colori, caratteri, titoli, pulsanti,
+     riquadri, codice, barra in alto) è in style.css.
+     ========================================================= */
+  :root{ --ink:var(--text); --paper:#FFFFFF; --font-display:var(--font-title); }
+  .skip{ position:absolute; left:-9999px; top:8px; z-index:70; background:var(--signal); color:#fff; padding:8px 14px; border-radius:6px; font-size:13px; }
+  .skip:focus{ left:12px; }
+  .browser .bar{ font-family:var(--font-mono); font-size:12px; color:var(--text-dim); }
+  .hero .page-ref, .hero .tags{ align-self:flex-start; }
+  .btn:disabled{ opacity:.55; cursor:default; }
+  .btn:disabled:hover{ border-color:var(--line); color:var(--text); }
+  .btn.primary:disabled:hover{ background:var(--signal); color:#fff; }
 
-  *{ box-sizing:border-box; }
-  html{ scroll-behavior:smooth; }
-  body{
-    margin:0;
-    background:var(--bg);
-    color:var(--text);
-    font-family:var(--font-body);
-    line-height:1.5;
-    -webkit-font-smoothing:antialiased;
-  }
-  a{ color:inherit; }
-  ::selection{ background:var(--signal); color:var(--ink); }
+  /* nelle anteprime del browser i titoli restano "normali" */
+  .browser .stage h1, .browser .stage h2, .browser .stage h3, .browser .stage h4{ font-family:Georgia, serif; border:none; padding:0; letter-spacing:normal; }
+  .browser .stage h2::after{ display:none; }
 
-  .bg-grid{
-    position:fixed; inset:0; z-index:0; pointer-events:none;
-    background-image:
-      linear-gradient(var(--line-soft) 1px, transparent 1px),
-      linear-gradient(90deg, var(--line-soft) 1px, transparent 1px);
-    background-size:56px 56px;
-    opacity:.6;
-    -webkit-mask-image:radial-gradient(ellipse 90% 70% at 50% 10%, #000 40%, transparent 85%);
-            mask-image:radial-gradient(ellipse 90% 70% at 50% 10%, #000 40%, transparent 85%);
-  }
-
-  section{
-    position:relative; z-index:1;
-    padding:160px 8vw 120px;
-    max-width:1180px;
-    margin:0 auto;
-  }
-  section.tight{ padding-top:120px; }
-
-  .kicker{
-    font-family:var(--font-mono);
-    font-size:15px;
-    color:var(--signal);
-    margin:0 0 18px;
-  }
-  h1,h2,h3{ font-family:var(--font-display); font-weight:400; margin:0; color:var(--text); }
-  h2{ font-size:clamp(34px,4.4vw,54px); line-height:1.12; max-width:16ch; }
-  .subtitle{
-    font-family:var(--font-body); font-size:18px; font-style:italic; color:var(--text-dim);
-    margin:10px 0 0; max-width:46ch;
-  }
-  .page-ref{
-    display:inline-flex; align-items:center; gap:8px; font-family:var(--font-mono); font-size:13px;
-    color:var(--signal); margin-top:16px; padding-left:12px; border-left:2px solid var(--signal);
-  }
-  .page-ref.hero-ref{ color:var(--text-dim); border-left-color:var(--line); margin-top:26px; }
-  .lede{
-    font-size:clamp(18px,2vw,21px);
-    color:var(--text-dim);
-    max-width:62ch;
-    margin:22px 0 0;
-  }
-  .mono{ font-family:var(--font-mono); }
-
-  /* ---------- Nav (wire + pins) ---------- */
-  nav.wire-nav{
-    position:fixed; right:26px; top:50%; transform:translateY(-50%);
-    z-index:50;
-    display:flex; flex-direction:column; align-items:center;
-    gap:0;
-  }
-  nav.wire-nav .seg{ width:1px; height:26px; background:var(--line); }
-  nav.wire-nav button{
-    appearance:none; border:none; background:none; padding:9px 0; margin:0;
-    cursor:pointer; display:block; position:relative;
-  }
-  nav.wire-nav button .dot{
-    width:9px; height:9px; border-radius:50%;
-    border:1.5px solid var(--text-dim);
-    background:transparent;
-    display:block;
-    transition:background .25s, border-color .25s, transform .25s;
-  }
-  nav.wire-nav button.active .dot{
-    background:var(--signal); border-color:var(--signal);
-    transform:scale(1.35);
-  }
-  nav.wire-nav button .label{
-    position:absolute; right:22px; top:50%; transform:translateY(-50%);
-    font-family:var(--font-mono); font-size:12px; color:var(--text);
-    background:var(--panel); border:1px solid var(--line);
-    padding:5px 10px; border-radius:4px; white-space:nowrap;
-    opacity:0; pointer-events:none; transition:opacity .15s;
-  }
+  /* navigazione a puntini sulla destra */
+  nav.wire-nav{ position:fixed; right:26px; top:50%; transform:translateY(-50%); z-index:50; display:flex; flex-direction:column; align-items:center; }
+  nav.wire-nav .seg{ width:1px; height:20px; background:var(--line); }
+  nav.wire-nav button{ appearance:none; border:none; background:none; padding:7px 0; margin:0; cursor:pointer; display:block; position:relative; }
+  nav.wire-nav button .dot{ width:9px; height:9px; border-radius:50%; border:1.5px solid var(--text-dim); display:block; transition:background .25s, border-color .25s, transform .25s; }
+  nav.wire-nav button.active .dot{ background:var(--signal); border-color:var(--signal); transform:scale(1.35); }
+  nav.wire-nav button .label{ position:absolute; right:22px; top:50%; transform:translateY(-50%); font-size:12px; color:var(--text); background:var(--panel); border:1px solid var(--line); box-shadow:var(--shadow); padding:5px 10px; border-radius:6px; white-space:nowrap; opacity:0; pointer-events:none; transition:opacity .15s; }
   nav.wire-nav button:hover .label{ opacity:1; }
   @media (max-width:860px){ nav.wire-nav{ display:none; } }
 
-  /* ---------- Hero ---------- */
-  .hero{
-    min-height:100svh;
-    display:flex; flex-direction:column; justify-content:center;
-    padding-top:0; padding-bottom:0;
-    max-width:1180px;
-  }
-  .hero-tag{
-    font-family:var(--font-mono); font-size:15px; color:var(--text-dim);
-    display:flex; align-items:center; gap:10px; margin-bottom:28px;
-  }
-  .hero-tag .px{ width:8px; height:8px; border-radius:50%; background:var(--ok); box-shadow:0 0 0 4px rgba(31,122,82,.15); }
-  .hero h1{ font-size:clamp(52px,9vw,108px); line-height:0.98; max-width:11ch; }
-  .hero .lede{ font-size:clamp(19px,2.2vw,24px); max-width:46ch; }
-  .scrollcue{
-    margin-top:64px; display:flex; align-items:center; gap:12px;
-    font-family:var(--font-mono); font-size:14px; color:var(--text-dim);
-  }
+  section.tight{ padding-top:120px; }
+
+  .mono{ font-family:var(--font-mono); }
+
+  /* ---------- Hero (come nelle altre pagine) ---------- */
+  .hero-grid{ display:grid; grid-template-columns:1.1fr .9fr; gap:48px; align-items:center; }
+  @media (max-width:960px){ .hero-grid{ grid-template-columns:1fr; } }
+  .scrollcue{ margin-top:48px; display:flex; align-items:center; gap:12px; font-size:13px; color:var(--text-dim); }
   .scrollcue svg{ animation:bob 1.8s ease-in-out infinite; }
   @keyframes bob{ 0%,100%{ transform:translateY(0); } 50%{ transform:translateY(6px); } }
-
-  .hero-net{ position:absolute; inset:0; z-index:0; overflow:hidden; pointer-events:none; }
-  .hero-net svg{ width:100%; height:100%; }
-  .hero-net .pulse{ animation:travel linear infinite; }
   @keyframes travel{
     0%{ offset-distance:0%; opacity:0; }
     8%{ opacity:1; }
     92%{ opacity:1; }
     100%{ offset-distance:100%; opacity:0; }
   }
-  @media (prefers-reduced-motion: reduce){
-    .hero-net .pulse{ animation:none; opacity:.55; }
-    .scrollcue svg{ animation:none; }
-  }
+  @media (prefers-reduced-motion: reduce){ .scrollcue svg{ animation:none; } }
+
+  /* riquadro "cosa succede quando apri una pagina" */
+  .hero-demo{ padding:22px; }
+  .hero-steps{ list-style:none; margin:0; padding:0; display:flex; flex-direction:column; gap:8px; }
+  .hero-steps li{ display:flex; align-items:center; gap:12px; padding:10px 12px; border:1px solid var(--line-soft); border-radius:8px; background:var(--panel-2); font-size:14px; color:var(--text-dim); transition:border-color .3s, background .3s, color .3s; }
+  .hero-steps li .n{ flex:none; width:24px; height:24px; border-radius:50%; display:flex; align-items:center; justify-content:center; font-family:var(--font-mono); font-size:12px; font-weight:600; background:var(--panel); border:1px solid var(--line); color:var(--text-dim); transition:background .3s, color .3s, border-color .3s; }
+  .hero-steps li code{ font-family:var(--font-mono); font-size:12.5px; color:var(--text); }
+  .hero-steps li.on{ border-color:var(--note-line); background:var(--note-bg); color:var(--text); }
+  .hero-steps li.on .n{ background:var(--signal); border-color:var(--signal); color:#fff; }
+  .hero-demo .browser{ margin-top:14px; }
+  .hero-demo .browser .stage{ padding:20px 24px; min-height:84px; font-family:var(--font-body); color:var(--text-dim); font-size:14px; display:flex; align-items:center; }
+  .hero-demo .browser .stage h4{ margin:0; font-family:var(--font-title); font-size:24px; font-weight:600; color:var(--text); }
 
   /* ---------- Panels & cards ---------- */
-  .panel{
-    background:var(--panel);
-    border:1px solid var(--line);
-    border-radius:10px;
-  }
-  .grid2{ display:grid; grid-template-columns:1fr 1fr; gap:48px; align-items:center; }
-  @media (max-width:860px){ .grid2{ grid-template-columns:1fr; } }
 
   .stat-row{ display:flex; gap:14px; margin-top:34px; flex-wrap:wrap; }
   .stat{
@@ -255,22 +159,14 @@
   .cs-pulse{
     position:absolute; top:50%; left:0; width:11px; height:11px; border-radius:50%;
     background:var(--signal); transform:translate(-50%,-50%); opacity:0;
-    box-shadow:0 0 10px 2px rgba(143,90,12,.45);
+    box-shadow:0 0 10px 2px rgba(29,78,216,.45);
   }
   .cs-pulse.moveright{ animation:moveright .9s ease-in-out forwards; }
   .cs-pulse.moveleft{ animation:moveleft .9s ease-in-out forwards; }
   @keyframes moveright{ 0%{ left:0; opacity:0; } 10%{ opacity:1; } 90%{ opacity:1; } 100%{ left:100%; opacity:0; } }
   @keyframes moveleft{ 0%{ left:100%; opacity:0; } 10%{ opacity:1; } 90%{ opacity:1; } 100%{ left:0; opacity:0; } }
   .cs-controls{ display:flex; gap:14px; margin-top:8px; flex-wrap:wrap; }
-  .btn{
-    font-family:var(--font-mono); font-size:14px; color:var(--text);
-    background:var(--panel-2); border:1px solid var(--line); border-radius:6px;
-    padding:12px 18px; cursor:pointer; transition:border-color .2s, background .2s;
-  }
-  .btn:hover{ border-color:var(--signal); }
-  .btn:active{ transform:translateY(1px); }
-  .btn.primary{ border-color:var(--signal); color:var(--ink); background:var(--signal); font-weight:600; }
-  .btn.primary:hover{ background:#A8710F; }
+
   .cs-log{ margin-top:18px; font-family:var(--font-mono); font-size:14px; color:var(--text-dim); min-height:22px; }
   .cs-log .ok{ color:var(--ok); }
   .cs-log .err{ color:var(--alert); }
@@ -300,7 +196,7 @@
     transition:border-color .3s, box-shadow .3s;
   }
   .www-result .tag{ font-family:var(--font-mono); font-size:28px; font-weight:600; color:var(--text-dim); transition:color .3s; }
-  .www-result.complete{ border-color:var(--signal); box-shadow:0 0 24px -4px rgba(143,90,12,.35); }
+  .www-result.complete{ border-color:var(--signal); box-shadow:0 0 24px -4px rgba(29,78,216,.35); }
   .www-result.complete .tag{ color:var(--signal); }
   .www-hint{ margin-top:22px; font-size:14px; color:var(--text-dim); }
 
@@ -315,7 +211,7 @@
   .url-bar .seg:hover, .url-bar .seg.active{ color:var(--text); border-color:var(--signal); }
   .url-caption{
     margin-top:22px; min-height:64px; padding:18px 22px;
-    background:var(--panel-2); border-left:2px solid var(--signal); border-radius:0 8px 8px 0;
+    background:var(--note-bg); border:1px solid var(--note-line); border-radius:10px;
   }
   .url-caption .name{ font-family:var(--font-mono); font-size:14px; color:var(--signal); margin-bottom:4px; }
   .url-caption .expl{ font-size:15px; color:var(--text-dim); }
@@ -344,7 +240,7 @@
 
   /* ---------- HTTPS ---------- */
   .https-wrap{ margin-top:52px; display:grid; grid-template-columns:auto 1fr; gap:56px; align-items:center; }
-  @media (max-width:760px){ .https-wrap{ grid-template-columns:1fr; gap:36px; } }
+  @media (max-width:760px){ .https-wrap{ grid-template-columns:1fr; gap:36px; }}
   .toggle{
     display:inline-flex; border:1px solid var(--line); border-radius:100px; padding:4px; gap:4px;
     font-family:var(--font-mono); font-size:14px; width:fit-content;
@@ -354,7 +250,7 @@
     background:transparent; color:var(--text-dim); font-family:var(--font-mono); font-size:14px;
     transition:background .2s, color .2s;
   }
-  .toggle button.on{ background:var(--signal); color:var(--ink); font-weight:600; }
+  .toggle button.on{ background:var(--signal); color:#fff; font-weight:600; }
   .lock-scene{ display:flex; flex-direction:column; align-items:center; gap:16px; }
   .lock-scene svg{ width:64px; height:64px; }
   .lock-status{ font-family:var(--font-mono); font-size:14px; text-align:center; }
@@ -367,11 +263,11 @@
     animation:packetmove 2.6s linear infinite;
   }
   @keyframes packetmove{ 0%{ left:0%; opacity:0; } 8%{ opacity:1; } 92%{ opacity:1; } 100%{ left:88%; opacity:0; } }
-  @media (prefers-reduced-motion: reduce){ .packet{ animation:none; left:40%; opacity:1; } }
+  @media (prefers-reduced-motion: reduce){ .packet{ animation:none; left:40%; opacity:1; }}
 
   /* ---------- Languages demo ---------- */
   .lang-wrap{ margin-top:52px; display:grid; grid-template-columns:260px 1fr; gap:40px; }
-  @media (max-width:820px){ .lang-wrap{ grid-template-columns:1fr; } }
+  @media (max-width:820px){ .lang-wrap{ grid-template-columns:1fr; }}
   .lang-toggles{ display:flex; flex-direction:column; gap:12px; }
   .lang-toggle{
     display:flex; align-items:center; justify-content:space-between; gap:12px;
@@ -388,10 +284,6 @@
   .switch.on .knob{ left:21px; background:var(--signal); }
   .switch[disabled]{ cursor:default; opacity:.55; }
 
-  .browser{ border:1px solid var(--line); border-radius:10px; overflow:hidden; background:var(--paper); }
-  .browser .bar{ background:var(--panel-2); padding:10px 14px; display:flex; gap:8px; align-items:center; border-bottom:1px solid var(--line); }
-  .browser .dotb{ width:9px; height:9px; border-radius:50%; background:var(--line); }
-  .browser .addr{ margin-left:8px; font-family:var(--font-mono); font-size:12px; color:var(--text-dim); }
   .browser .stage{ padding:36px 32px; min-height:220px; color:#2b2b26; font-family:Georgia, serif; }
   .stage.css-on{ background:linear-gradient(160deg,#fff 0%,#f1ece0 100%); }
   .stage h4{ font-family:Georgia, serif; margin:0 0 10px; font-size:26px; color:#1b1b16; }
@@ -409,11 +301,7 @@
   .js-hint{ font-size:13px; color:#8a8577; margin-top:10px; }
 
   /* ---------- Finale ---------- */
-  .finale{
-    background:var(--panel); border:1px solid var(--line); border-radius:14px;
-    padding:64px 6vw; margin:0 8vw 140px; max-width:1180px; position:relative; z-index:1;
-  }
-  .finale h2{ max-width:16ch; }
+
   .glossary{ display:flex; flex-wrap:wrap; gap:10px; margin-top:36px; }
   .chip{
     font-family:var(--font-mono); font-size:14px; color:var(--text);
@@ -433,12 +321,34 @@
   .closing .next{ font-family:var(--font-mono); font-size:14px; color:var(--text-dim); }
   .closing .next b{ color:var(--signal); }
 
-  footer{ position:relative; z-index:1; text-align:center; padding:40px 20px 60px; font-family:var(--font-mono); font-size:13px; color:var(--text-dim); }
-</style>
+  /* riquadro di riepilogo finale */
+  .finale{ background:var(--panel); border:1px solid var(--line); border-radius:14px; box-shadow:var(--shadow); padding:56px 6vw; margin:0 6vw 110px; position:relative; }
+  @media (min-width:1300px){ .finale{ max-width:1100px; margin-left:auto; margin-right:auto; } }
+  @media (max-width:600px){ .finale{ margin:0 16px 80px; padding:40px 20px; } }
+  </style>
 </head>
 <body>
 
-<div class="bg-grid" aria-hidden="true"></div>
+<a class="skip" href="#internet">Vai al contenuto</a>
+<header class="topbar">
+  <div class="topbar-in">
+    <details class="pagesel">
+      <summary title="Cambia pagina"><b>01</b> Internet e Web</summary>
+      <nav class="pagesel-menu" aria-label="Pagine del corso">
+        <a href="01-web.html" class="current" aria-current="page"><b>01</b>Internet e Web</a>
+        <a href="02-html.html"><b>02</b>HTML</a>
+        <a href="03-css.html"><b>03</b>CSS</a>
+        <a href="04-layout.html"><b>04</b>Esempi di layout</a>
+        <a href="05-form.html"><b>05</b>Form</a>
+        <a href="index.html" class="to-index">← Tutte le pagine (indice)</a>
+      </nav>
+    </details>
+    <nav class="links" id="topLinks" aria-label="Sezioni">
+      <a href="#internet">Internet</a><a href="#client-server">Client-server</a><a href="#www">WWW</a><a href="#url">URL</a><a href="#crawler">Motori di ricerca</a><a href="#https">HTTP / HTTPS</a><a href="#linguaggi">Linguaggi</a><a href="#finale">Riepilogo</a>
+    </nav>
+    <a class="back" href="index.html">← Indice</a>
+  </div>
+</header>
 
 <nav class="wire-nav" id="wireNav" aria-label="Navigazione sezioni">
   <button data-target="hero"><span class="dot"></span><span class="label">Inizio</span></button>
@@ -462,31 +372,37 @@
 
 <!-- HERO -->
 <section class="hero" id="hero">
-  <div class="hero-net" aria-hidden="true">
-    <svg viewBox="0 0 1200 800" preserveAspectRatio="xMidYMid slice">
-      <path id="hp1" d="M -50 620 C 300 520, 500 700, 900 560 S 1300 480, 1500 560" fill="none" stroke="#DED6BE" stroke-width="1.5"/>
-      <path id="hp2" d="M -80 300 C 250 380, 480 200, 820 320 S 1250 260, 1400 200" fill="none" stroke="#DED6BE" stroke-width="1.5"/>
-      <path id="hp3" d="M 100 -40 C 200 200, 60 420, 260 620 S 420 820, 380 900" fill="none" stroke="#DED6BE" stroke-width="1.5"/>
-      <circle class="pulse" r="3.2" fill="#8F5A0C" style="offset-path:path('M -50 620 C 300 520, 500 700, 900 560 S 1300 480, 1500 560'); animation-duration:9s; animation-delay:0s;"/>
-      <circle class="pulse" r="3.2" fill="#8F5A0C" style="offset-path:path('M -80 300 C 250 380, 480 200, 820 320 S 1250 260, 1400 200'); animation-duration:12s; animation-delay:2.5s;"/>
-      <circle class="pulse" r="2.6" fill="#8F5A0C" style="offset-path:path('M 100 -40 C 200 200, 60 420, 260 620 S 420 820, 380 900'); animation-duration:10s; animation-delay:5s;"/>
-      <circle class="pulse" r="2.6" fill="#8F5A0C" style="offset-path:path('M -50 620 C 300 520, 500 700, 900 560 S 1300 480, 1500 560'); animation-duration:9s; animation-delay:4.5s;"/>
-    </svg>
-  </div>
-  <h1>Dentro al Web</h1>
-  <p class="page-ref hero-ref">Unità B2 · Linguaggi HTML e CSS — pp. 158-165</p>
-  <p class="lede">Prima di scrivere una riga di HTML, guardiamo cosa succede davvero quando apri una pagina: chi parla con chi, con quali regole, lungo quali fili.</p>
-  <div class="scrollcue">
-    <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M2 5L8 11L14 5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
-    scorri per iniziare
+  <div class="hero-grid">
+    <div>
+      <h1>Dentro al Web.</h1>
+      <p class="page-ref hero-ref">Linguaggi HTML e CSS — pp. 158-165</p>
+      <p class="lede">Prima di scrivere una riga di HTML, guardiamo cosa succede davvero quando apri una pagina: chi parla con chi, con quali regole, lungo quali fili.</p>
+      <div class="tags"><span>Internet</span><span>client-server</span><span>URL</span><span>HTTPS</span></div>
+      <div class="scrollcue">
+        <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M2 5L8 11L14 5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        scorri per iniziare
+      </div>
+    </div>
+    <div class="panel hero-demo">
+      <p class="file-label">Apri una pagina <em>guarda i passaggi</em></p>
+      <ol class="hero-steps" id="heroSteps">
+        <li><span class="n">1</span>Scrivi l'indirizzo: <code>www.esempio.it</code></li>
+        <li><span class="n">2</span>Il browser invia la richiesta <code>GET</code></li>
+        <li><span class="n">3</span>Il server risponde <code>200 OK</code></li>
+        <li><span class="n">4</span>Il browser mostra la pagina</li>
+      </ol>
+      <div class="browser">
+        <div class="bar"><span class="dotb"></span><span class="dotb"></span><span class="dotb"></span><span class="addr" id="heroAddr">about:blank</span></div>
+        <div class="stage" id="heroStage">pagina vuota</div>
+      </div>
+    </div>
   </div>
 </section>
 
 <!-- INTERNET -->
 <section id="internet">
-  <h2>Internet</h2>
-  <p class="subtitle">Nascita e infrastruttura di una rete pubblica</p>
-  <p class="page-ref">p. 159</p>
+  <span class="sec-num">01 · Internet</span>
+  <h2>Nascita e infrastruttura di una rete pubblica</h2>
   <p class="lede">Internet nasce nel 1969 da ARPANET, la rete costruita in piena guerra fredda dall'agenzia statunitense DARPA. Non è un'invenzione singola: sono milioni di computer collegati da cavi, WiFi e satelliti, che si scambiano dati attraverso router e switch.</p>
 
   <div class="netmap" aria-hidden="true">
@@ -652,9 +568,8 @@
 
 <!-- CLIENT SERVER -->
 <section id="client-server">
-  <h2>L'architettura client-server</h2>
-  <p class="subtitle">Chi chiede, chi risponde</p>
-  <p class="page-ref">p. 160-161</p>
+  <span class="sec-num">02 · Client-server</span>
+  <h2>Chi chiede, chi risponde</h2>
   <p class="lede">Quasi tutti i servizi di Internet — il Web, la posta elettronica — si basano su un'architettura <b>client-server</b>: un client fa una richiesta, un server, sempre in ascolto, risponde.</p>
 
   <div class="demo">
@@ -718,9 +633,8 @@
 
 <!-- WWW -->
 <section id="www">
-  <h2>Il World Wide Web</h2>
-  <p class="subtitle">Le tre tecnologie che lo fondano</p>
-  <p class="page-ref">p. 161</p>
+  <span class="sec-num">03 · WWW</span>
+  <h2>Le tre tecnologie che lo fondano</h2>
   <p class="lede">Il <b>World Wide Web</b> — letteralmente «<b>ragnatela planetaria</b>», abbreviato in <b>WWW</b> o più comunemente <b>Web</b> — è il sistema di documenti ipertestuali e multimediali che si naviga in Internet passando da una pagina all'altra attraverso i collegamenti. Si basa su tre tecnologie distinte che, insieme, lo rendono possibile.</p>
 
   <div class="www-row">
@@ -754,9 +668,8 @@
 
 <!-- URL -->
 <section id="url">
-  <h2>Che cos'è un URL?</h2>
-  <p class="subtitle">Le cinque parti di un indirizzo web</p>
-  <p class="page-ref">p. 162</p>
+  <span class="sec-num">04 · URL</span>
+  <h2>Le cinque parti di un indirizzo web</h2>
   <p class="lede">Ogni risorsa del Web ha un indirizzo univoco.</p>
 
   <div class="url-bar" id="urlBar">
@@ -770,9 +683,8 @@
 
 <!-- CRAWLER -->
 <section id="crawler">
-  <h2>L'accesso alle pagine web e i motori di ricerca</h2>
-  <p class="subtitle">Come funziona uno spider</p>
-  <p class="page-ref">p. 163</p>
+  <span class="sec-num">05 · Motori di ricerca</span>
+  <h2>Come funziona uno spider</h2>
   <p class="lede">I motori di ricerca usano programmi automatici, gli <b>spider</b> (o web crawler), che saltano da un link all'altro per indicizzare le pagine pubbliche.</p>
 
   <div class="crawl-wrap">
@@ -801,7 +713,7 @@
           <text class="clabel" x="748" y="246">/contatti</text>
         </svg>
         <div class="spider" id="spider" style="left:13.3%; top:50%;">
-          <svg viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="4" fill="#8F5A0C"/><g stroke="#8F5A0C" stroke-width="1.4" stroke-linecap="round"><path d="M12 8 L4 4"/><path d="M12 8 L20 4"/><path d="M12 12 L2 12"/><path d="M12 12 L22 12"/><path d="M12 16 L4 20"/><path d="M12 16 L20 20"/></g></svg>
+          <svg viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="4" fill="#1D4ED8"/><g stroke="#1D4ED8" stroke-width="1.4" stroke-linecap="round"><path d="M12 8 L4 4"/><path d="M12 8 L20 4"/><path d="M12 12 L2 12"/><path d="M12 12 L22 12"/><path d="M12 16 L4 20"/><path d="M12 16 L20 20"/></g></svg>
         </div>
       </div>
       <div class="crawl-controls">
@@ -824,9 +736,8 @@
 
 <!-- HTTPS -->
 <section id="https">
-  <h2>La sicurezza dei siti web</h2>
-  <p class="subtitle">Da HTTP a HTTPS</p>
-  <p class="page-ref">p. 164</p>
+  <span class="sec-num">06 · HTTP / HTTPS</span>
+  <h2>Da HTTP a HTTPS</h2>
   <p class="lede">HTTP invia i dati in chiaro. HTTPS li cifra, proteggendo password e numeri di carta da occhi indiscreti sulla rete.</p>
 
   <div class="https-wrap">
@@ -836,7 +747,7 @@
         <button data-mode="https">HTTPS</button>
       </div>
       <svg id="lockIcon" viewBox="0 0 64 64" fill="none">
-        <rect x="14" y="28" width="36" height="28" rx="4" fill="#F1ECDD" stroke="#B23327" stroke-width="2"/>
+        <rect x="14" y="28" width="36" height="28" rx="4" fill="#F2F4F8" stroke="#B23327" stroke-width="2"/>
         <path id="shackle" d="M20 28 V20 a12 12 0 0 1 24 0 v8" stroke="#B23327" stroke-width="3.4" fill="none" stroke-linecap="round"/>
         <circle cx="32" cy="42" r="4" fill="#B23327"/>
       </svg>
@@ -855,9 +766,8 @@
 
 <!-- LINGUAGGI -->
 <section id="linguaggi">
-  <h2>I linguaggi del Web</h2>
-  <p class="subtitle">HTML, CSS e JavaScript a confronto</p>
-  <p class="page-ref">p. 165</p>
+  <span class="sec-num">07 · Linguaggi</span>
+  <h2>HTML, CSS e JavaScript a confronto</h2>
   <p class="lede">HTML dà il contenuto, CSS lo stile, JavaScript il comportamento. Prova a spegnerli uno alla volta e osserva cosa cambia qui sotto.</p>
 
   <div class="lang-wrap">
@@ -890,6 +800,7 @@
 
 <!-- FINALE -->
 <div class="finale" id="finale">
+  <span class="sec-num">08 · Riepilogo</span>
   <h2>Internet non è il Web</h2>
   <p class="lede">Internet è l'infrastruttura globale di rete. Il Web — insieme a posta elettronica, chat, home banking — è solo uno dei servizi che vi girano sopra.</p>
 
@@ -908,7 +819,9 @@
 
 </div>
 
-<footer>Materiale didattico basato su "Hashtag 2", Modulo B, Linguaggi per il web · Realizzato con l'assistenza di Claude (Anthropic)</footer>
+<nav class="prevnext" aria-label="Pagina precedente e successiva"><span></span><a class="next" href="02-html.html"><span>Pagina successiva →</span><b>02 · HTML</b></a></nav>
+
+<footer><a class="btn" href="index.html" style="margin-bottom:18px">← Torna all'indice</a><br>Materiale didattico basato su "Hashtag 2", Modulo B, Linguaggi per il web · Realizzato con l'assistenza di Claude (Anthropic)</footer>
 
 <script>
 (function(){
@@ -940,6 +853,25 @@
     sections.forEach(function(s){ if(s) obs.observe(s); });
   }
   setActive('hero');
+
+
+  /* ---------- Hero: i passaggi di una richiesta ---------- */
+  (function(){
+    var items = Array.prototype.slice.call(document.querySelectorAll('#heroSteps li'));
+    var addr = document.getElementById('heroAddr'), stage = document.getElementById('heroStage');
+    var reduce = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    function show(k){
+      items.forEach(function(li, i){ li.classList.toggle('on', i <= k); });
+      addr.textContent = k >= 0 ? 'www.esempio.it' : 'about:blank';
+      if(k <= 0) stage.textContent = 'pagina vuota';
+      else if(k < 3) stage.textContent = 'caricamento…';
+      else stage.innerHTML = '<h4>Benvenuti!</h4>';
+    }
+    if(reduce){ show(3); return; }
+    var seq = [-1, 0, 1, 2, 3, 3, 3], i = 0;
+    show(seq[0]);
+    setInterval(function(){ i = (i + 1) % seq.length; show(seq[i]); }, 1200);
+  })();
 
   /* ---------- Client / Server demo ---------- */
   var clientStatus = document.getElementById('clientStatus');
@@ -993,7 +925,7 @@
             csStage.innerHTML =
               '<div style="text-align:center">' +
                 '<svg viewBox="0 0 48 48" style="width:34px;height:34px;color:var(--alert)" fill="none"><circle cx="14" cy="24" r="8" stroke="currentColor" stroke-width="2"/><circle cx="34" cy="24" r="8" stroke="currentColor" stroke-width="2"/><line x1="20" y1="18" x2="28" y2="30" stroke="currentColor" stroke-width="2" stroke-linecap="round"/><line x1="28" y1="18" x2="20" y2="30" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>' +
-                '<h4 style="margin:6px 0 2px; font-family:\'IBM Plex Mono\',monospace; font-size:26px; font-weight:700; color:var(--alert)">404</h4>' +
+                '<h4 style="margin:6px 0 2px; font-family:\'JetBrains Mono\',monospace; font-size:26px; font-weight:700; color:var(--alert)">404</h4>' +
                 '<p style="margin:0; font-size:14px; font-weight:600; color:#333">Pagina non trovata</p>' +
                 '<p style="margin:6px 0 0; font-size:12px; color:#777">La risorsa ' + path + ' non è disponibile su questo server.</p>' +
               '</div>';
@@ -1078,7 +1010,6 @@
     if(crawling) return;
     crawling = true;
     resetCrawl();
-    var step = 0;
     function next(){
       if(step >= order.length){ crawling = false; return; }
       var idx = order[step];
@@ -1185,6 +1116,34 @@
     });
   });
 
+})();
+</script>
+
+<script>
+/* barra in alto: evidenzia la sezione visibile */
+(function(){
+  var links = Array.prototype.slice.call(document.querySelectorAll('#topLinks a'));
+  if(!('IntersectionObserver' in window) || !links.length) return;
+  var secs = links.map(function(a){ return document.querySelector(a.getAttribute('href')); }).filter(Boolean);
+  var obs = new IntersectionObserver(function(entries){
+    var best=null, r=0;
+    entries.forEach(function(e){ if(e.isIntersecting && e.intersectionRatio>r){ r=e.intersectionRatio; best=e.target; } });
+    if(!best) return;
+    links.forEach(function(a){
+      var on = a.getAttribute('href')==='#'+best.id; a.classList.toggle('active', on);
+      if(on){ var p=a.parentNode; p.scrollLeft = a.offsetLeft - p.clientWidth/2 + a.clientWidth/2; }
+    });
+  }, {threshold:[0.2,0.4,0.6,0.8], rootMargin:'-10% 0px -10% 0px'});
+  secs.forEach(function(s){ obs.observe(s); });
+})();
+</script>
+
+<script>
+/* menu delle pagine: si chiude cliccando fuori o con Esc */
+(function(){
+  var d = document.querySelector('.pagesel'); if(!d) return;
+  document.addEventListener('click', function(e){ if(d.open && !d.contains(e.target)) d.open = false; });
+  document.addEventListener('keydown', function(e){ if(e.key === 'Escape' && d.open){ d.open = false; d.querySelector('summary').focus(); } });
 })();
 </script>
 </body>

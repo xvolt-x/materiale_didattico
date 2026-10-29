@@ -1,0 +1,531 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="15 progetti di sito web, uno per studente: si progettano ora con HTML, CSS e form e si completano con JavaScript/Flask e database">
+  <title>I progetti</title>
+  <!-- Tema comune a tutte le pagine del corso -->
+  <link rel="stylesheet" href="style.css">
+  <style>
+  /* =========================================================
+     Stili specifici di QUESTA pagina (progetti).
+     Il tema comune è in style.css.
+     ========================================================= */
+  .skip{ position:absolute; left:-9999px; top:8px; z-index:70; background:var(--signal); color:#fff; padding:8px 14px; border-radius:6px; font-size:13px; }
+  .skip:focus{ left:12px; }
+  .hero{ min-height:auto; padding-bottom:40px; }
+  .hero .page-ref, .hero .tags{ align-self:flex-start; }
+  .hero h1{ max-width:18ch; }
+  section.tight{ padding-top:70px; }
+
+  /* fasi */
+  .phases{ display:grid; grid-template-columns:repeat(4,1fr); gap:14px; margin-top:32px; counter-reset:f; }
+  @media (max-width:980px){ .phases{ grid-template-columns:1fr 1fr; } }
+  @media (max-width:560px){ .phases{ grid-template-columns:1fr; } }
+  .phase{ padding:20px; position:relative; }
+  .phase .n{ font-family:var(--font-mono); font-size:12px; font-weight:600; color:var(--signal); text-transform:uppercase; letter-spacing:.08em; }
+  .phase h4{ font-family:var(--font-title); font-size:18px; margin:6px 0 8px; }
+  .phase p{ margin:0; font-size:14px; color:var(--text-dim); line-height:1.55; }
+  .phase .when{ display:inline-block; margin-top:12px; font-size:12px; font-weight:600; padding:3px 9px; border-radius:100px; background:var(--panel-2); color:var(--text-dim); border:1px solid var(--line); }
+  .phase.now{ border-color:var(--signal); box-shadow:0 0 0 3px var(--signal-soft), var(--shadow); }
+  .phase.now .when{ background:var(--signal); color:#fff; border-color:var(--signal); }
+
+  /* requisiti */
+  .req{ list-style:none; padding:0; margin:28px 0 0; display:grid; grid-template-columns:1fr 1fr; gap:10px 28px; max-width:980px; }
+  @media (max-width:760px){ .req{ grid-template-columns:1fr; } }
+  .req li{ position:relative; padding-left:30px; font-size:15px; }
+  .req li::before{ content:"✓"; position:absolute; left:0; top:1px; width:20px; height:20px; border-radius:5px; background:var(--signal-soft); color:var(--signal); font-size:12px; font-weight:700; display:flex; align-items:center; justify-content:center; }
+
+  /* esempio di relazione */
+  .rel-demo{ display:grid; grid-template-columns:1fr auto 1.5fr; gap:16px; align-items:center; margin-top:28px; }
+  @media (max-width:860px){ .rel-demo{ grid-template-columns:1fr; } .rel-demo .arrow{ transform:rotate(90deg); justify-self:center; } }
+  .rel-demo .table{ margin-top:6px; font-size:13px; }
+  .rel-demo .table td, .rel-demo .table th{ padding:7px 10px; }
+  .rel-demo .cap{ font-family:var(--font-mono); font-size:12.5px; font-weight:600; color:var(--text); }
+  .arrow{ font-size:26px; color:var(--signal); }
+  .hl{ background:#FEF3C7 !important; font-weight:600; }
+  .hlid{ background:#FEF3C7 !important; font-weight:600; }
+
+  /* filtri */
+  .filters{ display:flex; flex-wrap:wrap; gap:8px; margin-top:30px; align-items:center; }
+  .filters .lbl{ font-size:13px; color:var(--text-dim); margin-right:4px; }
+  .filters .btn{ font-size:13px; padding:6px 12px; }
+  .search{ font:inherit; font-size:14px; padding:8px 12px; border:1px solid var(--line); border-radius:8px; background:var(--panel); min-width:220px; margin-left:auto; }
+  .search:focus{ outline:none; border-color:var(--signal); box-shadow:0 0 0 3px var(--signal-soft); }
+  @media (max-width:640px){ .search{ margin-left:0; width:100%; } }
+
+  /* schede progetto */
+  .projects{ display:grid; grid-template-columns:1fr 1fr; gap:22px; margin-top:24px; }
+  @media (max-width:960px){ .projects{ grid-template-columns:1fr; } }
+  .proj{ padding:0; overflow:hidden; display:flex; flex-direction:column; }
+  .proj-head{ padding:22px 24px 16px; border-bottom:1px solid var(--line-soft); }
+  .proj-top{ display:flex; justify-content:space-between; align-items:center; gap:10px; }
+  .proj .num{ font-family:var(--font-mono); font-size:13px; font-weight:600; color:var(--signal); }
+  .proj .area{ font-size:11.5px; font-weight:600; text-transform:uppercase; letter-spacing:.06em; color:var(--text-dim); background:var(--panel-2); border:1px solid var(--line); padding:2px 8px; border-radius:100px; }
+  .proj h3{ margin:6px 0 8px; font-size:22px; }
+  .proj .scen{ margin:0; font-size:14.5px; color:var(--text-dim); line-height:1.6; }
+  .proj-body{ padding:18px 24px 22px; display:flex; flex-direction:column; gap:16px; flex:1; }
+  .tables2{ display:grid; grid-template-columns:1fr 1fr; gap:12px; }
+  @media (max-width:520px){ .tables2{ grid-template-columns:1fr; } }
+  .tbl{ border:1px solid var(--line); border-radius:10px; overflow:hidden; background:var(--panel); }
+  .tbl-name{ background:var(--code-bg); color:#fff; font-family:var(--font-mono); font-size:12.5px; font-weight:600; padding:7px 11px; display:flex; justify-content:space-between; }
+  .tbl-name small{ font-weight:400; color:#94A3B8; }
+  .tbl ul{ list-style:none; margin:0; padding:4px 0; }
+  .tbl li{ display:flex; justify-content:space-between; gap:8px; padding:4px 11px; font-size:12.5px; border-bottom:1px solid var(--line-soft); }
+  .tbl li:last-child{ border-bottom:none; }
+  .tbl li code{ font-family:var(--font-mono); color:var(--text); font-size:12px; background:none; border:none; padding:0; word-break:break-all; }
+  .tbl li{ flex-wrap:wrap; }
+  .tbl li span{ color:var(--text-dim); text-align:right; margin-left:auto; }
+  .tbl li.pk code::after, .tbl li.fk code::after{ font-family:var(--font-body); font-size:9.5px; font-weight:700; margin-left:6px; padding:1px 5px; border-radius:4px; vertical-align:1px; }
+  .tbl li.pk code::after{ content:"PK"; background:#FEF3C7; color:#92400E; }
+  .tbl li.fk code::after{ content:"FK"; background:#DCFCE7; color:#166534; }
+  .tbl li.fk{ background:#F7FEF9; }
+  .relation{ font-size:13.5px; color:var(--text-dim); margin:-4px 0 0; padding-left:12px; border-left:3px solid #86EFAC; }
+  .detail h5{ margin:0 0 6px; font-size:11.5px; font-weight:600; text-transform:uppercase; letter-spacing:.07em; color:var(--signal); }
+  .detail p{ margin:0; font-size:14px; line-height:1.55; }
+  .pages-list{ display:flex; flex-wrap:wrap; gap:6px; }
+  .pages-list span{ font-family:var(--font-mono); font-size:12px; padding:3px 8px; border-radius:6px; background:var(--panel-2); border:1px solid var(--line); }
+  .pages-list span.f{ background:var(--signal-soft); border-color:#BFD3FB; color:var(--signal-dark); }
+  .extra{ margin-top:auto; padding:12px 14px; border-radius:10px; background:var(--note-bg); border:1px solid var(--note-line); font-size:13.5px; color:var(--text-dim); }
+  .extra b{ color:var(--signal); font-size:11.5px; text-transform:uppercase; letter-spacing:.06em; display:block; margin-bottom:3px; }
+  .proj-foot{ display:flex; justify-content:space-between; align-items:center; gap:10px; padding:10px 24px; border-top:1px solid var(--line-soft); background:var(--panel-2); }
+  .proj-foot label{ font-size:13px; color:var(--text-dim); display:flex; align-items:center; gap:8px; flex:1; }
+  .proj-foot input{ font:inherit; font-size:13.5px; border:1px solid var(--line); border-radius:6px; padding:5px 9px; flex:1; min-width:0; background:#fff; }
+  .proj-foot .btn{ font-size:12.5px; padding:5px 10px; }
+  .empty{ display:none; margin-top:20px; color:var(--text-dim); }
+
+  .code-wrap{ margin-top:26px; }
+  .code-wrap .file-label{ align-items:center; }
+
+  /* stampa: una scheda per pagina */
+  @media print{
+    .topbar, .filters, .skip, footer .btn, .proj-foot .btn, .no-print{ display:none !important; }
+    body{ background:#fff; }
+    section{ padding:20px 0; max-width:none; }
+    .projects{ display:block; }
+    .proj{ break-inside:avoid; page-break-after:always; box-shadow:none; margin-bottom:0; }
+    .proj[hidden]{ display:none; }
+    body.print-one section:not(#progetti){ display:none; }
+    body.print-one .proj:not(.to-print){ display:none; }
+  }
+  </style>
+</head>
+<body>
+
+<a class="skip" href="#progetti">Vai ai progetti</a>
+<header class="topbar">
+  <div class="topbar-in">
+    <span class="brand">06 · Progetti</span>
+    <nav class="links" aria-label="Sezioni">
+      <a href="#fasi">Le fasi</a><a href="#tabelle">Le due tabelle</a><a href="#progetti">I 15 progetti</a><a href="#consegna">Prima consegna</a><a href="#valutazione">Valutazione</a>
+    </nav>
+  </div>
+</header>
+
+<!-- HERO -->
+<section class="hero" id="hero">
+  <h1>Un sito tuo, da costruire per tutto l'anno.</h1>
+  <p class="page-ref">Progetto annuale · 15 consegne, una per studente</p>
+  <p class="lede">Ognuno di voi riceve un progetto diverso. Oggi lo <b>progettate</b> e lo realizzate con HTML, CSS e form, usando dati inventati. Più avanti, con JavaScript o Flask, il sito diventerà interattivo e, alla fine, i dati verranno salvati in un vero <b>database</b>. Per questo ogni sito si basa fin da subito su <b>due tabelle collegate</b>.</p>
+  <div class="tags"><span>progettazione</span><span>mappa del sito</span><span>tabelle</span><span>chiave primaria</span><span>chiave esterna</span><span>form</span></div>
+</section>
+
+<!-- FASI -->
+<section class="tight" id="fasi">
+  <span class="sec-num">01 · Le fasi</span>
+  <h2>Il sito cresce un pezzo alla volta</h2>
+  <p class="lede">Non dovete fare tutto subito. Ogni fase aggiunge qualcosa a quello che avete già costruito, quindi conviene progettare bene fin dall'inizio.</p>
+  <div class="phases">
+    <div class="panel phase now"><span class="n">Fase 1</span><h4>Progettazione</h4><p>Leggi la consegna, decidi nome e aspetto del sito, disegna la mappa delle pagine e completa le due tabelle con i dati di esempio.</p><span class="when">adesso</span></div>
+    <div class="panel phase now"><span class="n">Fase 2</span><h4>HTML, CSS e form</h4><p>Realizzi tutte le pagine statiche: il menu, i contenuti, le due tabelle in HTML con dati inventati e il form per inserire un nuovo elemento.</p><span class="when">adesso</span></div>
+    <div class="panel phase"><span class="n">Fase 3</span><h4>JavaScript o Flask</h4><p>Il sito diventa dinamico: ricerche, filtri, calcoli e controlli sui dati del form. Ogni progetto ha una "sfida" pensata per questa fase.</p><span class="when">più avanti</span></div>
+    <div class="panel phase"><span class="n">Fase 4</span><h4>Database</h4><p>Le due tabelle progettate diventano tabelle vere: le pagine leggono i dati dal database e il form li salva.</p><span class="when">alla fine</span></div>
+  </div>
+
+  <h3>Requisiti uguali per tutti (fasi 1 e 2)</h3>
+  <ul class="req">
+    <li>Almeno <b>5 pagine</b> HTML, collegate da un <b>menu uguale</b> in tutte le pagine.</li>
+    <li>Un solo foglio di stile <code>style.css</code>, collegato a ogni pagina con <code>&lt;link&gt;</code>.</li>
+    <li>Una pagina con l'elenco di ciascuna delle <b>due tabelle</b>, scritta con <code>&lt;table&gt;</code>, <code>&lt;th&gt;</code> e <code>&lt;td&gt;</code>.</li>
+    <li>Almeno <b>5 righe</b> di dati inventati ma realistici per la prima tabella e almeno <b>8</b> per la seconda.</li>
+    <li>Un <b>form</b> con almeno 5 campi di tipi diversi, un <code>&lt;label&gt;</code> per ogni campo e la validazione del browser (<code>required</code>, <code>min</code>, <code>max</code>…).</li>
+    <li>Una <b>home</b> che presenta il sito e una pagina <b>chi siamo / contatti</b>.</li>
+    <li>Almeno 3 immagini, tutte con l'attributo <code>alt</code>.</li>
+    <li>Nomi dei file in minuscolo, senza spazi né accenti (es. <code>catalogo-libri.html</code>).</li>
+  </ul>
+</section>
+
+<!-- TABELLE -->
+<section class="tight" id="tabelle">
+  <span class="sec-num">02 · Le due tabelle</span>
+  <h2>Due tabelle collegate da una chiave</h2>
+  <p class="lede">Ogni progetto ha una tabella "principale" e una seconda tabella i cui elementi <b>appartengono</b> a un elemento della prima. Il collegamento si fa con un numero: la seconda tabella ha una colonna (la <b>chiave esterna</b>, <code>FK</code>) che contiene l'<code>id</code> (la <b>chiave primaria</b>, <code>PK</code>) di una riga della prima.</p>
+
+  <div class="rel-demo">
+    <div>
+      <span class="cap">autori</span>
+      <div class="table-scroll"><table class="table">
+        <thead><tr><th>id</th><th>nome</th><th>cognome</th></tr></thead>
+        <tbody><tr><td class="hlid">1</td><td>Italo</td><td>Calvino</td></tr><tr><td>2</td><td>Elsa</td><td>Morante</td></tr><tr><td>3</td><td>Primo</td><td>Levi</td></tr></tbody>
+      </table></div>
+    </div>
+    <div class="arrow" aria-hidden="true">⟵</div>
+    <div>
+      <span class="cap">libri</span>
+      <div class="table-scroll"><table class="table">
+        <thead><tr><th>id</th><th>titolo</th><th>anno</th><th>id_autore</th></tr></thead>
+        <tbody><tr><td>1</td><td>Il barone rampante</td><td>1957</td><td class="hl">1</td></tr><tr><td>2</td><td>L'isola di Arturo</td><td>1957</td><td>2</td></tr><tr><td>3</td><td>Le città invisibili</td><td>1972</td><td class="hl">1</td></tr><tr><td>4</td><td>Il sistema periodico</td><td>1975</td><td>3</td></tr></tbody>
+      </table></div>
+    </div>
+  </div>
+  <div class="tip"><b>Ricorda</b><br>Un autore può avere <b>molti</b> libri, ma ogni libro ha <b>un solo</b> autore: per questo <code>id_autore</code> sta nella tabella dei libri. Nelle pagine HTML della fase 2 al posto del numero potete scrivere direttamente il nome (es. "Italo Calvino"); con il database il nome verrà recuperato automaticamente.</div>
+
+  <h3>Che tipo di dato scegliere</h3>
+  <p class="lede" style="margin-top:0">Per ogni colonna indicate il tipo. Lo stesso tipo vi dice già quale campo usare nel form e, più avanti, come dichiararlo nel database.</p>
+  <div class="table-scroll"><table class="table">
+    <thead><tr><th>Tipo del campo</th><th>Esempio</th><th>Campo del form (fase 2)</th><th>Nel database (fase 4)</th></tr></thead>
+    <tbody>
+      <tr><td>testo</td><td>Calvino</td><td><code>&lt;input type="text"&gt;</code> oppure <code>&lt;select&gt;</code> se i valori sono pochi e fissi</td><td><code>TEXT</code></td></tr>
+      <tr><td>testo lungo</td><td>una descrizione</td><td><code>&lt;textarea&gt;</code></td><td><code>TEXT</code></td></tr>
+      <tr><td>numero intero</td><td>1957</td><td><code>&lt;input type="number"&gt;</code> con <code>min</code> e <code>max</code></td><td><code>INTEGER</code></td></tr>
+      <tr><td>numero decimale</td><td>12.50</td><td><code>&lt;input type="number" step="0.01"&gt;</code></td><td><code>REAL</code></td></tr>
+      <tr><td>data</td><td>2026-11-15</td><td><code>&lt;input type="date"&gt;</code></td><td><code>DATE</code></td></tr>
+      <tr><td>ora</td><td>21:00</td><td><code>&lt;input type="time"&gt;</code></td><td><code>TIME</code></td></tr>
+      <tr><td>sì / no</td><td>sì</td><td><code>&lt;input type="checkbox"&gt;</code></td><td><code>BOOLEAN</code></td></tr>
+      <tr><td>email</td><td>nome@esempio.it</td><td><code>&lt;input type="email"&gt;</code></td><td><code>TEXT</code></td></tr>
+      <tr><td>chiave esterna</td><td>1</td><td><code>&lt;select&gt;</code> con le righe della prima tabella</td><td><code>INTEGER</code> + <code>FOREIGN KEY</code></td></tr>
+    </tbody>
+  </table></div>
+</section>
+
+<!-- PROGETTI -->
+<section class="tight" id="progetti">
+  <span class="sec-num">03 · I 15 progetti</span>
+  <h2>Una consegna per ogni studente</h2>
+  <p class="lede">Le colonne indicate sono il <b>minimo</b>: potete aggiungerne altre, ma non toglierle. Nome del sito, colori e stile li decidete voi. Le pagine in blu sono quelle con il form.</p>
+
+  <div class="filters no-print" role="group" aria-label="Filtra i progetti">
+    <span class="lbl">Tema:</span>
+    <button class="btn on" data-area="tutti" type="button">Tutti</button>
+    <button class="btn" data-area="Tempo libero" type="button">Tempo libero</button>
+    <button class="btn" data-area="Servizi" type="button">Servizi</button>
+    <button class="btn" data-area="Cultura" type="button">Cultura</button>
+    <button class="btn" data-area="Negozi" type="button">Negozi</button>
+    <input class="search" id="q" type="search" placeholder="Cerca un progetto o uno studente…" aria-label="Cerca">
+  </div>
+
+  <div class="projects" id="list"></div>
+  <p class="empty" id="empty">Nessun progetto corrisponde alla ricerca.</p>
+  <div class="toggle-row no-print"><button class="btn" id="clearNames" type="button">Cancella tutti i nomi degli studenti</button><button class="btn" id="printAll" type="button">Stampa tutte le schede</button></div>
+  <div class="tip no-print"><b>Per l'insegnante</b><br>I nomi scritti nel campo "Studente" restano salvati solo in questo browser. Con "Stampa" ottieni una scheda per pagina da consegnare; dal riquadro di stampa puoi anche salvarla in PDF.</div>
+</section>
+
+<!-- CONSEGNA -->
+<section class="tight" id="consegna">
+  <span class="sec-num">04 · Prima consegna</span>
+  <h2>Cosa consegnare alla fine della fase 1</h2>
+  <p class="lede">Prima di scrivere le pagine, preparate il documento di progetto: un file <code>README.md</code> nella cartella del sito (o nel repository GitHub). Copiate il modello qui sotto e completatelo. Insieme al README consegnate uno <b>schizzo della home</b> (wireframe), disegnato a mano e fotografato oppure fatto al computer, salvato come <code>wireframe.jpg</code>.</p>
+
+  <div class="code-wrap">
+    <p class="file-label"><span>README.md <em>modello da completare</em></span><span><button class="btn small" id="copyReadme" type="button" style="font-size:12.5px;padding:5px 10px">Copia</button></span></p>
+<pre class="code-block" id="readme"><span class="cm"># Nome del sito</span>
+
+Progetto n. __  ·  Studente: ______________  ·  Classe 4__
+
+<span class="cm">## 1. Di che cosa si tratta</span>
+In due o tre frasi: che cosa offre il sito e a chi è rivolto.
+
+<span class="cm">## 2. Mappa del sito</span>
+- index.html — Home: ...
+- ______.html — Elenco della tabella 1
+- ______.html — Elenco della tabella 2
+- ______.html — Form: ...
+- contatti.html — Chi siamo / contatti
+
+<span class="cm">## 3. Le tabelle</span>
+
+<span class="cm">### Tabella 1: ______</span>
+| colonna | tipo | esempio |
+|---------|------|---------|
+| id (PK) | numero intero | 1 |
+| ...     | ...  | ... |
+
+<span class="cm">### Tabella 2: ______</span>
+| colonna | tipo | esempio |
+|---------|------|---------|
+| id (PK) | numero intero | 1 |
+| ...     | ...  | ... |
+| id_____ (FK) | numero intero | 1 |
+
+Relazione: un/una ______ ha molti/e ______; ogni ______ appartiene a un solo/a ______.
+
+<span class="cm">## 4. Il form</span>
+In quale tabella inserisce i dati? Elenca i campi e il tipo di input di ciascuno.
+
+<span class="cm">## 5. Stile</span>
+Colori principali (codici esadecimali), caratteri, layout scelto (blocchi, menu laterale, schede...).</pre>
+  </div>
+  <div class="tip"><b>Consiglio</b><br>Per il layout potete partire da uno dei tre modelli della pagina <b>Esempi di layout</b>, e per il form dalla pagina <b>I Form</b>.</div>
+</section>
+
+<!-- VALUTAZIONE -->
+<section class="tight" id="valutazione">
+  <span class="sec-num">05 · Valutazione</span>
+  <h2>Su cosa verranno valutate le fasi 1 e 2</h2>
+  <div class="table-scroll"><table class="table" style="margin-top:36px">
+    <thead><tr><th>Criterio</th><th>Che cosa si guarda</th></tr></thead>
+    <tbody>
+      <tr><td><b>Progettazione</b></td><td>README completo; tabelle con tutte le colonne richieste, tipi corretti, chiave primaria e chiave esterna; relazione spiegata; wireframe.</td></tr>
+      <tr><td><b>Dati di esempio</b></td><td>Righe sufficienti, realistiche e coerenti tra le due tabelle (ogni riga della seconda tabella si riferisce a una riga esistente della prima).</td></tr>
+      <tr><td><b>HTML</b></td><td>Struttura corretta, tag adatti al contenuto, tabelle con intestazioni, link funzionanti tra tutte le pagine, immagini con <code>alt</code>.</td></tr>
+      <tr><td><b>Form</b></td><td>Campi coerenti con le colonne della tabella, tipi di input adatti, <code>label</code> collegate, validazione del browser.</td></tr>
+      <tr><td><b>CSS</b></td><td>Un unico foglio di stile, aspetto curato e uniforme, tabelle e form leggibili, menu evidente.</td></tr>
+      <tr><td><b>Ordine e costanza</b></td><td>Nomi dei file corretti, cartelle ordinate, consegne rispettate, lavoro portato avanti in ogni lezione.</td></tr>
+    </tbody>
+  </table></div>
+</section>
+
+<footer>Materiale didattico basato su "Hashtag 2", Modulo B, Linguaggi per il web · Realizzato con l'assistenza di Claude (Anthropic)</footer>
+
+<script>
+(function(){
+  "use strict";
+
+  /* ====================================================================
+     I 15 PROGETTI
+     Per modificare un progetto basta cambiare i dati qui sotto.
+     Ogni colonna: [nome, tipo, "pk" | "fk" | ""]
+     ==================================================================== */
+  var P = [
+    { t:'Biblioteca di quartiere', a:'Cultura',
+      s:'La biblioteca del quartiere vuole un sito dove consultare il catalogo, scoprire gli autori e proporre nuovi libri da acquistare.',
+      t1:['autori',[['id','numero intero','pk'],['nome','testo'],['cognome','testo'],['nazionalita','testo'],['anno_nascita','numero intero'],['biografia','testo lungo']]],
+      t2:['libri',[['id','numero intero','pk'],['titolo','testo'],['anno_pubblicazione','numero intero'],['genere','testo'],['pagine','numero intero'],['disponibile','sì / no'],['id_autore','→ autori','fk']]],
+      r:'Un autore può aver scritto molti libri; ogni libro ha un solo autore.',
+      p:['index.html','autori.html','catalogo.html','*proponi-libro.html','contatti.html'],
+      f:'Proponi un libro: titolo, autore (menu a tendina), genere, anno di pubblicazione, numero di pagine, nota per il bibliotecario.',
+      x:'Cercare un libro per titolo e mostrare solo quelli disponibili.' },
+
+    { t:'Torneo di calcetto della scuola', a:'Tempo libero',
+      s:'Il comitato studentesco organizza il torneo di calcetto tra le classi e vuole un sito con squadre, giocatori e regolamento.',
+      t1:['squadre',[['id','numero intero','pk'],['nome','testo'],['classe','testo'],['colore_maglia','testo'],['capitano','testo'],['motto','testo']]],
+      t2:['giocatori',[['id','numero intero','pk'],['nome','testo'],['cognome','testo'],['numero_maglia','numero intero'],['ruolo','testo'],['gol','numero intero'],['id_squadra','→ squadre','fk']]],
+      r:'Una squadra ha molti giocatori; ogni giocatore gioca in una sola squadra.',
+      p:['index.html','squadre.html','giocatori.html','*iscrizione.html','regolamento.html'],
+      f:'Iscrivi un giocatore: nome, cognome, squadra (menu a tendina), ruolo (pulsanti radio), numero di maglia (1–99), accettazione del regolamento.',
+      x:'Classifica dei marcatori ordinata per numero di gol.' },
+
+    { t:'Ricettario online', a:'Tempo libero',
+      s:'Un sito di ricette divise per categoria, a cui i visitatori possono inviare le proprie ricette.',
+      t1:['categorie',[['id','numero intero','pk'],['nome','testo'],['descrizione','testo lungo'],['immagine','testo (nome file)']]],
+      t2:['ricette',[['id','numero intero','pk'],['titolo','testo'],['ingredienti','testo lungo'],['tempo_minuti','numero intero'],['difficolta','testo'],['porzioni','numero intero'],['vegetariana','sì / no'],['id_categoria','→ categorie','fk']]],
+      r:'Una categoria (es. "Dolci") contiene molte ricette; ogni ricetta appartiene a una sola categoria.',
+      p:['index.html','categorie.html','ricette.html','*invia-ricetta.html','chi-siamo.html'],
+      f:'Invia una ricetta: titolo, categoria, ingredienti (area di testo), tempo in minuti, difficoltà (radio), porzioni, vegetariana (casella).',
+      x:'Ricalcolare le dosi cambiando il numero di porzioni; mostrare le ricette pronte in meno di 30 minuti.' },
+
+    { t:'Cineteca', a:'Cultura',
+      s:'Un archivio di film con le schede dei registi, pensato per un cineforum scolastico.',
+      t1:['registi',[['id','numero intero','pk'],['nome','testo'],['cognome','testo'],['nazionalita','testo'],['anno_nascita','numero intero'],['foto','testo (nome file)']]],
+      t2:['film',[['id','numero intero','pk'],['titolo','testo'],['anno','numero intero'],['genere','testo'],['durata_minuti','numero intero'],['voto','numero intero (1–10)'],['trama','testo lungo'],['id_regista','→ registi','fk']]],
+      r:'Un regista ha diretto molti film; ogni film ha un solo regista.',
+      p:['index.html','registi.html','film.html','*aggiungi-film.html','cineforum.html'],
+      f:'Aggiungi un film: titolo, regista, anno, genere (menu a tendina), durata, voto (cursore range da 1 a 10), trama.',
+      x:'Calcolare il voto medio dei film di ciascun regista.' },
+
+    { t:'Etichetta musicale indipendente', a:'Cultura',
+      s:'Una piccola etichetta discografica presenta i suoi artisti e i loro brani e raccoglie le proposte di nuove canzoni.',
+      t1:['artisti',[['id','numero intero','pk'],['nome_arte','testo'],['genere_musicale','testo'],['citta','testo'],['anno_esordio','numero intero'],['bio','testo lungo']]],
+      t2:['brani',[['id','numero intero','pk'],['titolo','testo'],['durata_secondi','numero intero'],['anno','numero intero'],['ascolti','numero intero'],['esplicito','sì / no'],['id_artista','→ artisti','fk']]],
+      r:'Un artista ha pubblicato molti brani; ogni brano è di un solo artista.',
+      p:['index.html','artisti.html','brani.html','*proponi-brano.html','contatti.html'],
+      f:'Proponi un brano: titolo, artista, durata, anno, link al brano (type="url"), contenuto esplicito (casella).',
+      x:'Mostrare la durata in minuti e secondi (es. 3:45) e la classifica dei 5 brani più ascoltati.' },
+
+    { t:'Rifugio per animali', a:'Servizi',
+      s:'Un rifugio presenta cani e gatti in attesa di una famiglia e raccoglie online le richieste di adozione.',
+      t1:['animali',[['id','numero intero','pk'],['nome','testo'],['specie','testo'],['razza','testo'],['eta_anni','numero intero'],['sesso','testo'],['data_arrivo','data'],['adottato','sì / no']]],
+      t2:['richieste',[['id','numero intero','pk'],['nome_richiedente','testo'],['email','email'],['telefono','testo'],['data_richiesta','data'],['messaggio','testo lungo'],['id_animale','→ animali','fk']]],
+      r:'Un animale può ricevere molte richieste di adozione; ogni richiesta riguarda un solo animale.',
+      p:['index.html','animali.html','richieste.html','*adotta.html','come-aiutarci.html'],
+      f:'Richiesta di adozione: nome, email, telefono (type="tel"), animale scelto, messaggio, consenso al trattamento dei dati (obbligatorio).',
+      x:'Filtrare per specie e mostrare solo gli animali non ancora adottati.' },
+
+    { t:'Palestra', a:'Servizi',
+      s:'Una palestra di quartiere pubblica i suoi corsi settimanali e permette di iscriversi online.',
+      t1:['corsi',[['id','numero intero','pk'],['nome','testo'],['istruttore','testo'],['giorno','testo'],['orario','ora'],['posti_max','numero intero'],['prezzo_mensile','numero decimale']]],
+      t2:['iscrizioni',[['id','numero intero','pk'],['nome','testo'],['cognome','testo'],['email','email'],['data_nascita','data'],['livello','testo'],['data_iscrizione','data'],['id_corso','→ corsi','fk']]],
+      r:'Un corso ha molti iscritti; ogni iscrizione riguarda un solo corso.',
+      p:['index.html','corsi.html','iscritti.html','*iscriviti.html','orari-e-contatti.html'],
+      f:'Iscriviti a un corso: nome, cognome, email, data di nascita, corso, livello (principiante / intermedio / avanzato).',
+      x:'Mostrare quanti posti sono ancora liberi in ogni corso.' },
+
+    { t:'Agenzia di viaggi', a:'Servizi',
+      s:'Un\'agenzia di viaggi presenta le sue mete e i viaggi organizzati in partenza nei prossimi mesi.',
+      t1:['destinazioni',[['id','numero intero','pk'],['citta','testo'],['paese','testo'],['continente','testo'],['descrizione','testo lungo'],['immagine','testo (nome file)']]],
+      t2:['viaggi',[['id','numero intero','pk'],['titolo','testo'],['data_partenza','data'],['giorni','numero intero'],['prezzo','numero decimale'],['mezzo','testo'],['posti_disponibili','numero intero'],['id_destinazione','→ destinazioni','fk']]],
+      r:'Per una destinazione ci sono molti viaggi in date diverse; ogni viaggio porta a una sola destinazione.',
+      p:['index.html','destinazioni.html','viaggi.html','*nuovo-viaggio.html','contatti.html'],
+      f:'Area agenzia, nuovo viaggio: titolo, destinazione, data di partenza, numero di giorni, prezzo, mezzo (aereo / treno / pullman).',
+      x:'Cercare i viaggi entro un budget massimo e mostrare il prezzo al giorno.' },
+
+    { t:'Archivio di videogiochi', a:'Tempo libero',
+      s:'Un sito per appassionati che cataloga videogiochi e case produttrici, con voto e classificazione PEGI.',
+      t1:['case_produttrici',[['id','numero intero','pk'],['nome','testo'],['paese','testo'],['anno_fondazione','numero intero'],['sito_web','testo']]],
+      t2:['videogiochi',[['id','numero intero','pk'],['titolo','testo'],['anno','numero intero'],['piattaforma','testo'],['genere','testo'],['pegi','numero intero'],['voto','numero intero (1–10)'],['id_casa','→ case_produttrici','fk']]],
+      r:'Una casa produttrice ha sviluppato molti videogiochi; ogni videogioco è di una sola casa.',
+      p:['index.html','case.html','videogiochi.html','*aggiungi-gioco.html','info.html'],
+      f:'Aggiungi un videogioco: titolo, casa produttrice, anno, piattaforma (caselle multiple), PEGI (3, 7, 12, 16, 18), voto.',
+      x:'Filtrare per piattaforma e colorare il PEGI in base all\'età.' },
+
+    { t:'Concessionaria di auto usate', a:'Negozi',
+      s:'Una concessionaria mette online le auto usate in vendita, divise per marca.',
+      t1:['marche',[['id','numero intero','pk'],['nome','testo'],['paese','testo'],['logo','testo (nome file)']]],
+      t2:['auto',[['id','numero intero','pk'],['modello','testo'],['anno_immatricolazione','numero intero'],['km','numero intero'],['alimentazione','testo'],['cambio','testo'],['prezzo','numero decimale'],['venduta','sì / no'],['id_marca','→ marche','fk']]],
+      r:'Una marca ha molte auto in vendita; ogni auto è di una sola marca.',
+      p:['index.html','marche.html','auto-in-vendita.html','*vendi-auto.html','dove-siamo.html'],
+      f:'Metti in vendita un\'auto: marca, modello, anno, chilometri, alimentazione (radio), cambio, prezzo richiesto.',
+      x:'Cercare per prezzo e chilometri massimi; calcolare la rata mensile di un finanziamento.' },
+
+    { t:'Eventi in città', a:'Tempo libero',
+      s:'Un sito che raccoglie concerti, spettacoli e serate nei locali della città.',
+      t1:['locali',[['id','numero intero','pk'],['nome','testo'],['indirizzo','testo'],['tipo','testo'],['capienza','numero intero'],['sito_web','testo']]],
+      t2:['eventi',[['id','numero intero','pk'],['titolo','testo'],['data','data'],['ora','ora'],['genere','testo'],['prezzo','numero decimale'],['gratuito','sì / no'],['id_locale','→ locali','fk']]],
+      r:'In un locale si svolgono molti eventi; ogni evento si tiene in un solo locale.',
+      p:['index.html','locali.html','calendario.html','*segnala-evento.html','contatti.html'],
+      f:'Segnala un evento: titolo, locale, data, ora (type="time"), genere, prezzo, gratuito (casella).',
+      x:'Mostrare solo gli eventi futuri, in ordine di data, e quelli del fine settimana.' },
+
+    { t:'Vivaio e negozio di piante', a:'Negozi',
+      s:'Un vivaio presenta le sue piante con i consigli di cura e tiene sotto controllo il magazzino.',
+      t1:['categorie',[['id','numero intero','pk'],['nome','testo'],['descrizione','testo lungo'],['immagine','testo (nome file)']]],
+      t2:['piante',[['id','numero intero','pk'],['nome_comune','testo'],['nome_scientifico','testo'],['luce','testo'],['annaffiature_settimana','numero intero'],['prezzo','numero decimale'],['quantita','numero intero'],['id_categoria','→ categorie','fk']]],
+      r:'Una categoria (es. "Piante aromatiche") contiene molte piante; ogni pianta appartiene a una sola categoria.',
+      p:['index.html','categorie.html','piante.html','*nuova-pianta.html','consigli.html'],
+      f:'Nuova pianta: nome comune, nome scientifico, categoria, luce (pieno sole / mezz\'ombra / ombra), annaffiature a settimana, prezzo, quantità.',
+      x:'Segnalare in rosso le piante con meno di 5 pezzi in magazzino.' },
+
+    { t:'Bed & Breakfast', a:'Servizi',
+      s:'Un piccolo B&B presenta le sue camere e accetta prenotazioni online.',
+      t1:['camere',[['id','numero intero','pk'],['nome','testo'],['tipo','testo'],['posti_letto','numero intero'],['prezzo_notte','numero decimale'],['vista_mare','sì / no'],['descrizione','testo lungo']]],
+      t2:['prenotazioni',[['id','numero intero','pk'],['nome_ospite','testo'],['email','email'],['check_in','data'],['check_out','data'],['numero_ospiti','numero intero'],['note','testo lungo'],['id_camera','→ camere','fk']]],
+      r:'Una camera riceve molte prenotazioni nel tempo; ogni prenotazione riguarda una sola camera.',
+      p:['index.html','camere.html','prenotazioni.html','*prenota.html','dove-siamo.html'],
+      f:'Prenota: nome, email, camera, data di arrivo, data di partenza, numero di ospiti (con massimo), richieste particolari.',
+      x:'Calcolare il numero di notti e il prezzo totale; controllare che la partenza sia dopo l\'arrivo.' },
+
+    { t:'Sentieri di montagna', a:'Tempo libero',
+      s:'Una guida online ai sentieri della zona, con le recensioni di chi li ha percorsi.',
+      t1:['sentieri',[['id','numero intero','pk'],['nome','testo'],['zona','testo'],['lunghezza_km','numero decimale'],['dislivello_m','numero intero'],['durata_ore','numero decimale'],['difficolta','testo (T / E / EE)']]],
+      t2:['recensioni',[['id','numero intero','pk'],['autore','testo'],['data_uscita','data'],['voto','numero intero (1–5)'],['commento','testo lungo'],['consigliato','sì / no'],['id_sentiero','→ sentieri','fk']]],
+      r:'Un sentiero riceve molte recensioni; ogni recensione parla di un solo sentiero.',
+      p:['index.html','sentieri.html','recensioni.html','*racconta-escursione.html','sicurezza.html'],
+      f:'Racconta la tua escursione: nome, sentiero, data, voto da 1 a 5 (radio), commento, consigliato (casella).',
+      x:'Calcolare il voto medio di ogni sentiero e mostrarlo con le stelline.' },
+
+    { t:'Ripetizioni tra studenti', a:'Servizi',
+      s:'Una bacheca della scuola dove gli studenti più grandi offrono ripetizioni a quelli più giovani.',
+      t1:['materie',[['id','numero intero','pk'],['nome','testo'],['area','testo'],['descrizione','testo lungo']]],
+      t2:['annunci',[['id','numero intero','pk'],['nome_tutor','testo'],['classe','testo'],['email','email'],['giorni_disponibili','testo'],['prezzo_ora','numero decimale'],['online','sì / no'],['id_materia','→ materie','fk']]],
+      r:'Per una materia ci sono molti annunci; ogni annuncio riguarda una sola materia.',
+      p:['index.html','materie.html','bacheca.html','*pubblica-annuncio.html','regole.html'],
+      f:'Pubblica un annuncio: nome, classe, email, materia, giorni disponibili (caselle multiple), prezzo all\'ora, lezione online (casella).',
+      x:'Filtrare gli annunci per materia e mostrare solo quelli gratuiti.' }
+  ];
+
+  var KEY = 'progetti-4-studenti';
+  var names = {};
+  try { names = JSON.parse(localStorage.getItem(KEY)) || {}; } catch(e){ names = {}; }
+  function saveNames(){ try { localStorage.setItem(KEY, JSON.stringify(names)); } catch(e){} }
+
+  function esc(s){ return String(s).replace(/[&<>"]/g, function(c){ return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]; }); }
+  function tbl(t){
+    return '<div class="tbl"><div class="tbl-name">' + esc(t[0]) + '<small>' + t[1].length + ' colonne</small></div><ul>' +
+      t[1].map(function(c){ return '<li class="' + (c[2]||'') + '"><code>' + esc(c[0]) + '</code><span>' + esc(c[1]) + '</span></li>'; }).join('') +
+      '</ul></div>';
+  }
+
+  var list = document.getElementById('list');
+  list.innerHTML = P.map(function(p, i){
+    var n = String(i+1).padStart(2,'0');
+    return '<article class="panel proj" data-i="' + i + '" data-area="' + p.a + '">' +
+      '<div class="proj-head"><div class="proj-top"><span class="num">PROGETTO ' + n + '</span><span class="area">' + p.a + '</span></div>' +
+      '<h3>' + esc(p.t) + '</h3><p class="scen">' + esc(p.s) + '</p></div>' +
+      '<div class="proj-body">' +
+        '<div class="tables2">' + tbl(p.t1) + tbl(p.t2) + '</div>' +
+        '<p class="relation">' + esc(p.r) + '</p>' +
+        '<div class="detail"><h5>Pagine minime</h5><div class="pages-list">' +
+          p.p.map(function(x){ return x.charAt(0)==='*' ? '<span class="f">' + esc(x.slice(1)) + '</span>' : '<span>' + esc(x) + '</span>'; }).join('') +
+        '</div></div>' +
+        '<div class="detail"><h5>Il form</h5><p>' + esc(p.f) + '</p></div>' +
+        '<div class="extra"><b>Sfida per la fase 3</b>' + esc(p.x) + '</div>' +
+      '</div>' +
+      '<div class="proj-foot"><label>Studente <input type="text" data-name="' + i + '" value="' + esc(names[i]||'') + '" placeholder="nome e cognome"></label>' +
+      '<button class="btn" data-print="' + i + '" type="button">Stampa</button></div>' +
+    '</article>';
+  }).join('');
+
+  var cards = Array.prototype.slice.call(list.querySelectorAll('.proj'));
+  var area = 'tutti', q = document.getElementById('q');
+
+  function filter(){
+    var term = q.value.trim().toLowerCase(), shown = 0;
+    cards.forEach(function(c){
+      var i = +c.getAttribute('data-i');
+      var okA = area === 'tutti' || c.getAttribute('data-area') === area;
+      var okQ = !term || c.textContent.toLowerCase().indexOf(term) > -1 || (names[i]||'').toLowerCase().indexOf(term) > -1;
+      c.hidden = !(okA && okQ);
+      if (!c.hidden) shown++;
+    });
+    document.getElementById('empty').style.display = shown ? 'none' : 'block';
+  }
+  Array.prototype.forEach.call(document.querySelectorAll('[data-area]'), function(b){
+    if (b.tagName !== 'BUTTON') return;
+    b.addEventListener('click', function(){
+      area = b.getAttribute('data-area');
+      document.querySelectorAll('.filters .btn').forEach(function(x){ x.classList.toggle('on', x === b); });
+      filter();
+    });
+  });
+  q.addEventListener('input', filter);
+
+  list.addEventListener('input', function(e){
+    var i = e.target.getAttribute('data-name');
+    if (i === null) return;
+    names[i] = e.target.value; saveNames();
+  });
+  document.getElementById('clearNames').addEventListener('click', function(){
+    names = {}; saveNames();
+    list.querySelectorAll('[data-name]').forEach(function(x){ x.value = ''; });
+    filter();
+  });
+
+  list.addEventListener('click', function(e){
+    var i = e.target.getAttribute('data-print');
+    if (i === null) return;
+    cards.forEach(function(c){ c.classList.toggle('to-print', c.getAttribute('data-i') === i); });
+    document.body.classList.add('print-one');
+    window.print();
+  });
+  window.addEventListener('afterprint', function(){
+    document.body.classList.remove('print-one');
+    cards.forEach(function(c){ c.classList.remove('to-print'); });
+  });
+  document.getElementById('printAll').addEventListener('click', function(){
+    cards.forEach(function(c){ c.hidden = false; c.classList.add('to-print'); });
+    document.body.classList.add('print-one');
+    window.print();
+    filter();
+  });
+
+  document.getElementById('copyReadme').addEventListener('click', function(){
+    var b = this, old = b.textContent, txt = document.getElementById('readme').textContent;
+    (navigator.clipboard ? navigator.clipboard.writeText(txt) : Promise.reject()).then(function(){ b.textContent = 'Copiato ✓'; }, function(){ b.textContent = 'Non riuscito'; });
+    setTimeout(function(){ b.textContent = old; }, 1500);
+  });
+})();
+</script>
+
+</body>
+</html>
