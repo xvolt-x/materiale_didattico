@@ -7,331 +7,7 @@
 <meta name="description" content="Complessità computazionale: funzione di costo, misura dei tempi, ricerca lineare e binaria, notazione O, ordinamento e problemi intrattabili. Materiale per la classe quinta, liceo scienze applicate.">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
-<style>
-:root{
-  --paper:#f6f4ee;
-  --paper-dim:#eeebe1;
-  --ink:#15213b;
-  --ink-soft:#4a5468;
-  --blue:#2f6fed;
-  --blue-dim:#dbe6fd;
-  --teal:#1f8f7d;
-  --teal-dim:#d9efe9;
-  --amber:#d98c1f;
-  --amber-dim:#f8e6c8;
-  --red:#c4432c;
-  --line:#d9d4c6;
-  --radius:2px;
-}
-*{box-sizing:border-box;}
-html{scroll-behavior:smooth;}
-body{
-  margin:0;
-  background:var(--paper);
-  color:var(--ink);
-  font-family:'IBM Plex Sans',sans-serif;
-  line-height:1.55;
-}
-code, .mono{font-family:'IBM Plex Mono',monospace;}
-.sqrt{white-space:nowrap;}
-.sqrt .rad-inner{border-top:1.5px solid currentColor; padding:0 .12em 0 .04em;}
-.frac .den .sqrt .rad-inner{display:inline-block; line-height:1.05; margin-top:.3em; padding-top:.05em;}
-.frac{display:inline-flex; flex-direction:column; vertical-align:middle; text-align:center; font-size:.85em; line-height:1.15em; margin:0 .1em; position:relative; top:.05em;}
-.frac .num{border-bottom:1.3px solid currentColor; padding:0 .2em;}
-.frac .den{padding:0 .2em;}
-.sigma{position:relative; display:inline-block; font-size:1.5em; vertical-align:middle; margin:0 .2em; line-height:1; top:.08em;}
-.sigma .lim-top{position:absolute; top:-0.7em; left:50%; transform:translateX(-50%); font-size:.4em; white-space:nowrap;}
-.sigma .lim-bot{position:absolute; bottom:-0.5em; left:50%; transform:translateX(-50%); font-size:.4em; white-space:nowrap;}
-.bullets{max-width:70ch; padding-left:1.2em; margin:0 0 1.4em;}
-.bullets li{margin-bottom:.4em;}
-.bullets .formula-line{margin:.5em 0 .3em;}
-.bullets .formula-line + .formula-line{margin-top:.6em;}
-.formula-line{font-size:1.1rem;}
-.lim{display:inline-flex; flex-direction:column; align-items:center; vertical-align:middle; line-height:1.15; margin:0 .3em;}
-.lim .lim-sub{font-size:.7em;}
-.formula-table{width:100%; border-collapse:collapse; margin:1.6em 0; font-size:1.05rem; background:#fff; border:1px solid var(--line);}
-.formula-table th{background:var(--ink); color:var(--paper); text-align:left; padding:.6em .9em; font-family:'IBM Plex Mono',monospace; font-size:.8rem; font-weight:500;}
-.formula-table td{padding:1em .9em; border-top:1px solid var(--line); vertical-align:middle;}
-.formula-table td:first-child{font-family:'IBM Plex Mono',monospace; font-size:.85rem; white-space:nowrap; width:1%;}
-.formula-table td:first-child .sub{display:block; color:var(--ink-soft); font-size:.85em; font-weight:400;}
-h1,h2,h3{font-weight:600; margin:0 0 .4em 0;}
-p{margin:0 0 1em 0; max-width:70ch;}
-a{color:var(--blue);}
-
-/* ---- Nav ---- */
-nav.toc{
-  position:sticky; top:0; z-index:50;
-  background:var(--ink); color:var(--paper);
-  display:flex; overflow-x:auto; white-space:nowrap;
-  border-bottom:3px solid var(--blue);
-}
-nav.toc a{
-  color:var(--paper); text-decoration:none;
-  padding:.85em 1.1em; font-size:.85rem; font-family:'IBM Plex Mono',monospace;
-  border-right:1px solid rgba(255,255,255,.12);
-  opacity:.75;
-}
-nav.toc a:hover{opacity:1; background:rgba(255,255,255,.06);}
-nav.toc a span.n{color:var(--blue); margin-right:.5em;}
-
-/* ---- Hero ---- */
-header.hero{
-  padding:5em 2em 4em;
-  max-width:1000px; margin:0 auto;
-  border-bottom:1px solid var(--line);
-}
-header.hero .eyebrow{
-  font-family:'IBM Plex Mono',monospace; color:var(--blue);
-  font-size:.85rem; margin-bottom:1em;
-}
-header.hero h1{
-  font-size:clamp(1.8rem, 4vw, 2.7rem);
-  line-height:1.1; max-width:20ch;
-}
-header.hero .sub{font-size:1.15rem; color:var(--ink-soft); max-width:60ch;}
-.hero-meta{
-  display:flex; gap:2em; margin-top:2em; flex-wrap:wrap;
-  font-family:'IBM Plex Mono',monospace; font-size:.85rem; color:var(--ink-soft);
-}
-.hero-meta div span{display:block; color:var(--ink); font-size:1.3rem; font-weight:600; font-family:'IBM Plex Sans',sans-serif;}
-
-/* ---- Sections ---- */
-section{
-  max-width:1000px; margin:0 auto; padding:4.5em 2em;
-  border-bottom:1px solid var(--line);
-}
-section.alt{background:var(--paper-dim);max-width:none;}
-section.alt > .inner{max-width:1000px; margin:0 auto;}
-.kicker{
-  font-family:'IBM Plex Mono',monospace; color:var(--blue); font-size:.85rem;
-  display:flex; align-items:center; gap:.6em; margin-bottom:.6em;
-}
-.kicker .num{
-  width:1.8em; height:1.8em; border:1px solid var(--blue); border-radius:50%;
-  display:flex; align-items:center; justify-content:center; color:var(--blue); font-size:.8rem;
-}
-h2{font-size:1.5rem;}
-h3{font-size:1.1rem; margin-top:1.8em;}
-
-.badge{
-  font-family:'IBM Plex Mono',monospace; font-size:.72rem; padding:.25em .6em;
-  border:1px solid; display:inline-block; margin-left:.7em; vertical-align:middle;
-}
-.badge.onbook{color:var(--teal); border-color:var(--teal); background:var(--teal-dim);}
-.badge.extra{color:var(--amber); border-color:var(--amber); background:var(--amber-dim);}
-.legend-box{
-  display:flex; gap:2em; flex-wrap:wrap; align-items:center;
-  border:1px solid var(--line); background:#fff; padding:1em 1.4em; margin:1.6em 0 2.2em;
-  font-size:.9rem;
-}
-.legend-box .item{display:flex; align-items:center; gap:.6em;}
-
-/* ---- Teacher callout ---- */
-.teacher-note{
-  border-left:3px solid var(--teal); background:var(--teal-dim);
-  padding:1em 1.4em; margin:1.5em 0; font-size:.95rem;
-}
-.teacher-note strong{color:var(--teal); font-family:'IBM Plex Mono',monospace; font-size:.8rem; display:block; margin-bottom:.4em; text-transform:none;}
-
-/* ---- Card / panel ---- */
-.panel{
-  background:#fff; border:1px solid var(--line); padding:1.6em 1.8em; margin:1.6em 0;
-}
-.grid2{display:grid; grid-template-columns:1fr 1fr; gap:1.4em;}
-.grid3{display:grid; grid-template-columns:repeat(3,1fr); gap:1.2em;}
-@media(max-width:820px){.grid2,.grid3{grid-template-columns:1fr;}}
-
-/* ---- Buttons ---- */
-button{
-  font-family:'IBM Plex Mono',monospace; font-size:.85rem;
-  background:var(--ink); color:var(--paper); border:none;
-  padding:.7em 1.3em; cursor:pointer; border-radius:var(--radius);
-}
-button:hover{background:var(--blue);}
-button.secondary{background:none; color:var(--ink); border:1px solid var(--ink);}
-button.secondary:hover{background:var(--ink); color:var(--paper);}
-button:disabled{opacity:.4; cursor:not-allowed;}
-
-/* ---- Schema figura 12 ---- */
-.schema{display:flex; align-items:center; gap:.6em; flex-wrap:wrap; margin:2em 0; font-family:'IBM Plex Mono',monospace; font-size:.85rem;}
-.schema .box{border:1px solid var(--ink); padding:.9em 1.1em; background:#fff; text-align:center;}
-.schema .box.g1{background:var(--amber-dim); border-color:var(--amber);}
-.schema .box.g2{background:var(--teal-dim); border-color:var(--teal);}
-.schema .arrow{color:var(--blue); font-size:1.2rem;}
-.schema .approx{font-size:.75rem; text-align:center; width:100%;}
-.schema .approx .a1{color:var(--amber); font-weight:600;}
-.schema .approx .a2{color:var(--teal); font-weight:600;}
-
-/* ---- Overflow demo ---- */
-.overflow-box{display:flex; gap:2em; align-items:center; flex-wrap:wrap;}
-.byte-display{
-  font-family:'IBM Plex Mono',monospace; font-size:2.6rem; font-weight:600;
-  background:var(--ink); color:var(--paper); padding:.4em .7em; min-width:3.5em; text-align:center;
-  transition:background .15s;
-}
-.byte-display.overflow{background:var(--red); animation:shake .35s;}
-@keyframes shake{0%,100%{transform:translateX(0);}25%{transform:translateX(-6px);}75%{transform:translateX(6px);}}
-.bits{display:flex; gap:.25em; margin-top:.7em;}
-.bit{width:1.6em; height:1.6em; border:1px solid var(--ink); display:flex; align-items:center; justify-content:center; font-family:'IBM Plex Mono',monospace; font-size:.85rem;}
-.bit.on{background:var(--blue); color:#fff;}
-.overflow-msg{font-family:'IBM Plex Mono',monospace; font-size:.85rem; color:var(--red); min-height:1.4em;}
-
-/* ---- Flip cards ---- */
-.flip-card{perspective:1000px; height:220px; cursor:pointer;}
-.flip-card.tall{height:280px;}
-.flip-inner{position:relative; width:100%; height:100%; transition:transform .5s; transform-style:preserve-3d;}
-.flip-card.flipped .flip-inner{transform:rotateY(180deg);}
-.flip-face{position:absolute; width:100%; height:100%; backface-visibility:hidden; border:1px solid var(--line); padding:1.3em; background:#fff; display:flex; flex-direction:column; justify-content:center;}
-.flip-face.back{transform:rotateY(180deg); background:var(--ink); color:var(--paper); font-size:.9rem;}
-.flip-face .tag{font-family:'IBM Plex Mono',monospace; font-size:.75rem; color:var(--blue);}
-.flip-face h3{margin-top:.3em;}
-.flip-hint{font-family:'IBM Plex Mono',monospace; font-size:.7rem; color:var(--ink-soft); margin-top:.6em;}
-
-/* ---- Pi section ---- */
-.pi-controls{display:flex; align-items:center; gap:1em; flex-wrap:wrap; margin-bottom:1em;}
-.pi-controls input[type=range]{flex:1; min-width:180px;}
-.pi-readouts{display:flex; gap:1.5em; flex-wrap:wrap; font-family:'IBM Plex Mono',monospace; font-size:.85rem;}
-.pi-readouts .val{font-size:1.15rem; font-weight:600;}
-.leg{display:inline-flex; align-items:center; gap:.4em;}
-.dot{width:.7em; height:.7em; border-radius:50%; display:inline-block;}
-
-/* ---- Bisection ---- */
-.bisec-controls{display:flex; gap:1em; align-items:center; flex-wrap:wrap; margin-bottom:1em;}
-select{font-family:'IBM Plex Mono',monospace; padding:.5em; border:1px solid var(--ink);}
-table{border-collapse:collapse; width:100%; font-family:'IBM Plex Mono',monospace; font-size:.82rem; margin-top:1em;}
-th,td{border:1px solid var(--line); padding:.4em .6em; text-align:right;}
-th{background:var(--ink); color:var(--paper); font-weight:500;}
-td:first-child, th:first-child{text-align:center;}
-tbody tr:last-child{background:var(--blue-dim);}
-.converged{color:var(--teal); font-family:'IBM Plex Mono',monospace; font-size:.85rem; margin-top:.7em;}
-
-/* ---- Quiz ---- */
-.quiz-q{border:1px solid var(--line); background:#fff; padding:1.3em 1.5em; margin-bottom:1.2em;}
-.quiz-q p.qtext{font-weight:600; margin-bottom:.8em;}
-.quiz-q label{display:block; padding:.4em 0; cursor:pointer; font-size:.95rem;}
-.quiz-feedback{margin-top:.8em; font-family:'IBM Plex Mono',monospace; font-size:.85rem; padding:.6em; display:none;}
-.quiz-feedback.ok{background:var(--teal-dim); color:var(--teal); display:block;}
-.quiz-feedback.ko{background:#fbe4de; color:var(--red); display:block;}
-
-/* ---- Resources ---- */
-.resource{border-left:3px solid var(--amber); background:var(--amber-dim); padding:1em 1.3em; margin-bottom:1em;}
-.resource .tag{font-family:'IBM Plex Mono',monospace; font-size:.75rem; color:var(--amber); font-weight:600;}
-
-/* ---- Codice Python (sezione 9) ---- */
-pre.code{background:var(--ink); color:#e8e6df; font-family:'IBM Plex Mono',monospace; font-size:.82rem; line-height:1.55; padding:1.1em 1.3em; overflow-x:auto; margin:1em 0 1.4em; border-left:3px solid var(--blue);}
-pre.code .c{color:#8fb5a8;}
-pre.code .k{color:#8db3ff;}
-pre.code .s{color:#f0c27a;}
-.code-caption{font-family:'IBM Plex Mono',monospace; font-size:.75rem; color:var(--ink-soft); margin:1.4em 0 -.6em;}
-.slice-demo{display:grid; grid-template-columns:auto 1fr; gap:.55em 1em; align-items:center; font-family:'IBM Plex Mono',monospace; font-size:.85rem; margin:1em 0;}
-.slice-row{display:flex; gap:.3em; flex-wrap:wrap;}
-.slice-cell{width:2.6em; height:2em; display:flex; align-items:center; justify-content:center; border:1px solid var(--line); background:#fff; color:#b8b2a2;}
-.slice-cell.on-l{background:var(--blue-dim); border-color:var(--blue); color:var(--ink);}
-.slice-cell.on-r{background:var(--teal-dim); border-color:var(--teal); color:var(--ink);}
-.slice-cell.on-a{background:#fff; border-color:var(--ink); color:var(--ink);}
-.table-scroll{overflow-x:auto; max-width:100%;}
-select{max-width:100%;}
-.table-scroll > table{margin-top:1em;}
-.method-dot{display:inline-block; width:.75em; height:.75em; margin-right:.45em; vertical-align:baseline;}
-table.err-table td.ratio{font-weight:600;}
-table.err-table td.ratio.r2{color:var(--blue);}
-table.err-table td.ratio.r4{color:var(--amber);}
-table.err-table tbody tr:last-child{background:none;}
-#python-integrali .formula-table td{text-align:left;}
-#python-integrali .formula-table td.mono{text-align:right;}
-.teacher-note b{font-weight:600;}
-
-footer{padding:3em 2em; text-align:center; color:var(--ink-soft); font-family:'IBM Plex Mono',monospace; font-size:.8rem;}
-
-/* ==== Aggiunte per la pagina Complessità computazionale ==== */
-nav.toc a.home{opacity:1; background:rgba(255,255,255,.06);}
-.hero-actions{display:flex; gap:1em; flex-wrap:wrap; margin-top:-.6em;}
-.btn-link{display:inline-block; font-family:'IBM Plex Mono',monospace; font-size:.85rem; text-decoration:none; padding:.7em 1.3em; border:1px solid var(--ink); color:var(--ink); background:#fff;}
-.btn-link:hover{background:var(--ink); color:var(--paper);}
-table.plain tbody tr:last-child{background:none;}
-.code-cost td{text-align:left;}
-.vs-panel h3{margin-top:0;}
-.vs-panel.good{border-top:3px solid var(--teal);}
-.vs-panel.bad{border-top:3px solid var(--red);}
-.vs-panel ul{padding-left:1.2em; margin:.4em 0 0;}
-.vs-panel li{margin-bottom:.3em;}
-.formula-big{font-family:'IBM Plex Mono',monospace; font-size:1.15rem; background:#fff; border:1px solid var(--line); padding:.8em 1.2em; display:inline-block; margin:.4em 0 1.2em;}
-.formula-big b{color:var(--blue); font-weight:600;}
-input[type=number]{font-family:'IBM Plex Mono',monospace; padding:.4em; border:1px solid var(--ink); width:5.5em;}
-.stars{font-family:'IBM Plex Mono',monospace; background:#fff; border:1px solid var(--line); padding:1em 1.2em; line-height:1.15; margin:1em 0 0; min-height:3em; overflow-x:auto; font-size:.95rem; letter-spacing:.12em;}
-.out-block{font-family:'IBM Plex Mono',monospace; font-size:.8rem; background:#fff; border:1px solid var(--line); border-left:3px solid var(--teal); padding:.8em 1.2em; margin:-.6em 0 1.4em; white-space:pre; overflow-x:auto;}
-.out-block::before{content:'Output'; display:block; color:var(--teal); font-size:.72rem; margin-bottom:.3em;}
-.vec-wrap{overflow-x:auto; padding:1.5em 0 .3em;}
-.vec{display:flex; gap:3px; font-family:'IBM Plex Mono',monospace;}
-.vec .cell{flex:0 0 auto; width:2.5em; height:2.3em; display:flex; align-items:center; justify-content:center; border:1px solid var(--ink); background:#fff; font-size:.9rem; position:relative; transition:background .2s, opacity .2s;}
-.vec .cell .idx{position:absolute; top:-1.45em; font-size:.65rem; color:var(--ink-soft);}
-.vec.clickable .cell{cursor:pointer;}
-.vec.clickable .cell:hover{border-color:var(--blue);}
-.cell.dim{opacity:.22;}
-.cell.mid, .cell.cmp{background:var(--amber-dim); border-color:var(--amber); box-shadow:inset 0 0 0 1px var(--amber);}
-.cell.found{background:var(--teal); color:#fff; border-color:var(--teal);}
-.cell.seen{background:var(--paper-dim); color:var(--ink-soft);}
-.cell.sorted{background:var(--teal-dim); border-color:var(--teal);}
-.cell.cur{background:var(--blue-dim); border-color:var(--blue);}
-.cell.min{box-shadow:inset 0 0 0 2px var(--red);}
-.example-row{display:flex; align-items:center; gap:1em; flex-wrap:wrap; margin:.6em 0 1.2em; font-family:'IBM Plex Mono',monospace; font-size:.9rem;}
-.example-row .arrow{color:var(--amber);}
-.example-row .res{color:var(--blue);}
-.step-rows{display:flex; flex-direction:column; gap:.2em;}
-.step-row{display:flex; align-items:center; gap:1em; font-family:'IBM Plex Mono',monospace; font-size:.8rem;}
-.step-row .lbl{width:4.2em; flex:0 0 auto; color:var(--ink-soft);}
-.step-row .info{flex:0 0 auto; color:var(--ink-soft); white-space:nowrap;}
-.step-row .vec-wrap{padding:1.35em 0 .1em;}
-.msg{font-family:'IBM Plex Mono',monospace; font-size:.85rem; margin-top:.8em; min-height:1.4em;}
-.msg.ok{color:var(--teal);}
-.msg.ko{color:var(--red);}
-.legend-inline{display:flex; gap:1.2em; flex-wrap:wrap; font-family:'IBM Plex Mono',monospace; font-size:.75rem; color:var(--ink-soft); margin-top:.8em;}
-.legend-inline .sw{display:inline-block; width:1em; height:1em; border:1px solid var(--ink); vertical-align:-2px; margin-right:.4em;}
-.checks{display:flex; gap:.4em 1.2em; flex-wrap:wrap; font-family:'IBM Plex Mono',monospace; font-size:.85rem;}
-.checks label{display:inline-flex; align-items:center; gap:.35em; cursor:pointer;}
-details.sol{margin-top:1em; border-top:1px dashed var(--line); padding-top:.8em;}
-details.sol summary{cursor:pointer; font-family:'IBM Plex Mono',monospace; font-size:.85rem; color:var(--blue);}
-details.sol[open] summary{margin-bottom:.4em;}
-.ex-panel h3{margin-top:0; font-family:'IBM Plex Mono',monospace; font-size:1rem;}
-.ex-panel .tag{font-family:'IBM Plex Mono',monospace; font-size:.72rem; color:var(--amber);}
-.algo-list{display:grid; grid-template-columns:repeat(5,1fr); gap:1em; margin:1.2em 0;}
-@media(max-width:820px){.algo-list{grid-template-columns:1fr 1fr;}}
-.algo-list div{border:1px solid var(--line); background:#fff; padding:.9em 1em; font-size:.9rem;}
-.algo-list div b{display:block; font-family:'IBM Plex Mono',monospace; font-size:.85rem;}
-.algo-list div span{color:var(--ink-soft); font-size:.8rem; font-family:'IBM Plex Mono',monospace;}
-.pnp{display:grid; grid-template-columns:1fr 1fr; gap:1.4em;}
-@media(max-width:820px){.pnp{grid-template-columns:1fr;}}
-.res-grid{display:grid; grid-template-columns:repeat(3,1fr); gap:1em;}
-@media(max-width:820px){.res-grid{grid-template-columns:1fr;}}
-.resource a{display:block; font-weight:600; margin-top:.3em; text-decoration:none;}
-.resource a:hover{text-decoration:underline;}
-.resource p{margin:.3em 0 0; font-size:.9rem; color:var(--ink-soft);}
-@media(max-width:600px){
-  section{padding:3.2em 16px;}
-  header.hero{padding:3.5em 16px 3em;}
-  .panel{padding:1.2em 1em;}
-  .vec .cell{width:2.05em; height:2.1em; font-size:.78rem;}
-  pre.code{font-size:.74rem;}
-}
-pre.code .n{color:#e9a6c6;}
-.grid2 > *, .grid3 > *, .pnp > *{min-width:0;}
-.step-row .vec-wrap{flex:0 1 auto; min-width:0;}
-@media(max-width:700px){
-  .step-row{flex-wrap:wrap; row-gap:0;}
-  .step-row .lbl{width:3.6em;}
-  .step-row .vec-wrap{flex:1 1 0;}
-  .step-row .info{width:100%; padding-left:4.6em; white-space:normal; margin-bottom:.3em;}
-}
-
-/* ---- Link di ritorno all'indice ---- */
-.back-link{display:inline-flex; align-items:center; gap:.5em; font-family:'IBM Plex Mono',monospace; font-size:.85rem; color:var(--ink); text-decoration:none; border:1px solid var(--ink); background:#fff; padding:.5em 1em; margin-bottom:2em;}
-.back-link:hover{background:var(--ink); color:var(--paper);}
-.back-foot{display:block; margin:0 auto 1.2em; width:max-content;}
-.gauss-sum{display:grid; grid-template-columns:repeat(13, auto); justify-content:start; gap:.25em 0; font-family:'IBM Plex Mono',monospace; font-size:1.05rem; margin:.4em 0 1.2em; overflow-x:auto;}
-.gauss-sum span{text-align:center; padding:0 .35em;}
-.gauss-sum .tot{border-top:1.5px solid var(--ink); padding-top:.25em; color:var(--blue); font-weight:600;}
-@media(max-width:600px){.gauss-sum{font-size:.9rem;} .gauss-sum span{padding:0 .2em;}}
-</style>
+<link rel="stylesheet" href="style.css">
 </head>
 <body>
 
@@ -367,13 +43,13 @@ pre.code .n{color:#e9a6c6;}
   <p>Un buon algoritmo deve avere due qualità. Non basta che arrivi alla risposta giusta: deve arrivarci <strong>in un tempo utile</strong> e senza sprecare risorse.</p>
 
   <div class="grid2">
-    <div class="panel vs-panel good" style="margin:0">
+    <div class="panel vs-panel good m0">
       <h3>Correttezza</h3>
-      <p style="margin:0">L'algoritmo fornisce la soluzione del problema proposto.</p>
+      <p class="m0">L'algoritmo fornisce la soluzione del problema proposto.</p>
     </div>
-    <div class="panel vs-panel good" style="margin:0">
+    <div class="panel vs-panel good m0">
       <h3>Efficienza</h3>
-      <p style="margin:0">L'algoritmo fornisce la soluzione in un tempo utile, con un uso "ragionevole" delle risorse di calcolo: <strong>tempo macchina</strong> (numero di istruzioni eseguite dal computer) e <strong>memoria</strong>.</p>
+      <p class="m0">L'algoritmo fornisce la soluzione in un tempo utile, con un uso "ragionevole" delle risorse di calcolo: <strong>tempo macchina</strong> (numero di istruzioni eseguite dal computer) e <strong>memoria</strong>.</p>
     </div>
   </div>
 
@@ -386,15 +62,15 @@ pre.code .n{color:#e9a6c6;}
         <div class="flip-hint">clicca per girare la carta</div>
       </div>
       <div class="flip-face back">
-        <p style="margin:0">Non basta. Lo stesso algoritmo può impiegare 2 secondi sul PC di casa e 0,5 secondi su un server: il tempo misurato dice qualcosa sul <em>computer</em> e sul <em>programma</em>, non solo sull'<em>algoritmo</em>. Serve una misura più astratta: la <strong>funzione di costo</strong>.</p>
+        <p class="m0">Non basta. Lo stesso algoritmo può impiegare 2 secondi sul PC di casa e 0,5 secondi su un server: il tempo misurato dice qualcosa sul <em>computer</em> e sul <em>programma</em>, non solo sull'<em>algoritmo</em>. Serve una misura più astratta: la <strong>funzione di costo</strong>.</p>
       </div>
     </div>
   </div>
 
   <div class="grid2" style="margin-top:1.6em">
-    <div class="panel vs-panel bad" style="margin:0">
+    <div class="panel vs-panel bad m0">
       <h3>Tempo di esecuzione</h3>
-      <p style="margin:0">Dipende da numerosi fattori:</p>
+      <p class="m0">Dipende da numerosi fattori:</p>
       <ul>
         <li>il linguaggio di programmazione utilizzato;</li>
         <li>l'efficienza con cui il compilatore o l'interprete traduce il codice in istruzioni macchina;</li>
@@ -402,10 +78,10 @@ pre.code .n{color:#e9a6c6;}
         <li>gli altri programmi in esecuzione nello stesso momento.</li>
       </ul>
     </div>
-    <div class="panel vs-panel good" style="margin:0">
+    <div class="panel vs-panel good m0">
       <h3>Funzione di costo</h3>
       <p>È un metodo di valutazione più generale e "astratto": conta <strong>quante operazioni elementari</strong> esegue l'algoritmo, indipendentemente dal linguaggio in cui è scritto e dal computer su cui gira. Questi fattori cambiano <em>quanto dura</em> ogni operazione, ma non <em>quante</em> operazioni servono.</p>
-      <p style="margin:0">Poiché la dimensione dei problemi varia con la quantità di dati in input, il costo si esprime come una <strong>funzione di n</strong>, la dimensione dei dati.</p>
+      <p class="m0">Poiché la dimensione dei problemi varia con la quantità di dati in input, il costo si esprime come una <strong>funzione di n</strong>, la dimensione dei dati.</p>
     </div>
   </div>
 </section>
@@ -459,7 +135,7 @@ pre.code .n{color:#e9a6c6;}
   <div class="kicker"><span class="num">3</span>Dal lineare al quadratico<span class="badge onbook">Sul libro · pp. 40-42</span></div>
   <h2>print_square() e print_triangle()</h2>
 
-  <h3 style="margin-top:0">print_square(n): un quadrato n×n</h3>
+  <h3 class="mt0">print_square(n): un quadrato n×n</h3>
   <p>La funzione chiama n volte <code>print_row(n)</code>. Ogni chiamata costa 3n+3 operazioni, più 1 per la chiamata stessa.</p>
   <pre class="code py">def print_square(n):           # Operazioni
     i = 0                      # 1
@@ -480,7 +156,7 @@ pre.code .n{color:#e9a6c6;}
   <p>Per calcolare la somma 1 + 2 + … + n serve la formula di Gauss.</p>
 
   <div class="panel">
-    <h3 style="margin-top:0">La formula di Gauss: 1 + 2 + … + n = n(n+1)/2</h3>
+    <h3 class="mt0">La formula di Gauss: 1 + 2 + … + n = n(n+1)/2</h3>
     <p><strong>L'idea: scrivere la somma due volte.</strong> Chiamiamo S la somma 1 + 2 + … + n. Con n = 6 la scriviamo una volta in avanti e una volta al contrario, poi sommiamo le due righe colonna per colonna:</p>
     <div class="gauss-sum">
       <span>S</span><span>=</span><span>1</span><span>+</span><span>2</span><span>+</span><span>3</span><span>+</span><span>4</span><span>+</span><span>5</span><span>+</span><span>6</span>
@@ -489,14 +165,14 @@ pre.code .n{color:#e9a6c6;}
     </div>
     <p>Ogni colonna vale 7 = n + 1: quando il numero sopra sale di 1, quello sotto scende di 1, quindi la loro somma non cambia. Le colonne sono 6 = n. Allora 2S = 6 · 7 = 42 e S = 21.</p>
     <p><strong>Con un n qualsiasi</strong> il ragionamento è identico: ci sono <strong>n colonne</strong>, ognuna vale <strong>n + 1</strong>, quindi</p>
-    <div class="formula-big" style="margin-top:0">2S = n(n + 1) &nbsp;⇒&nbsp; <b>S = 1 + 2 + … + n = <span class="frac"><span class="num">n(n + 1)</span><span class="den">2</span></span></b></div>
+    <div class="formula-big mt0">2S = n(n + 1) &nbsp;⇒&nbsp; <b>S = 1 + 2 + … + n = <span class="frac"><span class="num">n(n + 1)</span><span class="den">2</span></span></b></div>
     <p><strong>Lo stesso ragionamento, disegnato.</strong> La somma 1 + 2 + … + n è una "scala" di quadratini (in azzurro): 1 nella prima riga, 2 nella seconda, fino a n. La seconda riga del calcolo qui sopra è la stessa scala capovolta (in arancione). Accostate, formano un rettangolo di n righe e n + 1 colonne: la scala azzurra ne occupa esattamente metà. Muovi il cursore per vederlo con diversi valori di n.</p>
     <div class="pi-controls">
       <span class="mono">n =</span>
       <input type="range" id="gaussN" min="1" max="12" value="6">
       <span class="mono" id="gaussNVal">6</span>
     </div>
-    <canvas id="gaussCanvas" width="560" height="380" style="width:min(100%,520px); height:auto; display:block; margin:0 auto; background:#fff"></canvas>
+    <canvas class="chart-gauss" id="gaussCanvas" width="560" height="380"></canvas>
     <div class="pi-readouts" style="justify-content:center; margin-top:.8em">
       <span class="mono" id="gaussText">–</span>
     </div>
@@ -534,7 +210,7 @@ pre.code .n{color:#e9a6c6;}
       <input type="range" id="costMax" min="10" max="1000" step="10" value="20">
       <span class="mono" id="costMaxVal">20</span>
     </div>
-    <canvas id="costCanvas" width="900" height="360" style="width:100%; height:auto; border:1px solid var(--line); background:#fff;"></canvas>
+    <canvas class="chart" id="costCanvas" width="900" height="360"></canvas>
   </div>
 </section>
 
@@ -558,8 +234,8 @@ time.struct_time(tm_year=2026, tm_mon=9, tm_mday=17, tm_hour=17, tm_min=41, ...)
   <h3>time() e process_time()</h3>
   <p>Le due funzioni misurano due tipi diversi di tempo.</p>
   <div class="grid2">
-    <div class="panel" style="margin:0">
-      <h3 style="margin-top:0" class="mono">time.time()</h3>
+    <div class="panel m0">
+      <h3 class="mono mt0">time.time()</h3>
       <ul class="bullets" style="margin-bottom:.6em">
         <li>Restituisce il <strong>tempo reale</strong> (<em>wall-clock time</em>) in secondi dall'epoch.</li>
         <li>È influenzato da ritardi del sistema, <code>sleep</code>, carico della CPU, cambi dell'orologio di sistema.</li>
@@ -570,8 +246,8 @@ start = time.time()
 time.sleep(2)
 print(time.time() - start)   # ~2.0 secondi</pre>
     </div>
-    <div class="panel" style="margin:0">
-      <h3 style="margin-top:0" class="mono">time.process_time()</h3>
+    <div class="panel m0">
+      <h3 class="mono mt0">time.process_time()</h3>
       <ul class="bullets" style="margin-bottom:.6em">
         <li>Restituisce il <strong>tempo di CPU usato dal processo</strong>, escluso il tempo trascorso in attesa.</li>
         <li>Non misura il tempo reale, ma solo il tempo in cui la CPU lavora per il tuo programma.</li>
@@ -626,7 +302,7 @@ plt.show()</pre>
       <button id="liveRun">Misura ▶</button>
       <span class="mono" id="liveStatus" style="color:var(--ink-soft)"></span>
     </div>
-    <canvas id="liveCanvas" width="900" height="340" style="width:100%; height:auto; border:1px solid var(--line); background:#fff;"></canvas>
+    <canvas class="chart" id="liveCanvas" width="900" height="340"></canvas>
   </div>
   <div class="teacher-note"><strong>Da notare</strong>I punti non sono mai perfettamente allineati: altri processi del computer, il browser e la gestione della memoria introducono "rumore". È uno dei motivi per cui la funzione di costo è una misura più affidabile del cronometro.</div>
 </div></section>
@@ -682,7 +358,7 @@ sum_while():    1.61121 s</div>
       <input type="range" id="sumN" min="0" max="100000" step="1000" value="60000">
       <span class="mono" id="sumNVal">60 000</span>
     </div>
-    <canvas id="sumCanvas" width="900" height="320" style="width:100%; height:auto; border:1px solid var(--line); background:#fff;"></canvas>
+    <canvas class="chart" id="sumCanvas" width="900" height="320"></canvas>
     <div class="pi-readouts" style="margin-top:.8em">
       <span class="leg"><span class="dot" style="background:#1f8f7d"></span>sum()</span><span class="val mono" id="sumT1">–</span>
       <span class="leg"><span class="dot" style="background:#d98c1f"></span>sum_while()</span><span class="val mono" id="sumT2">–</span>
@@ -716,7 +392,7 @@ sum_while():    1.61121 s</div>
   <p>Per ogni esercizio scrivi la tua funzione con un ciclo <code>while</code>, poi confronta il suo tempo di esecuzione con quello della versione predefinita di Python, come in <code>sum_test.py</code>. Prova a risolverli da solo; per <code>max_while()</code> trovi la soluzione.</p>
 
   <div class="grid2">
-    <div class="panel ex-panel" style="margin:0">
+    <div class="panel ex-panel m0">
       <span class="tag">◆ max_test.py</span>
       <h3>max_while() vs max()</h3>
       <p>Calcola il <strong>valore massimo</strong> di un vettore di valori numerici.</p>
@@ -735,7 +411,7 @@ sum_while():    1.61121 s</div>
       </details>
     </div>
 
-    <div class="panel ex-panel" style="margin:0">
+    <div class="panel ex-panel m0">
       <span class="tag">◆ in_test.py</span>
       <h3>in_while() vs operatore in</h3>
       <p>Restituisce <code>True</code> se un elemento è presente nella lista, <code>False</code> altrimenti.</p>
@@ -743,7 +419,7 @@ sum_while():    1.61121 s</div>
       <p style="font-size:.9rem; margin:0">Suggerimento: è la <strong>ricerca lineare</strong>, che analizziamo nella <a href="#casi">sezione 7</a>.</p>
     </div>
 
-    <div class="panel ex-panel" style="margin:0">
+    <div class="panel ex-panel m0">
       <span class="tag">◆ index_test.py</span>
       <h3>index_while() vs index()</h3>
       <p>Restituisce l'indice della <strong>prima occorrenza</strong> dell'elemento nella lista; genera un errore se l'elemento non è presente.</p>
@@ -751,7 +427,7 @@ sum_while():    1.61121 s</div>
 
     </div>
 
-    <div class="panel ex-panel" style="margin:0">
+    <div class="panel ex-panel m0">
       <span class="tag">◆ count_occurrences.py · p. 73</span>
       <h3>conta_while() vs count()</h3>
       <p>Analizza la complessità del codice qui sotto: aggiungi accanto a ogni istruzione il numero di volte che viene eseguita, somma e trova la classe di complessità.</p>
@@ -895,7 +571,7 @@ sum_while():    1.61121 s</div>
       <select id="clsMax"><option>10</option><option selected>20</option><option>50</option><option>100</option><option>1000</option></select>
       <label class="mono" style="display:inline-flex; gap:.4em; align-items:center; font-size:.85rem; cursor:pointer"><input type="checkbox" id="clsLog"> scala logaritmica</label>
     </div>
-    <canvas id="clsCanvas" width="900" height="380" style="width:100%; height:auto; border:1px solid var(--line); background:#fff;"></canvas>
+    <canvas class="chart" id="clsCanvas" width="900" height="380"></canvas>
   </div>
 
   <h3>Quanto tempo servirebbe?</h3>
@@ -983,13 +659,13 @@ if __name__ == '__main__':
   <div class="kicker"><span class="num">11</span>Quando nessun computer basta<span class="badge onbook">Sul libro · p. 63</span></div>
   <h2>I problemi intrattabili e il commesso viaggiatore</h2>
   <div class="pnp">
-    <div class="panel vs-panel good" style="margin:0">
+    <div class="panel vs-panel good m0">
       <h3>Problemi di classe P</h3>
-      <p style="margin:0">Sono i problemi visti finora: esistono soluzioni con complessità <strong>polinomiale</strong> (O(n), O(n²), …), che terminano in tempi ragionevoli anche con grandi quantità di dati.</p>
+      <p class="m0">Sono i problemi visti finora: esistono soluzioni con complessità <strong>polinomiale</strong> (O(n), O(n²), …), che terminano in tempi ragionevoli anche con grandi quantità di dati.</p>
     </div>
-    <div class="panel vs-panel bad" style="margin:0">
+    <div class="panel vs-panel bad m0">
       <h3>Problemi di classe NP</h3>
-      <p style="margin:0">Sono problemi per cui <strong>non conosciamo alcun algoritmo polinomiale</strong> che li risolva, e non siamo nemmeno certi che ne esista uno. Esempio: il <strong>problema del commesso viaggiatore</strong>.</p>
+      <p class="m0">Sono problemi per cui <strong>non conosciamo alcun algoritmo polinomiale</strong> che li risolva, e non siamo nemmeno certi che ne esista uno. Esempio: il <strong>problema del commesso viaggiatore</strong>.</p>
     </div>
   </div>
 
@@ -1007,7 +683,7 @@ if __name__ == '__main__':
       <button id="tspNew" class="secondary">Nuove città</button>
       <button id="tspSolve">Forza bruta ▶</button>
     </div>
-    <canvas id="tspCanvas" width="900" height="400" style="width:100%; height:auto; border:1px solid var(--line); background:#fff;"></canvas>
+    <canvas class="chart" id="tspCanvas" width="900" height="400"></canvas>
     <div class="pi-readouts" style="margin-top:.8em">
       <span class="leg">percorsi esaminati</span><span class="val mono" id="tspCount">–</span>
       <span class="leg">lunghezza migliore</span><span class="val mono" id="tspBest">–</span>
