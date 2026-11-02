@@ -241,11 +241,17 @@ table.err-table tbody tr:last-child{background:none;}
 .teacher-note b{font-weight:600;}
 
 footer{padding:3em 2em; text-align:center; color:var(--ink-soft); font-family:'IBM Plex Mono',monospace; font-size:.8rem;}
+
+/* ---- Link di ritorno all'indice ---- */
+.back-link{display:inline-flex; align-items:center; gap:.5em; font-family:'IBM Plex Mono',monospace; font-size:.85rem; color:var(--ink); text-decoration:none; border:1px solid var(--ink); background:#fff; padding:.5em 1em; margin-bottom:2em;}
+.back-link:hover{background:var(--ink); color:var(--paper);}
+.back-foot{display:block; margin:0 auto 1.2em; width:max-content;}
 </style>
 </head>
 <body>
 
 <nav class="toc">
+  <a href="index.html" style="opacity:1; background:rgba(255,255,255,.06)"><span class="n">←</span>Indice</a>
   <a href="#intro"><span class="n">01</span>Cos'è</a>
   <a href="#overflow"><span class="n">02</span>Errore &amp; overflow</a>
   <a href="#classi"><span class="n">03</span>Classificazione</a>
@@ -259,6 +265,7 @@ footer{padding:3em 2em; text-align:center; color:var(--ink-soft); font-family:'I
 </nav>
 
 <header class="hero">
+  <a class="back-link" href="index.html">← Torna all'indice</a>
   <div class="eyebrow">Modulo B — Unità B1 · Quinta scienze applicate</div>
   <h1>Calcolo numerico: dal problema reale al risultato approssimato</h1>
   <div class="legend-box">
@@ -842,7 +849,7 @@ print(stima)</pre>
   <div class="teacher-note"><strong>Confronto con rettangoli e trapezi</strong>In una dimensione Monte Carlo è molto meno efficiente dei trapezi: con 10 000 punti sbaglia in media ancora di 1–2 unità su 152, mentre i trapezi con 1 000 sottointervalli sbagliano di appena 0.00003. Il vantaggio è altrove: serve solo poter valutare f in punti casuali, e la velocità di convergenza 1/<span class="sqrt">√<span class="rad-inner">N</span></span> <b>non dipende dal numero di dimensioni</b>. Per questo Monte Carlo diventa il metodo preferito per integrali in molte dimensioni, dove i metodi "a griglia" diventano troppo costosi: un'anticipazione utile se in futuro incontrerai il machine learning.</div>
 </section>
 
-<footer>Materiale didattico basato su "Hashtag 3", Modulo B, Unità B1 — Calcolo numerico e algebra lineare · Realizzato con l'assistenza di Claude (Anthropic)</footer>
+<footer><a class="back-link back-foot" href="index.html">← Torna all'indice</a>Materiale didattico basato su "Hashtag 3", Modulo B, Unità B1 — Calcolo numerico e algebra lineare · Realizzato con l'assistenza di Claude (Anthropic)</footer>
 
 <script>
 /* ---------- Static flip cards (intro + pigreco) ---------- */
