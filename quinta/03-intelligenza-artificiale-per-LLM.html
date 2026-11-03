@@ -1,0 +1,606 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Intelligenza artificiale</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css">
+<style>
+  .flip-face.back{line-height:1.45;}
+  .ctrl-row{display:flex; gap:1em; align-items:center; flex-wrap:wrap; margin-bottom:1em; font-family:'IBM Plex Mono',monospace; font-size:.85rem;}
+  .ctrl-row input[type=range]{width:140px;}
+  .ai-canvas{width:min(100%,520px); height:auto; border:1px solid var(--line); background:#fff; display:block; margin:0 auto; touch-action:none;}
+  .ai-canvas.wide{width:100%;}
+  .readout{font-family:'IBM Plex Mono',monospace; font-size:.85rem; margin-top:1em; display:flex; gap:.4em 1.6em; flex-wrap:wrap; justify-content:center;}
+  .readout b{font-weight:600; color:var(--blue);}
+  .truth td, .truth th{text-align:center;}
+  .truth tbody tr:last-child{background:none;}
+  .truth td.on{background:var(--teal-dim); color:var(--teal); font-weight:600;}
+  .vocab td, .vocab th{text-align:center;}
+  .vocab td:first-child{text-align:left;}
+  .vocab tbody tr:last-child{background:none;}
+  .vocab tr.res td{background:var(--blue-dim);}
+  .nb-list{list-style:none; padding:0; margin:0;}
+  .nb-list li{display:flex; justify-content:space-between; gap:1em; flex-wrap:wrap; padding:.6em 0; border-top:1px solid var(--line);}
+  .nb-list li:first-child{border-top:none; padding-top:0;}
+  .nb-list .links{font-family:'IBM Plex Mono',monospace; font-size:.85rem;}
+  .formula-big{max-width:100%; overflow-x:auto; vertical-align:top;}
+  .hint{font-family:'IBM Plex Mono',monospace; font-size:.75rem; color:var(--ink-soft); text-align:center; margin-top:.6em;}
+</style>
+</head>
+<body>
+
+<nav class="toc">
+  <a class="home" href="index.html"><span class="n">←</span>Indice</a>
+  <a href="#dati"><span class="n">01</span>Dati come numeri</a>
+  <a href="#iris"><span class="n">02</span>Il dataset Iris</a>
+  <a href="#distanza"><span class="n">03</span>Distanza e vicini</a>
+  <a href="#neurone"><span class="n">04</span>Da dove vengono i numeri</a>
+  <a href="#coseno"><span class="n">05</span>Similarità del coseno</a>
+  <a href="#matrice"><span class="n">06</span>Matrice di similarità</a>
+  <a href="#direzioni"><span class="n">07</span>Direzioni</a>
+  <a href="#aritmetica"><span class="n">08</span>Aritmetica tra vettori</a>
+  <a href="#pca"><span class="n">09</span>Vedere in 2D</a>
+  <a href="#verso"><span class="n">10</span>Verso il laboratorio</a>
+</nav>
+
+<header class="hero">
+  <a class="back-link" href="index.html">← Torna all'indice</a>
+  <div class="eyebrow">Modulo B — Unità B3 · Quinta scienze applicate</div>
+  <h1>Intelligenza artificiale: dai dati agli embeddings</h1>
+  <p class="sub">Come fa una macchina a capire che due cose si somigliano? Trasformandole in punti di uno spazio e misurando distanze e angoli. È l'idea su cui si basano i modelli linguistici che vedremo al laboratorio.</p>
+  <div class="legend-box">
+    <div class="item"><span class="badge onbook" style="margin-left:0">Sul libro</span><span>contenuto presente nelle Unità B3 e B4</span></div>
+    <div class="item"><span class="badge extra" style="margin-left:0">Materiale extra</span><span>notebook Colab</span></div>
+  </div>
+</header>
+
+<!-- ============================================================ -->
+<section id="dati">
+  <div class="kicker"><span class="num">1</span>Dati come numeri<span class="badge onbook">Sul libro · pp. 218–219</span></div>
+  <h2>Per una macchina, un dato è un elenco di numeri</h2>
+  <p>Un computer non "vede" un fiore, una foto o una parola: lavora solo con numeri. Per descrivere un oggetto scegliamo quindi alcune <strong>caratteristiche</strong> misurabili (in inglese <em>features</em>) e lo rappresentiamo con l'elenco dei loro valori.</p>
+  <p>Un fiore, per esempio, può diventare quattro numeri: lunghezza e larghezza del sepalo, lunghezza e larghezza del petalo. Un elenco ordinato di numeri è un <strong>vettore</strong>, e un vettore è un <strong>punto</strong> in uno spazio con tante dimensioni quante sono le caratteristiche.</p>
+
+  <div class="schema">
+    <div class="box g1">Oggetto<br>(un fiore)</div>
+    <div class="arrow">→</div>
+    <div class="box g1">Caratteristiche<br>scelte</div>
+    <div class="arrow">→</div>
+    <div class="box g2">Vettore<br>[5.1, 3.5, 1.4, 0.2]</div>
+    <div class="arrow">→</div>
+    <div class="box g2">Punto in 4D</div>
+  </div>
+
+  <div class="flip-card tall" onclick="this.classList.toggle('flipped')">
+    <div class="flip-inner">
+      <div class="flip-face">
+        <span class="tag">PROVA A RISPONDERE</span>
+        <p style="margin:.7em 0 0">Per un fiore le caratteristiche le sceglie un botanico. Ma se volessimo trasformare in numeri una <strong>parola</strong>, come "gatto"? Quali caratteristiche useresti? E chi dovrebbe sceglierle?</p>
+        <span class="flip-hint">clic per girare</span>
+      </div>
+      <div class="flip-face back">
+        <p class="m0">Si potrebbero inventare caratteristiche come "è un animale", "è domestico", "è femminile"… ma per centinaia di migliaia di parole è impossibile farlo a mano. I modelli linguistici risolvono il problema in un altro modo: le caratteristiche le <strong>imparano da soli</strong>, leggendo enormi quantità di testo. È proprio ciò che esplorerete al laboratorio.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============================================================ -->
+<section id="iris" class="alt"><div class="inner">
+  <div class="kicker"><span class="num">2</span>Il dataset Iris<span class="badge onbook">Sul libro · pp. 220–223</span></div>
+  <h2>150 fiori, 4 misure, 3 specie</h2>
+  <p>Il dataset <strong>Iris</strong>, raccolto negli anni '30, contiene 150 fiori di tre specie (<em>setosa</em>, <em>versicolor</em>, <em>virginica</em>). Per ogni fiore ci sono 4 misure in centimetri.</p>
+
+  <div class="table-scroll"><table class="formula-table plain" style="width:auto; min-width:min(100%,460px)">
+    <thead><tr><th>colonna</th><th>significato</th></tr></thead>
+    <tbody>
+      <tr><td>sepal length</td><td style="text-align:left">lunghezza del sepalo</td></tr>
+      <tr><td>sepal width</td><td style="text-align:left">larghezza del sepalo</td></tr>
+      <tr><td>petal length</td><td style="text-align:left">lunghezza del petalo</td></tr>
+      <tr><td>petal width</td><td style="text-align:left">larghezza del petalo</td></tr>
+    </tbody>
+  </table></div>
+
+  <p>Non possiamo disegnare uno spazio a 4 dimensioni, ma possiamo guardarne due alla volta. Scegli quali misure mettere sugli assi: quale coppia <strong>separa meglio</strong> le tre specie?</p>
+
+  <div class="panel">
+    <div class="ctrl-row">
+      <span>asse x</span><select id="scX"></select>
+      <span>asse y</span><select id="scY"></select>
+    </div>
+    <canvas class="ai-canvas" id="scatterCanvas" width="560" height="460"></canvas>
+    <div class="readout" id="scLegend"></div>
+  </div>
+
+  <div class="code-caption">caricare Iris con Pandas</div>
+<pre class="code"><span class="k">from</span> sklearn.datasets <span class="k">import</span> load_iris
+
+iris = load_iris(as_frame=<span class="k">True</span>)
+df = iris.frame                     <span class="c"># 150 righe: un fiore per riga</span>
+X = df.iloc[:, :<span class="n">4</span>].to_numpy()      <span class="c"># le 4 misure: ogni riga è un vettore</span>
+print(X.shape)</pre>
+  <div class="out-block">(150, 4)</div>
+</div></section>
+
+<!-- ============================================================ -->
+<section id="distanza">
+  <div class="kicker"><span class="num">3</span>Distanza e vicini<span class="badge extra">Materiale extra · notebook lezione 1</span></div>
+  <h2>Vicino nello spazio vuol dire simile</h2>
+  <p>Se i fiori sono punti, possiamo misurare quanto sono lontani. In 2D la distanza si calcola con il teorema di Pitagora; in 4D (o in 100D) la formula è la stessa, con più termini:</p>
+  <div class="formula-big">d(a, b) = <span class="sqrt">√<span class="rad-inner">(a₁−b₁)² + (a₂−b₂)² + (a₃−b₃)² + (a₄−b₄)²</span></span></div>
+  <p>Due fiori vicini hanno misure simili, quindi probabilmente sono della stessa specie. <strong>Clicca su un fiore</strong> nel grafico: vengono evidenziati i suoi vicini più prossimi, calcolati con la distanza in <strong>4 dimensioni</strong>, non solo nelle due che vedi.</p>
+
+  <div class="panel">
+    <div class="ctrl-row">
+      <span>vicini k =</span><input type="range" id="knnK" min="1" max="15" value="5"><span id="knnKVal">5</span>
+    </div>
+    <canvas class="ai-canvas" id="knnCanvas" width="560" height="460"></canvas>
+    <p class="hint">asse x: petal length · asse y: petal width · clicca su un punto</p>
+    <div class="msg" id="knnMsg" style="text-align:center">Nessun fiore selezionato.</div>
+  </div>
+
+  <div class="code-caption">i 5 vicini del fiore 0</div>
+<pre class="code"><span class="k">import</span> numpy <span class="k">as</span> np
+
+dist = np.linalg.norm(X - X[<span class="n">0</span>], axis=<span class="n">1</span>)   <span class="c"># distanza del fiore 0 da tutti i 150</span>
+vicini = np.argsort(dist)[<span class="n">1</span>:<span class="n">6</span>]             <span class="c"># ordino e salto il primo (è il fiore stesso)</span>
+print(vicini, df[<span class="s">"target"</span>].iloc[vicini].tolist())</pre>
+  <div class="out-block">[17  4 39 28 27] [0, 0, 0, 0, 0]</div>
+
+  <div class="teacher-note"><strong>Da notare</strong>Per trovare i vicini non abbiamo mai usato la specie, eppure i vicini di una setosa sono tutti setose. Gli "errori" capitano solo dove versicolor e virginica si sovrappongono: prova a cliccare un fiore al confine tra le due nuvole.</div>
+</section>
+
+<!-- ============================================================ -->
+<section id="neurone" class="alt"><div class="inner">
+  <div class="kicker"><span class="num">4</span>Da dove vengono i numeri<span class="badge onbook">Sul libro · pp. 195–199</span></div>
+  <h2>Il neurone artificiale e le rappresentazioni imparate</h2>
+  <p>Le misure di Iris le ha scelte una persona. I modelli linguistici, invece, i numeri che descrivono le parole li <strong>imparano</strong>. Per capire come, partiamo dal mattone di base: il <strong>neurone artificiale</strong>.</p>
+  <p>Un neurone riceve degli ingressi x₁, x₂, li moltiplica per dei <strong>pesi</strong> w₁, w₂, somma tutto e aggiunge un <strong>bias</strong> b. Se il risultato è positivo, si "accende":</p>
+  <div class="formula-big">y = 1 se <b>w₁x₁ + w₂x₂</b> + b &gt; 0, altrimenti 0</div>
+  <p>La somma pesata w₁x₁ + w₂x₂ è un <strong>prodotto scalare</strong> tra il vettore dei pesi e il vettore degli ingressi: tienilo a mente, lo ritroveremo tra poco. Muovi i pesi e il bias e guarda quale porta logica ottieni.</p>
+
+  <div class="panel">
+    <div class="ctrl-row">
+      <span>w₁</span><input type="range" id="nW1" min="-3" max="3" step="0.5" value="-2"><span id="nW1v">-2</span>
+      <span>w₂</span><input type="range" id="nW2" min="-3" max="3" step="0.5" value="-2"><span id="nW2v">-2</span>
+      <span>b</span><input type="range" id="nB" min="-3" max="3" step="0.5" value="3"><span id="nBv">3</span>
+    </div>
+    <table class="truth" style="max-width:420px">
+      <thead><tr><th>x₁</th><th>x₂</th><th>w · x + b</th><th>y</th></tr></thead>
+      <tbody id="truthBody"></tbody>
+    </table>
+    <div class="msg ok" id="gateMsg"></div>
+  </div>
+
+  <p>Un neurone solo non sa fare molto (prova a ottenere lo XOR: è impossibile, libro pp. 200–201). Ma una <strong>rete</strong> di migliaia di neuroni organizzati in strati trasforma un vettore in un altro vettore, strato dopo strato. Durante l'<strong>addestramento</strong> la rete regola da sola i pesi, e i vettori degli strati intermedi diventano <strong>rappresentazioni</strong> che nessuno ha progettato a mano.</p>
+
+  <div class="schema">
+    <div class="box g1">parola<br>"gatto"</div>
+    <div class="arrow">→</div>
+    <div class="box">rete neurale<br>addestrata su milioni di testi</div>
+    <div class="arrow">→</div>
+    <div class="box g2">embedding<br>[0.21, −0.43, …, 0.08]<br>100 numeri</div>
+  </div>
+
+  <div class="teacher-note"><strong>Da notare</strong>Il vettore che un modello associa a una parola si chiama <strong>embedding</strong>. Le sue coordinate non hanno un nome come "lunghezza del petalo": nessuno sa dire che cosa significhi, da sola, ciascuna di esse. Però, come per i fiori, parole simili finiscono vicine.</div>
+</div></section>
+
+<!-- ============================================================ -->
+<section id="coseno">
+  <div class="kicker"><span class="num">5</span>Similarità del coseno<span class="badge extra">Materiale extra · notebook lezione 2</span></div>
+  <h2>La somiglianza come angolo tra due vettori</h2>
+  <p>La distanza non è l'unico modo per confrontare due vettori. Dalla fisica sai che il prodotto scalare è legato all'angolo θ tra i vettori: a · b = ‖a‖ ‖b‖ cos θ. Ricavando il coseno otteniamo la <strong>similarità del coseno</strong>:</p>
+  <div class="formula-big">cos θ = <span class="frac"><span class="num"><b>a · b</b></span><span class="den">‖a‖ ‖b‖</span></span></div>
+  <ul class="bullets">
+    <li>vale <strong>1</strong> se i vettori puntano nella stessa direzione, <strong>0</strong> se sono perpendicolari, <strong>−1</strong> se sono opposti;</li>
+    <li><strong>non dipende dalla lunghezza</strong> dei vettori, solo dalla loro direzione;</li>
+    <li>è la misura di somiglianza usata dai modelli linguistici per confrontare parole e frasi.</li>
+  </ul>
+  <p><strong>Trascina le punte delle frecce.</strong> Poi prova ad allungare una freccia senza cambiarne la direzione: il coseno resta lo stesso.</p>
+
+  <div class="panel">
+    <canvas class="ai-canvas" id="cosCanvas" width="500" height="500"></canvas>
+    <div class="readout" id="cosReadout"></div>
+  </div>
+
+  <div class="code-caption">la funzione coseno</div>
+<pre class="code"><span class="k">def</span> coseno(a, b):
+    <span class="k">return</span> np.dot(a, b) / (np.linalg.norm(a) * np.linalg.norm(b))
+
+print(coseno(X[<span class="n">0</span>], X[<span class="n">1</span>]))     <span class="c"># due setose</span>
+print(coseno(X[<span class="n">0</span>], X[<span class="n">100</span>]))   <span class="c"># una setosa e una virginica</span></pre>
+  <div class="out-block">0.9986
+0.8601</div>
+
+  <div class="flip-card tall" onclick="this.classList.toggle('flipped')">
+    <div class="flip-inner">
+      <div class="flip-face">
+        <span class="tag">PROVA A RISPONDERE</span>
+        <p style="margin:.7em 0 0">Una setosa e una virginica sono fiori molto diversi, eppure il coseno vale 0,86: quasi come due setose. Perché? Guarda le misure: sono tutte positive…</p>
+        <span class="flip-hint">clic per girare</span>
+      </div>
+      <div class="flip-face back">
+        <p class="m0">Con misure tutte positive, tutti i vettori puntano nella stessa zona dello spazio, lontano dall'origine: gli angoli tra loro sono piccoli. Se spostiamo l'origine nel <strong>centro</strong> della nuvola di punti (sottraendo la media), le direzioni diventano informative: setosa e virginica risultano quasi opposte (−0,95).</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="code-caption">centrare i dati</div>
+<pre class="code">Xc = X - X.mean(axis=<span class="n">0</span>)           <span class="c"># sottraggo il fiore "medio"</span>
+print(coseno(Xc[<span class="n">0</span>], Xc[<span class="n">1</span>]))
+print(coseno(Xc[<span class="n">0</span>], Xc[<span class="n">100</span>]))</pre>
+  <div class="out-block">0.9804
+-0.9543</div>
+</section>
+
+<!-- ============================================================ -->
+<section id="matrice" class="alt"><div class="inner">
+  <div class="kicker"><span class="num">6</span>Matrice di similarità<span class="badge extra">Materiale extra · notebook lezione 2</span></div>
+  <h2>Tutti i confronti in un colpo solo</h2>
+  <p>Se rendiamo ogni vettore lungo 1 (lo <strong>normalizziamo</strong>), il denominatore della formula vale 1 e il coseno diventa un semplice prodotto scalare. Mettendo i vettori come righe di una matrice, il prodotto tra matrici calcola i coseni di <strong>tutte</strong> le coppie: 150 × 150 = 22 500 numeri.</p>
+
+  <div class="code-caption">matrice dei coseni</div>
+<pre class="code">Xn = Xc / np.linalg.norm(Xc, axis=<span class="n">1</span>, keepdims=<span class="k">True</span>)   <span class="c"># ogni riga ha lunghezza 1</span>
+S = Xn @ Xn.T                                          <span class="c"># S[i, j] = coseno tra fiore i e fiore j</span></pre>
+
+  <div class="panel">
+    <canvas class="ai-canvas" id="heatCanvas" width="480" height="480"></canvas>
+    <div class="readout">
+      <span class="leg"><span class="dot" style="background:#c4432c"></span>−1 opposti</span>
+      <span class="leg"><span class="dot" style="background:#fff;border:1px solid var(--line)"></span>0</span>
+      <span class="leg"><span class="dot" style="background:#1f8f7d"></span>+1 stessa direzione</span>
+    </div>
+    <p class="hint">fiori in ordine: setosa (1–50), versicolor (51–100), virginica (101–150) · passa sopra la matrice</p>
+    <div class="msg" id="heatMsg" style="text-align:center">&nbsp;</div>
+  </div>
+
+  <div class="teacher-note"><strong>Da notare</strong>Si vedono tre <strong>blocchi</strong> lungo la diagonale: i fiori della stessa specie sono simili tra loro. Setosa e virginica (angoli in alto a destra e in basso a sinistra) sono quasi opposte. Con le frasi, invece dei fiori, si ottiene lo stesso tipo di immagine.</div>
+</div></section>
+
+<!-- ============================================================ -->
+<section id="direzioni">
+  <div class="kicker"><span class="num">7</span>Direzioni<span class="badge extra">Materiale extra · notebook lezione 2</span></div>
+  <h2>Una freccia nello spazio ha un significato</h2>
+  <p>La <strong>differenza</strong> tra due vettori è una freccia che va dall'uno all'altro. Prendiamo il fiore "medio" di setosa e il fiore "medio" di virginica: la freccia che li unisce è la direzione "da setosa a virginica".</p>
+  <p>Il prodotto scalare di un punto con una freccia di lunghezza 1 è la sua <strong>proiezione</strong>: dice quanto quel punto è spostato lungo la freccia. Proiettiamo tutti i 150 fiori.</p>
+
+  <div class="code-caption">proiezione su una direzione</div>
+<pre class="code">specie = df[<span class="s">"target"</span>].to_numpy()
+direzione = X[specie == <span class="n">2</span>].mean(axis=<span class="n">0</span>) - X[specie == <span class="n">0</span>].mean(axis=<span class="n">0</span>)   <span class="c"># virginica − setosa</span>
+direzione = direzione / np.linalg.norm(direzione)                    <span class="c"># lunghezza 1</span>
+proiezioni = Xc @ direzione                                          <span class="c"># un numero per fiore</span></pre>
+
+  <div class="panel">
+    <canvas class="ai-canvas wide" id="projCanvas" width="900" height="300"></canvas>
+    <div class="readout" id="projLegend"></div>
+  </div>
+
+  <p>Le tre specie si dispongono in ordine lungo la freccia, e versicolor sta in mezzo: la direzione "da setosa a virginica" cattura qualcosa di reale, cioè la grandezza dei petali.</p>
+
+  <div class="teacher-note"><strong>Da notare</strong>Con gli embeddings delle parole si può fare la stessa cosa: si costruisce una direzione, per esempio da "uomo" a "donna", e si proiettano su di essa altre parole. Che cosa succede se si proiettano i nomi delle professioni? Lo scoprirete al laboratorio.</div>
+</section>
+
+<!-- ============================================================ -->
+<section id="aritmetica" class="alt"><div class="inner">
+  <div class="kicker"><span class="num">8</span>Aritmetica tra vettori<span class="badge extra">Materiale extra · notebook lezione 2</span></div>
+  <h2>re − uomo + donna = ?</h2>
+  <p>Se le direzioni hanno un significato, possiamo sommarle e sottrarle. Costruiamo a mano un piccolo vocabolario in cui ogni parola è descritta da 5 caratteristiche scelte da noi.</p>
+  <p>Poi calcoliamo <strong>A − B + C</strong> e cerchiamo la parola il cui vettore forma l'angolo più piccolo con il risultato (coseno più alto), escludendo le tre parole di partenza.</p>
+
+  <div class="panel">
+    <div class="ctrl-row">
+      <select id="arA"></select><span>−</span><select id="arB"></select><span>+</span><select id="arC"></select>
+    </div>
+    <div class="table-scroll"><table class="vocab" id="vocabTable"></table></div>
+    <div class="msg ok" id="arMsg"></div>
+  </div>
+
+  <div class="code-caption">la parola più simile a un vettore</div>
+<pre class="code"><span class="k">def</span> piu_simile(vettore, escludi=()):
+    candidati = [p <span class="k">for</span> p <span class="k">in</span> parole <span class="k">if</span> p <span class="k">not in</span> escludi]
+    <span class="k">return</span> max(candidati, key=<span class="k">lambda</span> p: coseno(vettore, parole[p]))
+
+v = parole[<span class="s">"re"</span>] - parole[<span class="s">"uomo"</span>] + parole[<span class="s">"donna"</span>]
+print(piu_simile(v, escludi=(<span class="s">"re"</span>, <span class="s">"uomo"</span>, <span class="s">"donna"</span>)))</pre>
+  <div class="out-block">regina</div>
+
+  <div class="teacher-note"><strong>Da notare</strong>Qui le caratteristiche le abbiamo scelte noi, quindi i conti tornano perfettamente. Negli embeddings veri le caratteristiche sono imparate: l'aritmetica funziona ancora, ma solo in modo approssimato, e a volte con risultati sorprendenti.</div>
+</div></section>
+
+<!-- ============================================================ -->
+<section id="pca">
+  <div class="kicker"><span class="num">9</span>Vedere in 2D<span class="badge extra">Materiale extra · notebook lezione 2</span></div>
+  <h2>Schiacciare 4 dimensioni su un foglio</h2>
+  <p>Per guardare uno spazio con molte dimensioni bisogna <strong>proiettarlo</strong> su un piano. La <strong>PCA</strong> (analisi delle componenti principali) sceglie il piano su cui la nuvola di punti è più "spalmata", in modo da perdere meno informazione possibile.</p>
+
+  <div class="code-caption">PCA da 4D a 2D</div>
+<pre class="code"><span class="k">from</span> sklearn.decomposition <span class="k">import</span> PCA
+
+pca = PCA(n_components=<span class="n">2</span>)
+coords = pca.fit_transform(X)              <span class="c"># 150 punti in 2D</span>
+print(pca.explained_variance_ratio_)        <span class="c"># quanta informazione conserva ogni componente</span></pre>
+  <div class="out-block">[0.9246 0.0531]</div>
+
+  <div class="panel">
+    <canvas class="ai-canvas" id="pcaCanvas" width="560" height="420"></canvas>
+    <div class="readout" id="pcaLegend"></div>
+  </div>
+
+  <p>Per Iris le due componenti conservano circa il <strong>98%</strong> della varianza: il grafico è una fotografia fedele dello spazio a 4 dimensioni.</p>
+
+  <div class="flip-card" onclick="this.classList.toggle('flipped')">
+    <div class="flip-inner">
+      <div class="flip-face">
+        <span class="tag">PROVA A RISPONDERE</span>
+        <p style="margin:.7em 0 0">Se proiettassimo su un piano delle parole che vivono in 100 dimensioni, la percentuale conservata sarebbe più alta o più bassa? Che cosa implica?</p>
+        <span class="flip-hint">clic per girare</span>
+      </div>
+      <div class="flip-face back">
+        <p class="m0">Molto più bassa. Il grafico 2D mostra solo una piccola parte dell'informazione: due punti vicini nel disegno possono essere lontani nello spazio originale. Quei grafici vanno letti con prudenza.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============================================================ -->
+<section id="verso" class="alt"><div class="inner">
+  <div class="kicker"><span class="num">10</span>Verso il laboratorio</div>
+  <h2>Che cosa portate con voi</h2>
+  <div class="grid3">
+    <div class="panel m0"><h3 class="mt0">Vicino = simile</h3><p class="m0">Un dato è un punto; cercare le cose simili significa cercare i punti vicini.</p></div>
+    <div class="panel m0"><h3 class="mt0">Il coseno</h3><p class="m0">La somiglianza si misura con l'angolo tra vettori, non con la loro lunghezza.</p></div>
+    <div class="panel m0"><h3 class="mt0">Le direzioni</h3><p class="m0">Le differenze tra vettori sono frecce con un significato: si possono sommare e ci si può proiettare sopra.</p></div>
+  </div>
+
+  <h3>Le nostre ipotesi</h3>
+  <p>Come fa un modello linguistico a "sapere" che <em>gatto</em> e <em>cane</em> sono parole vicine, mentre <em>gatto</em> e <em>democrazia</em> no? Nessuno gli ha dato caratteristiche come "animale" o "domestico". Scrivete le vostre ipotesi: le verificheremo dopo il laboratorio.</p>
+
+  <div class="panel">
+    <h3 class="mt0">Notebook Colab <span class="badge extra">Materiale extra</span></h3>
+    <ul class="nb-list">
+      <li><span>Lezione 1 · I dati sono punti (§ 1–3 di questa pagina)</span><span class="links"><a href="notebooks/lezione1-dati-come-punti.ipynb">apri il notebook</a></span></li>
+      <li><span>Lezione 2 · Vettori, angoli e direzioni (§ 4–9)</span><span class="links"><a href="notebooks/lezione2-vettori-e-direzioni.ipynb">apri il notebook</a></span></li>
+    </ul>
+  </div>
+</div></section>
+
+<footer><a class="back-link back-foot" href="index.html">← Torna all'indice</a>Materiale didattico basato su "Hashtag 3", Modulo B, Unità B3 e B4 — Intelligenza artificiale e data science · Realizzato con l'assistenza di Claude (Anthropic)</footer>
+
+<script>
+const IRIS=[[5.1,3.5,1.4,0.2,0,-2.684,0.319],[4.9,3.0,1.4,0.2,0,-2.714,-0.177],[4.7,3.2,1.3,0.2,0,-2.889,-0.145],[4.6,3.1,1.5,0.2,0,-2.745,-0.318],[5.0,3.6,1.4,0.2,0,-2.729,0.327],[5.4,3.9,1.7,0.4,0,-2.281,0.741],[4.6,3.4,1.4,0.3,0,-2.821,-0.089],[5.0,3.4,1.5,0.2,0,-2.626,0.163],[4.4,2.9,1.4,0.2,0,-2.886,-0.578],[4.9,3.1,1.5,0.1,0,-2.673,-0.114],[5.4,3.7,1.5,0.2,0,-2.507,0.645],[4.8,3.4,1.6,0.2,0,-2.613,0.015],[4.8,3.0,1.4,0.1,0,-2.786,-0.235],[4.3,3.0,1.1,0.1,0,-3.224,-0.511],[5.8,4.0,1.2,0.2,0,-2.645,1.179],[5.7,4.4,1.5,0.4,0,-2.386,1.338],[5.4,3.9,1.3,0.4,0,-2.624,0.811],[5.1,3.5,1.4,0.3,0,-2.648,0.312],[5.7,3.8,1.7,0.3,0,-2.2,0.873],[5.1,3.8,1.5,0.3,0,-2.588,0.514],[5.4,3.4,1.7,0.2,0,-2.31,0.391],[5.1,3.7,1.5,0.4,0,-2.544,0.433],[4.6,3.6,1.0,0.2,0,-3.216,0.133],[5.1,3.3,1.7,0.5,0,-2.303,0.099],[4.8,3.4,1.9,0.2,0,-2.356,-0.037],[5.0,3.0,1.6,0.2,0,-2.507,-0.146],[5.0,3.4,1.6,0.4,0,-2.469,0.131],[5.2,3.5,1.5,0.2,0,-2.562,0.368],[5.2,3.4,1.4,0.2,0,-2.64,0.312],[4.7,3.2,1.6,0.2,0,-2.632,-0.197],[4.8,3.1,1.6,0.2,0,-2.587,-0.204],[5.4,3.4,1.5,0.4,0,-2.41,0.411],[5.2,4.1,1.5,0.1,0,-2.649,0.813],[5.5,4.2,1.4,0.2,0,-2.599,1.093],[4.9,3.1,1.5,0.2,0,-2.637,-0.121],[5.0,3.2,1.2,0.2,0,-2.866,0.069],[5.5,3.5,1.3,0.2,0,-2.625,0.599],[4.9,3.6,1.4,0.1,0,-2.801,0.269],[4.4,3.0,1.3,0.2,0,-2.981,-0.488],[5.1,3.4,1.5,0.2,0,-2.59,0.229],[5.0,3.5,1.3,0.3,0,-2.77,0.264],[4.5,2.3,1.3,0.3,0,-2.849,-0.941],[4.4,3.2,1.3,0.2,0,-2.997,-0.342],[5.0,3.5,1.6,0.6,0,-2.406,0.189],[5.1,3.8,1.9,0.4,0,-2.209,0.437],[4.8,3.0,1.4,0.3,0,-2.714,-0.25],[5.1,3.8,1.6,0.2,0,-2.538,0.504],[4.6,3.2,1.4,0.2,0,-2.839,-0.228],[5.3,3.7,1.5,0.2,0,-2.543,0.579],[5.0,3.3,1.4,0.2,0,-2.703,0.108],[7.0,3.2,4.7,1.4,1,1.285,0.685],[6.4,3.2,4.5,1.5,1,0.932,0.318],[6.9,3.1,4.9,1.5,1,1.464,0.504],[5.5,2.3,4.0,1.3,1,0.183,-0.828],[6.5,2.8,4.6,1.5,1,1.088,0.075],[5.7,2.8,4.5,1.3,1,0.642,-0.418],[6.3,3.3,4.7,1.6,1,1.095,0.283],[4.9,2.4,3.3,1.0,1,-0.749,-1.005],[6.6,2.9,4.6,1.3,1,1.044,0.228],[5.2,2.7,3.9,1.4,1,-0.009,-0.723],[5.0,2.0,3.5,1.0,1,-0.508,-1.266],[5.9,3.0,4.2,1.5,1,0.512,-0.104],[6.0,2.2,4.0,1.0,1,0.265,-0.55],[6.1,2.9,4.7,1.4,1,0.985,-0.125],[5.6,2.9,3.6,1.3,1,-0.174,-0.255],[6.7,3.1,4.4,1.4,1,0.928,0.467],[5.6,3.0,4.5,1.5,1,0.66,-0.353],[5.8,2.7,4.1,1.0,1,0.236,-0.334],[6.2,2.2,4.5,1.5,1,0.945,-0.543],[5.6,2.5,3.9,1.1,1,0.045,-0.584],[5.9,3.2,4.8,1.8,1,1.116,-0.085],[6.1,2.8,4.0,1.3,1,0.358,-0.069],[6.3,2.5,4.9,1.5,1,1.298,-0.328],[6.1,2.8,4.7,1.2,1,0.922,-0.183],[6.4,2.9,4.3,1.3,1,0.715,0.149],[6.6,3.0,4.4,1.4,1,0.9,0.329],[6.8,2.8,4.8,1.4,1,1.332,0.244],[6.7,3.0,5.0,1.7,1,1.558,0.267],[6.0,2.9,4.5,1.5,1,0.813,-0.163],[5.7,2.6,3.5,1.0,1,-0.306,-0.368],[5.5,2.4,3.8,1.1,1,-0.068,-0.705],[5.5,2.4,3.7,1.0,1,-0.19,-0.68],[5.8,2.7,3.9,1.2,1,0.136,-0.314],[6.0,2.7,5.1,1.6,1,1.38,-0.421],[5.4,3.0,4.5,1.5,1,0.588,-0.484],[6.0,3.4,4.5,1.6,1,0.807,0.194],[6.7,3.1,4.7,1.5,1,1.221,0.408],[6.3,2.3,4.4,1.3,1,0.815,-0.372],[5.6,3.0,4.1,1.3,1,0.246,-0.269],[5.5,2.5,4.0,1.3,1,0.166,-0.682],[5.5,2.6,4.4,1.2,1,0.465,-0.671],[6.1,3.0,4.6,1.4,1,0.891,-0.034],[5.8,2.6,4.0,1.2,1,0.231,-0.404],[5.0,2.3,3.3,1.0,1,-0.705,-1.012],[5.6,2.7,4.2,1.3,1,0.357,-0.505],[5.7,3.0,4.2,1.2,1,0.332,-0.213],[5.7,2.9,4.2,1.3,1,0.376,-0.293],[6.2,2.9,4.3,1.3,1,0.643,0.018],[5.1,2.5,3.0,1.1,1,-0.906,-0.756],[5.7,2.8,4.1,1.3,1,0.299,-0.349],[6.3,3.3,6.0,2.5,2,2.531,-0.01],[5.8,2.7,5.1,1.9,2,1.415,-0.575],[7.1,3.0,5.9,2.1,2,2.617,0.344],[6.3,2.9,5.6,1.8,2,1.972,-0.18],[6.5,3.0,5.8,2.2,2,2.35,-0.04],[7.6,3.0,6.6,2.1,2,3.397,0.551],[4.9,2.5,4.5,1.7,2,0.521,-1.193],[7.3,2.9,6.3,1.8,2,2.933,0.356],[6.7,2.5,5.8,1.8,2,2.321,-0.244],[7.2,3.6,6.1,2.5,2,2.917,0.783],[6.5,3.2,5.1,2.0,2,1.662,0.242],[6.4,2.7,5.3,1.9,2,1.803,-0.216],[6.8,3.0,5.5,2.1,2,2.166,0.216],[5.7,2.5,5.0,2.0,2,1.346,-0.777],[5.8,2.8,5.1,2.4,2,1.586,-0.54],[6.4,3.2,5.3,2.3,2,1.904,0.119],[6.5,3.0,5.5,1.8,2,1.95,0.042],[7.7,3.8,6.7,2.2,2,3.487,1.176],[7.7,2.6,6.9,2.3,2,3.796,0.257],[6.0,2.2,5.0,1.5,2,1.301,-0.761],[6.9,3.2,5.7,2.3,2,2.428,0.378],[5.6,2.8,4.9,2.0,2,1.199,-0.606],[7.7,2.8,6.7,2.0,2,3.5,0.461],[6.3,2.7,4.9,1.8,2,1.389,-0.204],[6.7,3.3,5.7,2.1,2,2.275,0.335],[7.2,3.2,6.0,1.8,2,2.614,0.561],[6.2,2.8,4.8,1.8,2,1.259,-0.18],[6.1,3.0,4.9,1.8,2,1.291,-0.117],[6.4,2.8,5.6,2.1,2,2.124,-0.21],[7.2,3.0,5.8,1.6,2,2.388,0.465],[7.4,2.8,6.1,1.9,2,2.842,0.375],[7.9,3.8,6.4,2.0,2,3.231,1.374],[6.4,2.8,5.6,2.2,2,2.159,-0.217],[6.3,2.8,5.1,1.5,2,1.444,-0.143],[6.1,2.6,5.6,1.4,2,1.781,-0.5],[7.7,3.0,6.1,2.3,2,3.076,0.688],[6.3,3.4,5.6,2.4,2,2.144,0.14],[6.4,3.1,5.5,1.8,2,1.905,0.049],[6.0,3.0,4.8,1.8,2,1.169,-0.165],[6.9,3.1,5.4,2.1,2,2.108,0.372],[6.7,3.1,5.6,2.4,2,2.314,0.184],[6.9,3.1,5.1,2.3,2,1.922,0.409],[5.8,2.7,5.1,1.9,2,1.415,-0.575],[6.8,3.2,5.9,2.3,2,2.563,0.278],[6.7,3.3,5.7,2.5,2,2.419,0.305],[6.7,3.0,5.2,2.3,2,1.944,0.188],[6.3,2.5,5.0,1.9,2,1.527,-0.375],[6.5,3.0,5.2,2.0,2,1.764,0.079],[6.2,3.4,5.4,2.3,2,1.901,0.117],[5.9,3.0,5.1,1.8,2,1.39,-0.283]];
+(function(){
+  const COL = ['#2f6fed', '#d98c1f', '#1f8f7d'];
+  const NOMI = ['setosa', 'versicolor', 'virginica'];
+  const FEAT = ['sepal length', 'sepal width', 'petal length', 'petal width'];
+  const INK = '#15213b', SOFT = '#4a5468', LINE = '#d9d4c6';
+  const X = IRIS.map(r => r.slice(0, 4));
+  const Y = IRIS.map(r => r[4]);
+
+  // ---------- utilità ----------
+  const dot = (a, b) => a.reduce((s, v, i) => s + v * b[i], 0);
+  const norm = a => Math.sqrt(dot(a, a));
+  const sub = (a, b) => a.map((v, i) => v - b[i]);
+  const add = (a, b) => a.map((v, i) => v + b[i]);
+  const dist = (a, b) => norm(sub(a, b));
+  const media = rows => rows[0].map((_, j) => rows.reduce((s, r) => s + r[j], 0) / rows.length);
+  const fmt = (v, d = 3) => v.toFixed(d).replace('.', ',');
+  const legend = (el) => { el.innerHTML = NOMI.map((n, i) => `<span class="leg"><span class="dot" style="background:${COL[i]}"></span>${n}</span>`).join(''); };
+  function canvasPos(cv, e){ const r = cv.getBoundingClientRect(); return [(e.clientX - r.left) * cv.width / r.width, (e.clientY - r.top) * cv.height / r.height]; }
+
+  // assi generici per scatter
+  function axes(ctx, W, H, pad, xr, yr, xl, yl){
+    ctx.clearRect(0, 0, W, H);
+    ctx.strokeStyle = LINE; ctx.fillStyle = SOFT; ctx.lineWidth = 1;
+    ctx.font = '12px "IBM Plex Mono", monospace';
+    const sx = v => pad + (v - xr[0]) / (xr[1] - xr[0]) * (W - 2 * pad);
+    const sy = v => H - pad - (v - yr[0]) / (yr[1] - yr[0]) * (H - 2 * pad);
+    ctx.beginPath(); ctx.moveTo(pad, pad / 2); ctx.lineTo(pad, H - pad); ctx.lineTo(W - pad / 2, H - pad); ctx.stroke();
+    for (let k = 0; k <= 4; k++){
+      const vx = xr[0] + k * (xr[1] - xr[0]) / 4, vy = yr[0] + k * (yr[1] - yr[0]) / 4;
+      ctx.textAlign = 'center'; ctx.fillText(vx.toFixed(1), sx(vx), H - pad + 16);
+      ctx.textAlign = 'right'; ctx.fillText(vy.toFixed(1), pad - 6, sy(vy) + 4);
+    }
+    ctx.textAlign = 'center'; ctx.fillText(xl, W / 2, H - 6);
+    ctx.save(); ctx.translate(14, H / 2); ctx.rotate(-Math.PI / 2); ctx.fillText(yl, 0, 0); ctx.restore();
+    return [sx, sy];
+  }
+  function range(vals){ const lo = Math.min(...vals), hi = Math.max(...vals), m = (hi - lo) * 0.08; return [lo - m, hi + m]; }
+
+  // ---------- 2. scatter con scelta assi ----------
+  (function(){
+    const cv = document.getElementById('scatterCanvas'), ctx = cv.getContext('2d');
+    const sX = document.getElementById('scX'), sY = document.getElementById('scY');
+    FEAT.forEach((f, i) => { sX.add(new Option(f, i)); sY.add(new Option(f, i)); });
+    sX.value = 0; sY.value = 1;
+    legend(document.getElementById('scLegend'));
+    function draw(){
+      const i = +sX.value, j = +sY.value;
+      const [sx, sy] = axes(ctx, cv.width, cv.height, 50, range(X.map(r => r[i])), range(X.map(r => r[j])), FEAT[i] + ' (cm)', FEAT[j] + ' (cm)');
+      X.forEach((r, k) => { ctx.fillStyle = COL[Y[k]]; ctx.globalAlpha = .75; ctx.beginPath(); ctx.arc(sx(r[i]), sy(r[j]), 4.5, 0, 2 * Math.PI); ctx.fill(); });
+      ctx.globalAlpha = 1;
+    }
+    sX.addEventListener('change', draw); sY.addEventListener('change', draw); draw();
+  })();
+
+  // ---------- 3. vicini in 4D ----------
+  (function(){
+    const cv = document.getElementById('knnCanvas'), ctx = cv.getContext('2d');
+    const kIn = document.getElementById('knnK'), kOut = document.getElementById('knnKVal'), msg = document.getElementById('knnMsg');
+    const xr = range(X.map(r => r[2])), yr = range(X.map(r => r[3]));
+    let sel = null, sx, sy;
+    function draw(){
+      [sx, sy] = axes(ctx, cv.width, cv.height, 50, xr, yr, 'petal length (cm)', 'petal width (cm)');
+      const k = +kIn.value; kOut.textContent = k;
+      let vicini = [];
+      if (sel !== null){
+        vicini = X.map((r, idx) => [dist(r, X[sel]), idx]).filter(p => p[1] !== sel).sort((a, b) => a[0] - b[0]).slice(0, k).map(p => p[1]);
+      }
+      X.forEach((r, idx) => {
+        const evid = sel === null || idx === sel || vicini.includes(idx);
+        ctx.globalAlpha = evid ? .85 : .18; ctx.fillStyle = COL[Y[idx]];
+        ctx.beginPath(); ctx.arc(sx(r[2]), sy(r[3]), vicini.includes(idx) ? 6 : 4.5, 0, 2 * Math.PI); ctx.fill();
+      });
+      ctx.globalAlpha = 1;
+      if (sel !== null){
+        ctx.strokeStyle = INK; ctx.lineWidth = 1;
+        vicini.forEach(idx => { ctx.beginPath(); ctx.moveTo(sx(X[sel][2]), sy(X[sel][3])); ctx.lineTo(sx(X[idx][2]), sy(X[idx][3])); ctx.stroke(); });
+        ctx.lineWidth = 2.5; ctx.beginPath(); ctx.arc(sx(X[sel][2]), sy(X[sel][3]), 9, 0, 2 * Math.PI); ctx.stroke();
+        const conta = [0, 0, 0]; vicini.forEach(v => conta[Y[v]]++);
+        const ok = conta[Y[sel]];
+        msg.className = 'msg ' + (ok === k ? 'ok' : 'ko');
+        msg.innerHTML = `Fiore ${sel} (${NOMI[Y[sel]]}) · misure [${X[sel].join(', ')}] · vicini: ` +
+          NOMI.map((n, i) => conta[i] ? `${conta[i]} ${n}` : '').filter(Boolean).join(', ');
+      }
+    }
+    cv.addEventListener('click', e => {
+      const [px, py] = canvasPos(cv, e);
+      let best = null, bd = 1e9;
+      X.forEach((r, idx) => { const d = Math.hypot(sx(r[2]) - px, sy(r[3]) - py); if (d < bd){ bd = d; best = idx; } });
+      if (bd < 20){ sel = best; draw(); }
+    });
+    kIn.addEventListener('input', draw); draw();
+  })();
+
+  // ---------- 4. neurone ----------
+  (function(){
+    const ids = ['nW1', 'nW2', 'nB'], body = document.getElementById('truthBody'), msg = document.getElementById('gateMsg');
+    const PORTE = { '0001': 'AND', '0111': 'OR', '1110': 'NAND', '1000': 'NOR', '0000': 'sempre 0', '1111': 'sempre 1', '0110': 'XOR', '1001': 'XNOR' };
+    function upd(){
+      const [w1, w2, b] = ids.map(id => +document.getElementById(id).value);
+      ids.forEach((id, i) => document.getElementById(id + 'v').textContent = [w1, w2, b][i]);
+      let code = '';
+      body.innerHTML = [[0, 0], [0, 1], [1, 0], [1, 1]].map(([a, c]) => {
+        const s = w1 * a + w2 * c + b, y = s > 0 ? 1 : 0; code += y;
+        return `<tr><td>${a}</td><td>${c}</td><td>${s}</td><td class="${y ? 'on' : ''}">${y}</td></tr>`;
+      }).join('');
+      msg.textContent = PORTE[code] ? 'Porta ottenuta: ' + PORTE[code] : 'Funzione logica senza un nome comune (' + code + ')';
+    }
+    ids.forEach(id => document.getElementById(id).addEventListener('input', upd)); upd();
+  })();
+
+  // ---------- 5. coseno trascinabile ----------
+  (function(){
+    const cv = document.getElementById('cosCanvas'), ctx = cv.getContext('2d'), out = document.getElementById('cosReadout');
+    const W = cv.width, H = cv.height, U = 40, O = [W / 2, H / 2];
+    const v = { a: [4, 2], b: [1, 4] }; let drag = null;
+    const toPx = p => [O[0] + p[0] * U, O[1] - p[1] * U];
+    const toV = (px, py) => [Math.round((px - O[0]) / U * 2) / 2, Math.round((O[1] - py) / U * 2) / 2];
+    function arrow(p, col, lab){
+      const [x, y] = toPx(p), ang = Math.atan2(y - O[1], x - O[0]);
+      ctx.strokeStyle = col; ctx.fillStyle = col; ctx.lineWidth = 3;
+      ctx.beginPath(); ctx.moveTo(O[0], O[1]); ctx.lineTo(x, y); ctx.stroke();
+      ctx.beginPath(); ctx.moveTo(x, y); ctx.lineTo(x - 13 * Math.cos(ang - .4), y - 13 * Math.sin(ang - .4)); ctx.lineTo(x - 13 * Math.cos(ang + .4), y - 13 * Math.sin(ang + .4)); ctx.fill();
+      ctx.beginPath(); ctx.arc(x, y, 7, 0, 2 * Math.PI); ctx.globalAlpha = .25; ctx.fill(); ctx.globalAlpha = 1;
+      ctx.font = '600 15px "IBM Plex Mono", monospace'; ctx.fillText(lab, x + 10, y - 10);
+    }
+    function draw(){
+      ctx.clearRect(0, 0, W, H);
+      ctx.strokeStyle = '#eeebe1'; ctx.lineWidth = 1;
+      for (let k = -6; k <= 6; k++){ ctx.beginPath(); ctx.moveTo(O[0] + k * U, 0); ctx.lineTo(O[0] + k * U, H); ctx.stroke(); ctx.beginPath(); ctx.moveTo(0, O[1] + k * U); ctx.lineTo(W, O[1] + k * U); ctx.stroke(); }
+      ctx.strokeStyle = LINE; ctx.beginPath(); ctx.moveTo(O[0], 0); ctx.lineTo(O[0], H); ctx.moveTo(0, O[1]); ctx.lineTo(W, O[1]); ctx.stroke();
+      const a1 = Math.atan2(v.a[1], v.a[0]), a2 = Math.atan2(v.b[1], v.b[0]);
+      let d = a2 - a1; while (d > Math.PI) d -= 2 * Math.PI; while (d < -Math.PI) d += 2 * Math.PI;
+      ctx.strokeStyle = '#d98c1f'; ctx.lineWidth = 2; ctx.beginPath(); ctx.arc(O[0], O[1], 34, -a1, -(a1 + d), d > 0); ctx.stroke();
+      arrow(v.a, '#2f6fed', 'a'); arrow(v.b, '#c4432c', 'b');
+      const na = norm(v.a), nb = norm(v.b);
+      if (na === 0 || nb === 0){ out.innerHTML = 'Un vettore nullo non ha direzione: il coseno non è definito.'; return; }
+      const c = dot(v.a, v.b) / (na * nb);
+      out.innerHTML = `<span>a = [${v.a.join(', ')}]</span><span>b = [${v.b.join(', ')}]</span><span>a · b = ${fmt(dot(v.a, v.b), 2)}</span>` +
+        `<span>‖a‖ = ${fmt(na, 2)}</span><span>‖b‖ = ${fmt(nb, 2)}</span><span>θ = ${fmt(Math.abs(d) * 180 / Math.PI, 1)}°</span><span>cos θ = <b>${fmt(c, 3)}</b></span>`;
+    }
+    cv.addEventListener('pointerdown', e => {
+      const [px, py] = canvasPos(cv, e);
+      for (const k of ['a', 'b']){ const [x, y] = toPx(v[k]); if (Math.hypot(x - px, y - py) < 22){ drag = k; cv.setPointerCapture(e.pointerId); } }
+    });
+    cv.addEventListener('pointermove', e => { if (!drag) return; const [px, py] = canvasPos(cv, e); const p = toV(px, py); v[drag] = p.map(z => Math.max(-6, Math.min(6, z))); draw(); });
+    cv.addEventListener('pointerup', () => drag = null);
+    draw();
+  })();
+
+  // dati centrati, usati da 6 e 7
+  const M = media(X), Xc = X.map(r => sub(r, M));
+
+  // ---------- 6. heatmap ----------
+  (function(){
+    const cv = document.getElementById('heatCanvas'), ctx = cv.getContext('2d'), msg = document.getElementById('heatMsg');
+    const Xn = Xc.map(r => { const n = norm(r); return r.map(v => v / n); });
+    const N = Xn.length, cell = cv.width / N;
+    const S = Xn.map(a => Xn.map(b => dot(a, b)));
+    const mix = (c1, c2, t) => c1.map((v, i) => Math.round(v + (c2[i] - v) * t));
+    const RED = [196, 67, 44], WHITE = [255, 255, 255], TEAL = [31, 143, 125];
+    const img = ctx.createImageData(cv.width, cv.height);
+    for (let py = 0; py < cv.height; py++) for (let px = 0; px < cv.width; px++){
+      const s = S[Math.floor(py / cell)][Math.floor(px / cell)];
+      const c = s < 0 ? mix(WHITE, RED, -s) : mix(WHITE, TEAL, s);
+      const o = (py * cv.width + px) * 4; img.data[o] = c[0]; img.data[o + 1] = c[1]; img.data[o + 2] = c[2]; img.data[o + 3] = 255;
+    }
+    ctx.putImageData(img, 0, 0);
+    cv.addEventListener('mousemove', e => {
+      const [px, py] = canvasPos(cv, e); const i = Math.floor(py / cell), j = Math.floor(px / cell);
+      if (i >= 0 && j >= 0 && i < N && j < N) msg.textContent = `fiore ${i} (${NOMI[Y[i]]}) e fiore ${j} (${NOMI[Y[j]]}): coseno ${fmt(S[i][j])}`;
+    });
+  })();
+
+  // ---------- 7. proiezioni ----------
+  (function(){
+    const cv = document.getElementById('projCanvas'), ctx = cv.getContext('2d');
+    let d = sub(media(X.filter((_, i) => Y[i] === 2)), media(X.filter((_, i) => Y[i] === 0)));
+    const nd = norm(d); d = d.map(v => v / nd);
+    const P = Xc.map(r => dot(r, d));
+    const lo = Math.floor(Math.min(...P)), hi = Math.ceil(Math.max(...P)), B = 30, bw = (hi - lo) / B;
+    const cnt = [0, 1, 2].map(s => { const h = Array(B).fill(0); P.forEach((p, i) => { if (Y[i] === s) h[Math.min(B - 1, Math.floor((p - lo) / bw))]++; }); return h; });
+    const maxC = Math.max(...cnt.flat());
+    const W = cv.width, H = cv.height, pad = 40;
+    ctx.clearRect(0, 0, W, H);
+    const sx = v => pad + (v - lo) / (hi - lo) * (W - 2 * pad), sy = c => H - pad - c / maxC * (H - 2 * pad);
+    cnt.forEach((h, s) => h.forEach((c, b) => { if (!c) return; ctx.fillStyle = COL[s]; ctx.globalAlpha = .6; ctx.fillRect(sx(lo + b * bw) + 1, sy(c), (W - 2 * pad) / B - 2, H - pad - sy(c)); }));
+    ctx.globalAlpha = 1; ctx.strokeStyle = LINE; ctx.beginPath(); ctx.moveTo(pad, H - pad); ctx.lineTo(W - pad, H - pad); ctx.stroke();
+    ctx.fillStyle = SOFT; ctx.font = '12px "IBM Plex Mono", monospace'; ctx.textAlign = 'center';
+    for (let v = lo; v <= hi; v++) ctx.fillText(v, sx(v), H - pad + 16);
+    ctx.fillText('← verso setosa                                   verso virginica →', W / 2, H - 6);
+    legend(document.getElementById('projLegend'));
+  })();
+
+  // ---------- 8. aritmetica ----------
+  (function(){
+    const CAR = ['regale', 'femminile', 'umano', 'animale', 'giovane'];
+    const P = {
+      're': [1, 0, 1, 0, 0], 'regina': [1, 1, 1, 0, 0], 'principe': [1, 0, 1, 0, 1], 'principessa': [1, 1, 1, 0, 1],
+      'uomo': [0, 0, 1, 0, 0], 'donna': [0, 1, 1, 0, 0], 'ragazzo': [0, 0, 1, 0, 1], 'ragazza': [0, 1, 1, 0, 1],
+      'gatto': [0, 0, 0, 1, 0], 'gatta': [0, 1, 0, 1, 0], 'gattino': [0, 0, 0, 1, 1], 'corona': [1, 0, 0, 0, 0]
+    };
+    const sel = ['arA', 'arB', 'arC'].map(id => document.getElementById(id));
+    sel.forEach(s => Object.keys(P).forEach(p => s.add(new Option(p, p))));
+    sel[0].value = 're'; sel[1].value = 'uomo'; sel[2].value = 'donna';
+    const tab = document.getElementById('vocabTable'), msg = document.getElementById('arMsg');
+    function upd(){
+      const [a, b, c] = sel.map(s => s.value);
+      const v = add(sub(P[a], P[b]), P[c]);
+      let rows = `<thead><tr><th>parola</th>${CAR.map(c => `<th>${c}</th>`).join('')}</tr></thead><tbody>`;
+      [a, b, c].forEach((p, i) => rows += `<tr><td>${['A', 'B', 'C'][i]} · ${p}</td>${P[p].map(x => `<td>${x}</td>`).join('')}</tr>`);
+      rows += `<tr class="res"><td>A − B + C</td>${v.map(x => `<td>${x}</td>`).join('')}</tr></tbody>`;
+      tab.innerHTML = rows;
+      if (norm(v) === 0){ msg.className = 'msg ko'; msg.textContent = 'Il risultato è il vettore nullo: non ha una direzione, quindi non somiglia a nessuna parola.'; return; }
+      const cand = Object.keys(P).filter(p => ![a, b, c].includes(p)).map(p => [p, dot(v, P[p]) / (norm(v) * norm(P[p]))]).sort((x, y) => y[1] - x[1]).slice(0, 3);
+      msg.className = 'msg ok';
+      msg.innerHTML = `${a} − ${b} + ${c} ≈ <b>${cand[0][0]}</b> (coseno ${fmt(cand[0][1])}) · poi: ` + cand.slice(1).map(x => `${x[0]} (${fmt(x[1])})`).join(', ');
+    }
+    sel.forEach(s => s.addEventListener('change', upd)); upd();
+  })();
+
+  // ---------- 9. PCA ----------
+  (function(){
+    const cv = document.getElementById('pcaCanvas'), ctx = cv.getContext('2d');
+    const px = IRIS.map(r => r[5]), py = IRIS.map(r => r[6]);
+    const [sx, sy] = axes(ctx, cv.width, cv.height, 50, range(px), range(py), 'componente 1 (92%)', 'componente 2 (5%)');
+    IRIS.forEach((r, k) => { ctx.fillStyle = COL[Y[k]]; ctx.globalAlpha = .75; ctx.beginPath(); ctx.arc(sx(px[k]), sy(py[k]), 4.5, 0, 2 * Math.PI); ctx.fill(); });
+    ctx.globalAlpha = 1;
+    legend(document.getElementById('pcaLegend'));
+  })();
+})();
+</script>
+</body>
+</html>
