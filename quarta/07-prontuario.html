@@ -1,0 +1,263 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Prontuario HTML e CSS</title>
+  <!-- Tema comune a tutte le pagine del corso -->
+  <link rel="stylesheet" href="css/style.css">
+<style>
+  /* =========================================================
+     Stili specifici di QUESTA pagina.
+     Il tema comune (colori, caratteri, titoli, pulsanti,
+     riquadri, codice, barra in alto) è in style.css.
+     ========================================================= */
+  .skip{ position:absolute; left:-9999px; top:8px; z-index:70; background:var(--signal); color:#fff; padding:8px 14px; border-radius:6px; font-size:13px; }
+  .skip:focus{ left:12px; }
+  .hero{ min-height:auto; padding-bottom:60px; }
+  .hero .page-ref, .hero .tags{ align-self:flex-start; }
+  .mono{ font-family:var(--font-mono); }
+  .content p, .content li{ color:var(--text-dim); font-size:15px; }
+  .content p{ max-width:76ch; }
+  .content ol, .content ul{ padding-left:22px; max-width:76ch; }
+  .content li{ margin-bottom:7px; }
+  .content li > ol{ margin-top:7px; }
+  .content b{ color:var(--text); }
+  .content .code-block{ margin:16px 0 8px; }
+  
+  .pr-grid{ display:grid; grid-template-columns:1fr 1fr; gap:22px; margin-top:36px; }
+  @media (max-width:860px){ .pr-grid{ grid-template-columns:1fr; } }
+  .pr-item{ min-width:0; }
+  .pr-item h3{ font-size:16px; margin:0 0 8px; }
+  .pr-item .code-block{ margin:0; font-size:12.5px; line-height:1.65; }
+  .pr-item.wide{ grid-column:1 / -1; }
+  .hero .btn{ align-self:flex-start; margin-top:28px; }
+  @media print{
+    .topbar, .prevnext, footer, .hero .btn, .hero .tags{ display:none; }
+    section{ padding:20px 0; max-width:none; }
+    .hero{ min-height:auto; padding-top:0; }
+    .code-block{ background:#fff; color:#000; border:1px solid #999; white-space:pre-wrap; }
+    .pr-grid{ gap:12px; }
+    .pr-item{ break-inside:avoid; }
+  }
+
+</style>
+</head>
+<body>
+
+<a class="skip" href="#html">Vai al contenuto</a>
+<header class="topbar">
+  <div class="topbar-in">
+    <details class="pagesel">
+      <summary title="Cambia pagina"><b>07</b> Prontuario</summary>
+      <nav class="pagesel-menu" aria-label="Pagine del corso">
+        <a href="01-web.html"><b>01</b>Internet e Web</a>
+        <a href="02-html.html"><b>02</b>HTML</a>
+        <a href="03-css.html"><b>03</b>CSS</a>
+        <a href="04-layout.html"><b>04</b>Esempi di layout</a>
+        <a href="05-form.html"><b>05</b>Form</a>
+        <a href="06-esercizi.html"><b>06</b>Esercizi</a>
+        <a href="07-prontuario.html" class="current" aria-current="page"><b>07</b>Prontuario</a>
+        <a href="index.html" class="to-index">← Tutte le pagine (indice)</a>
+      </nav>
+    </details>
+    <nav class="links" id="topLinks" aria-label="Sezioni">
+      <a href="#html">HTML</a><a href="#html-form">Form</a><a href="#css-sintassi">CSS: sintassi</a><a href="#css-proprieta">CSS: proprietà</a>
+    </nav>
+    <a class="back" href="index.html">← Indice</a>
+  </div>
+</header>
+
+<!-- HERO -->
+<section class="hero" id="hero">
+  <span class="sec-num">07 · Prontuario</span>
+  <h1>Prontuario HTML e CSS.</h1>
+  <p class="page-ref">Da usare negli esercizi e in verifica</p>
+  <p class="lede">La sintassi da avere sotto mano: non devi impararla a memoria. Sta a te scegliere che cosa usare, dove e perché.</p>
+  <a class="btn" href="javascript:window.print()">Stampa il prontuario</a>
+</section>
+
+<section id="html">
+  <span class="sec-num">01 · HTML</span>
+  <h2>Pagina e contenuti</h2>
+  <div class="pr-grid"><div class="pr-item"><h3>Struttura</h3><pre class="code-block"><span class="tg">&lt;!DOCTYPE</span> html<span class="tg">&gt;</span>
+<span class="tg">&lt;html</span> <span class="at">lang</span>=<span class="vl">"it"</span><span class="tg">&gt;</span>
+<span class="tg">&lt;head</span><span class="tg">&gt;</span>
+  <span class="tg">&lt;meta</span> <span class="at">charset</span>=<span class="vl">"UTF-8"</span><span class="tg">&gt;</span>
+  <span class="tg">&lt;title</span><span class="tg">&gt;</span>...<span class="tg">&lt;/title</span><span class="tg">&gt;</span>
+  <span class="tg">&lt;link</span> <span class="at">rel</span>=<span class="vl">"stylesheet"</span> <span class="at">href</span>=<span class="vl">"css/style.css"</span><span class="tg">&gt;</span>
+<span class="tg">&lt;/head</span><span class="tg">&gt;</span>
+<span class="tg">&lt;body</span><span class="tg">&gt;</span>
+  ...
+<span class="tg">&lt;/body</span><span class="tg">&gt;</span>
+<span class="tg">&lt;/html</span><span class="tg">&gt;</span></pre></div><div class="pr-item"><h3>Testo</h3><pre class="code-block"><span class="tg">&lt;h1</span><span class="tg">&gt;</span>...<span class="tg">&lt;/h1</span><span class="tg">&gt;</span>  <span class="tg">&lt;h2</span><span class="tg">&gt;</span>...<span class="tg">&lt;/h2</span><span class="tg">&gt;</span>  <span class="tg">&lt;h3</span><span class="tg">&gt;</span>...<span class="tg">&lt;/h3</span><span class="tg">&gt;</span>
+<span class="tg">&lt;h4</span><span class="tg">&gt;</span>...<span class="tg">&lt;/h4</span><span class="tg">&gt;</span>  <span class="tg">&lt;h5</span><span class="tg">&gt;</span>...<span class="tg">&lt;/h5</span><span class="tg">&gt;</span>  <span class="tg">&lt;h6</span><span class="tg">&gt;</span>...<span class="tg">&lt;/h6</span><span class="tg">&gt;</span>
+<span class="tg">&lt;p</span><span class="tg">&gt;</span>...<span class="tg">&lt;/p</span><span class="tg">&gt;</span>
+<span class="tg">&lt;br</span><span class="tg">&gt;</span>
+<span class="tg">&lt;strong</span><span class="tg">&gt;</span>...<span class="tg">&lt;/strong</span><span class="tg">&gt;</span>
+<span class="tg">&lt;em</span><span class="tg">&gt;</span>...<span class="tg">&lt;/em</span><span class="tg">&gt;</span>
+<span class="cm">&lt;!-- commento --&gt;</span></pre></div><div class="pr-item"><h3>Link e immagini</h3><pre class="code-block"><span class="tg">&lt;a</span> <span class="at">href</span>=<span class="vl">"pagina.html"</span><span class="tg">&gt;</span>...<span class="tg">&lt;/a</span><span class="tg">&gt;</span>
+<span class="tg">&lt;a</span> <span class="at">href</span>=<span class="vl">"https://www.sito.it"</span> <span class="at">target</span>=<span class="vl">"_blank"</span><span class="tg">&gt;</span>...<span class="tg">&lt;/a</span><span class="tg">&gt;</span>
+<span class="tg">&lt;a</span> <span class="at">href</span>=<span class="vl">"#id-elemento"</span><span class="tg">&gt;</span>...<span class="tg">&lt;/a</span><span class="tg">&gt;</span>
+<span class="tg">&lt;img</span> <span class="at">src</span>=<span class="vl">"img/foto.jpg"</span> <span class="at">alt</span>=<span class="vl">"..."</span> <span class="at">width</span>=<span class="vl">"300"</span><span class="tg">&gt;</span></pre></div><div class="pr-item"><h3>Elenchi</h3><pre class="code-block"><span class="tg">&lt;ul</span><span class="tg">&gt;</span>
+  <span class="tg">&lt;li</span><span class="tg">&gt;</span>...<span class="tg">&lt;/li</span><span class="tg">&gt;</span>
+<span class="tg">&lt;/ul</span><span class="tg">&gt;</span>
+
+<span class="tg">&lt;ol</span><span class="tg">&gt;</span>
+  <span class="tg">&lt;li</span><span class="tg">&gt;</span>...<span class="tg">&lt;/li</span><span class="tg">&gt;</span>
+<span class="tg">&lt;/ol</span><span class="tg">&gt;</span></pre></div><div class="pr-item"><h3>Tabelle</h3><pre class="code-block"><span class="tg">&lt;table</span><span class="tg">&gt;</span>
+  <span class="tg">&lt;tr</span><span class="tg">&gt;</span>
+    <span class="tg">&lt;th</span><span class="tg">&gt;</span>...<span class="tg">&lt;/th</span><span class="tg">&gt;</span>
+    <span class="tg">&lt;th</span><span class="tg">&gt;</span>...<span class="tg">&lt;/th</span><span class="tg">&gt;</span>
+  <span class="tg">&lt;/tr</span><span class="tg">&gt;</span>
+  <span class="tg">&lt;tr</span><span class="tg">&gt;</span>
+    <span class="tg">&lt;td</span><span class="tg">&gt;</span>...<span class="tg">&lt;/td</span><span class="tg">&gt;</span>
+    <span class="tg">&lt;td</span><span class="tg">&gt;</span>...<span class="tg">&lt;/td</span><span class="tg">&gt;</span>
+  <span class="tg">&lt;/tr</span><span class="tg">&gt;</span>
+<span class="tg">&lt;/table</span><span class="tg">&gt;</span></pre></div><div class="pr-item"><h3>Contenitori e attributi per lo stile</h3><pre class="code-block"><span class="tg">&lt;div</span> <span class="at">class</span>=<span class="vl">"..."</span><span class="tg">&gt;</span>...<span class="tg">&lt;/div</span><span class="tg">&gt;</span>
+<span class="tg">&lt;span</span> <span class="at">class</span>=<span class="vl">"..."</span><span class="tg">&gt;</span>...<span class="tg">&lt;/span</span><span class="tg">&gt;</span>
+<span class="tg">&lt;div</span> <span class="at">id</span>=<span class="vl">"..."</span><span class="tg">&gt;</span>...<span class="tg">&lt;/div</span><span class="tg">&gt;</span>
+<span class="tg">&lt;p</span> <span class="at">class</span>=<span class="vl">"nome1 nome2"</span><span class="tg">&gt;</span>...<span class="tg">&lt;/p</span><span class="tg">&gt;</span></pre></div></div>
+</section>
+
+<section id="html-form">
+  <span class="sec-num">02 · Form</span>
+  <h2>Tag, tipi di campo e attributi</h2>
+  <div class="pr-grid"><div class="pr-item"><h3>Tag</h3><pre class="code-block"><span class="tg">&lt;form</span> <span class="at">action</span>=<span class="vl">"/..."</span> <span class="at">method</span>=<span class="vl">"post"</span><span class="tg">&gt;</span>  <span class="tg">&lt;/form</span><span class="tg">&gt;</span>
+<span class="tg">&lt;form</span> <span class="at">action</span>=<span class="vl">"/..."</span> <span class="at">method</span>=<span class="vl">"get"</span><span class="tg">&gt;</span>  <span class="tg">&lt;/form</span><span class="tg">&gt;</span>
+
+<span class="tg">&lt;label</span> <span class="at">for</span>=<span class="vl">"x"</span><span class="tg">&gt;</span>...<span class="tg">&lt;/label</span><span class="tg">&gt;</span>
+<span class="tg">&lt;input</span> <span class="at">type</span>=<span class="vl">"..."</span> <span class="at">id</span>=<span class="vl">"x"</span> <span class="at">name</span>=<span class="vl">"x"</span><span class="tg">&gt;</span>
+
+<span class="tg">&lt;textarea</span> <span class="at">id</span>=<span class="vl">"..."</span> <span class="at">name</span>=<span class="vl">"..."</span> <span class="at">rows</span>=<span class="vl">"4"</span><span class="tg">&gt;</span><span class="tg">&lt;/textarea</span><span class="tg">&gt;</span>
+
+<span class="tg">&lt;select</span> <span class="at">id</span>=<span class="vl">"..."</span> <span class="at">name</span>=<span class="vl">"..."</span><span class="tg">&gt;</span>
+  <span class="tg">&lt;option</span> <span class="at">value</span>=<span class="vl">"..."</span><span class="tg">&gt;</span>...<span class="tg">&lt;/option</span><span class="tg">&gt;</span>
+  <span class="tg">&lt;option</span> <span class="at">value</span>=<span class="vl">"..."</span> selected<span class="tg">&gt;</span>...<span class="tg">&lt;/option</span><span class="tg">&gt;</span>
+<span class="tg">&lt;/select</span><span class="tg">&gt;</span>
+
+<span class="tg">&lt;input</span> <span class="at">type</span>=<span class="vl">"radio"</span> <span class="at">id</span>=<span class="vl">"..."</span> <span class="at">name</span>=<span class="vl">"..."</span> <span class="at">value</span>=<span class="vl">"..."</span><span class="tg">&gt;</span>
+<span class="tg">&lt;input</span> <span class="at">type</span>=<span class="vl">"radio"</span> <span class="at">id</span>=<span class="vl">"..."</span> <span class="at">name</span>=<span class="vl">"..."</span> <span class="at">value</span>=<span class="vl">"..."</span> checked<span class="tg">&gt;</span>
+<span class="tg">&lt;input</span> <span class="at">type</span>=<span class="vl">"checkbox"</span> <span class="at">id</span>=<span class="vl">"..."</span> <span class="at">name</span>=<span class="vl">"..."</span> <span class="at">value</span>=<span class="vl">"..."</span><span class="tg">&gt;</span>
+
+<span class="tg">&lt;fieldset</span><span class="tg">&gt;</span>
+  <span class="tg">&lt;legend</span><span class="tg">&gt;</span>...<span class="tg">&lt;/legend</span><span class="tg">&gt;</span>
+<span class="tg">&lt;/fieldset</span><span class="tg">&gt;</span>
+
+<span class="tg">&lt;button</span> <span class="at">type</span>=<span class="vl">"submit"</span><span class="tg">&gt;</span>...<span class="tg">&lt;/button</span><span class="tg">&gt;</span>
+<span class="tg">&lt;button</span> <span class="at">type</span>=<span class="vl">"reset"</span><span class="tg">&gt;</span>...<span class="tg">&lt;/button</span><span class="tg">&gt;</span></pre></div><div><div class="pr-item"><h3>Valori di type</h3><pre class="code-block">text · email · password · tel · url
+number · date · time · color · range
+file · radio · checkbox · submit · reset</pre></div><div style="height:22px"></div><div class="pr-item"><h3>Attributi dei campi</h3><pre class="code-block"><span class="at">placeholder</span>=<span class="vl">"..."</span>
+<span class="at">value</span>=<span class="vl">"..."</span>
+required
+<span class="at">minlength</span>=<span class="vl">"3"</span>     <span class="at">maxlength</span>=<span class="vl">"200"</span>
+<span class="at">min</span>=<span class="vl">"1"</span>           <span class="at">max</span>=<span class="vl">"10"</span>
+<span class="at">min</span>=<span class="vl">"2026-01-01"</span>  <span class="at">max</span>=<span class="vl">"2026-12-31"</span>
+<span class="at">step</span>=<span class="vl">"0.5"</span>
+<span class="at">pattern</span>=<span class="vl">"[0-9]{5}"</span>
+<span class="at">pattern</span>=<span class="vl">"[A-Z]{2}[0-9]{3}"</span>
+checked
+selected</pre></div></div></div>
+</section>
+
+<section id="css-sintassi">
+  <span class="sec-num">03 · CSS: sintassi</span>
+  <h2>Dove si scrive, regole e selettori</h2>
+  <div class="pr-grid"><div class="pr-item"><h3>Dove si scrive</h3><pre class="code-block"><span class="tg">&lt;link</span> <span class="at">rel</span>=<span class="vl">"stylesheet"</span> <span class="at">href</span>=<span class="vl">"css/style.css"</span><span class="tg">&gt;</span>
+
+<span class="tg">&lt;style</span><span class="tg">&gt;</span>
+  <span class="val">...</span>
+<span class="tg">&lt;/style</span><span class="tg">&gt;</span>
+
+<span class="tg">&lt;p</span> <span class="at">style</span>=<span class="vl">"color: red;"</span><span class="tg">&gt;</span>...<span class="tg">&lt;/p</span><span class="tg">&gt;</span></pre></div><div class="pr-item"><h3>Regola</h3><pre class="code-block"><span class="sel">selettore</span> {
+  <span class="prop">proprietà</span>: <span class="val">valore</span>;
+  <span class="prop">proprietà</span>: <span class="val">valore</span>;
+}
+
+<span class="cm">/* commento */</span></pre></div><div class="pr-item"><h3>Selettori</h3><pre class="code-block"><span class="sel">p</span> { }
+<span class="sel">.nome-classe</span> { }
+<span class="sel">#nome-id</span> { }
+<span class="sel">h1, h2, p</span> { }
+<span class="sel">.scheda p</span> { }</pre></div><div class="pr-item"><h3>Pseudo-classi</h3><pre class="code-block"><span class="sel">a:hover</span> { }
+<span class="sel">button:hover</span> { }
+<span class="sel">input:focus</span> { }
+<span class="sel">input:user-invalid</span> { }
+<span class="sel">input:invalid</span> { }</pre></div></div>
+</section>
+
+<section id="css-proprieta">
+  <span class="sec-num">04 · CSS: proprietà</span>
+  <h2>Colori, testo, spazi, dimensioni e disposizione</h2>
+  <div class="pr-grid"><div class="pr-item"><h3>Colori</h3><pre class="code-block"><span class="prop">color</span>: <span class="val">red</span>;
+<span class="prop">color</span>: <span class="val">#0b6e4f</span>;
+<span class="prop">color</span>: <span class="val">rgb(11, 110, 79)</span>;
+<span class="prop">background-color</span>: <span class="val">lightyellow</span>;</pre></div><div class="pr-item"><h3>Dimensioni</h3><pre class="code-block"><span class="prop">width</span>: <span class="val">300px</span>;  <span class="prop">width</span>: <span class="val">30%</span>;
+<span class="prop">width</span>: <span class="val">100%</span>;   <span class="prop">width</span>: <span class="val">auto</span>;
+<span class="prop">max-width</span>: <span class="val">500px</span>;
+<span class="prop">height</span>: <span class="val">200px</span>;</pre></div><div class="pr-item wide"><h3>Testo</h3><pre class="code-block"><span class="prop">font-family</span>: <span class="val">Arial, Verdana, sans-serif</span>;
+<span class="prop">font-size</span>: <span class="val">16px</span>;  <span class="prop">font-size</span>: <span class="val">1.5em</span>;  <span class="prop">font-size</span>: <span class="val">120%</span>;
+<span class="prop">font-weight</span>: <span class="val">normal</span>;  <span class="prop">font-weight</span>: <span class="val">bold</span>;  <span class="prop">font-weight</span>: <span class="val">700</span>;
+<span class="prop">font-style</span>: <span class="val">normal</span>;  <span class="prop">font-style</span>: <span class="val">italic</span>;
+<span class="prop">text-align</span>: <span class="val">left</span>;  <span class="prop">text-align</span>: <span class="val">center</span>;  <span class="prop">text-align</span>: <span class="val">right</span>;
+<span class="prop">text-transform</span>: <span class="val">uppercase</span>;  <span class="val">lowercase</span>;  <span class="val">capitalize</span>;
+<span class="prop">text-decoration</span>: <span class="val">none</span>;  <span class="prop">text-decoration</span>: <span class="val">underline</span>;
+<span class="prop">line-height</span>: <span class="val">1.5</span>;</pre></div><div class="pr-item wide"><h3>Spazi e bordi</h3><pre class="code-block"><span class="prop">padding</span>: <span class="val">10px</span>;
+<span class="prop">padding</span>: <span class="val">10px 20px</span>;
+<span class="prop">padding</span>: <span class="val">5px 10px 15px 20px</span>;
+<span class="prop">padding-top</span>: <span class="val">10px</span>;   <span class="prop">padding-right</span>: <span class="val">10px</span>;   <span class="prop">padding-bottom</span>: <span class="val">10px</span>;   <span class="prop">padding-left</span>: <span class="val">10px</span>;
+
+<span class="prop">margin</span>: <span class="val">10px</span>;
+<span class="prop">margin</span>: <span class="val">0 auto</span>;
+<span class="prop">margin</span>: <span class="val">5px 10px 15px 20px</span>;
+<span class="prop">margin-top</span>: <span class="val">10px</span>;    <span class="prop">margin-right</span>: <span class="val">10px</span>;    <span class="prop">margin-bottom</span>: <span class="val">10px</span>;    <span class="prop">margin-left</span>: <span class="val">10px</span>;
+
+<span class="prop">border</span>: <span class="val">2px solid #333333</span>;
+<span class="prop">border-top</span>: <span class="val">1px dashed gray</span>;
+<span class="prop">border-left</span>: <span class="val">5px solid orange</span>;
+<span class="prop">border-style</span>: <span class="val">solid</span>;  <span class="val">dashed</span>;  <span class="val">dotted</span>;  <span class="val">double</span>;  <span class="val">none</span>;
+<span class="prop">border-radius</span>: <span class="val">10px</span>;
+<span class="prop">border-top-left-radius</span>: <span class="val">10px</span>;</pre></div><div class="pr-item wide"><h3>Disposizione</h3><pre class="code-block"><span class="prop">display</span>: <span class="val">block</span>;
+<span class="prop">display</span>: <span class="val">inline</span>;
+<span class="prop">display</span>: <span class="val">inline-block</span>;
+<span class="prop">display</span>: <span class="val">flex</span>;
+<span class="prop">display</span>: <span class="val">none</span>;
+
+<span class="sel">.contenitore</span> {
+  <span class="prop">display</span>: <span class="val">flex</span>;
+  <span class="prop">gap</span>: <span class="val">10px</span>;
+  <span class="prop">flex-wrap</span>: <span class="val">wrap</span>;
+  <span class="prop">justify-content</span>: <span class="val">center</span>;  <span class="val">space-between</span>;
+  <span class="prop">align-items</span>: <span class="val">center</span>;
+}</pre></div></div>
+</section>
+
+<nav class="prevnext" aria-label="Pagina precedente e successiva"><a class="prev" href="06-esercizi.html"><span>← Pagina precedente</span><b>06 · Esercizi</b></a><span></span></nav>
+
+<footer><a class="btn" href="index.html" style="margin-bottom:18px">← Torna all'indice</a><br>Materiale didattico basato su "Hashtag 2", Modulo B, Linguaggi per il web · Realizzato con l'assistenza di Claude (Anthropic)</footer>
+
+<script>
+/* evidenzia nella barra in alto la sezione che stai leggendo */
+(function(){
+  var links = Array.prototype.slice.call(document.querySelectorAll('#topLinks a'));
+  var secs = links.map(function(a){ return document.querySelector(a.getAttribute('href')); }).filter(Boolean);
+  if(!('IntersectionObserver' in window)) return;
+  var obs = new IntersectionObserver(function(entries){
+    var best = null, bestRatio = 0;
+    entries.forEach(function(e){ if(e.isIntersecting && e.intersectionRatio > bestRatio){ bestRatio = e.intersectionRatio; best = e.target; } });
+    if(!best) return;
+    links.forEach(function(a){
+      var on = a.getAttribute('href')==='#'+best.id; a.classList.toggle('active', on);
+      if(on){ var p=a.parentNode; p.scrollLeft = a.offsetLeft - p.clientWidth/2 + a.clientWidth/2; }
+    });
+  }, {threshold:[0.1,0.3,0.6], rootMargin:'-10% 0px -40% 0px'});
+  secs.forEach(function(s){ obs.observe(s); });
+})();
+/* menu delle pagine: si chiude cliccando fuori o con Esc */
+(function(){
+  var d = document.querySelector('.pagesel'); if(!d) return;
+  document.addEventListener('click', function(e){ if(d.open && !d.contains(e.target)) d.open = false; });
+  document.addEventListener('keydown', function(e){ if(e.key === 'Escape' && d.open){ d.open = false; d.querySelector('summary').focus(); } });
+})();
+</script>
+</body>
+</html>

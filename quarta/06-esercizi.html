@@ -1,0 +1,244 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Esercizi su CSS, layout e form</title>
+  <!-- Tema comune a tutte le pagine del corso -->
+  <link rel="stylesheet" href="css/style.css">
+<style>
+  /* =========================================================
+     Stili specifici di QUESTA pagina.
+     Il tema comune (colori, caratteri, titoli, pulsanti,
+     riquadri, codice, barra in alto) è in style.css.
+     ========================================================= */
+  .skip{ position:absolute; left:-9999px; top:8px; z-index:70; background:var(--signal); color:#fff; padding:8px 14px; border-radius:6px; font-size:13px; }
+  .skip:focus{ left:12px; }
+  .hero{ min-height:auto; padding-bottom:60px; }
+  .hero .page-ref, .hero .tags{ align-self:flex-start; }
+  .mono{ font-family:var(--font-mono); }
+  .content p, .content li{ color:var(--text-dim); font-size:15px; }
+  .content p{ max-width:76ch; }
+  .content ol, .content ul{ padding-left:22px; max-width:76ch; }
+  .content li{ margin-bottom:7px; }
+  .content li > ol{ margin-top:7px; }
+  .content b{ color:var(--text); }
+  .content .code-block{ margin:16px 0 8px; }
+  
+  .ex-card{ margin-top:28px; padding:32px; scroll-margin-top:80px; }
+  .ex-level{ display:inline-block; font-family:var(--font-mono); font-size:12px; font-weight:600; letter-spacing:.03em; padding:5px 12px; border-radius:100px; margin-bottom:14px; }
+  .ex-level.base{ background:var(--signal-soft); color:#1E40AF; }
+  .ex-level.intermedio{ background:#C7D7FD; color:#1E40AF; }
+  .ex-level.avanzato{ background:#A5BEFB; color:#1E3A8A; }
+  .ex-level.riepilogo{ background:var(--alert); color:#fff; }
+  .ex-card h3{ font-size:21px; margin:0 0 6px; }
+  .ex-card h4{ font-family:var(--font-title); font-size:16px; font-weight:600; color:var(--text); margin:26px 0 6px; }
+  .ex-card .ex-goal{ font-size:14px; font-style:italic; color:var(--text-dim); margin-top:0; padding-bottom:14px; border-bottom:1px solid var(--line); }
+  .shot{ margin:18px 0 6px; max-width:760px; }
+  .shot img{ display:block; width:100%; border:1px solid var(--line); border-radius:10px; background:#fff; }
+  .shot figcaption{ font-size:13px; color:var(--text-dim); margin-top:8px; }
+  ul.check{ list-style:none; padding-left:0; }
+  ul.check li{ margin-bottom:8px; }
+  ul.check label{ display:flex; gap:10px; align-items:flex-start; cursor:pointer; }
+  ul.check input{ margin-top:4px; width:16px; height:16px; accent-color:var(--signal); flex:none; }
+  .table{ max-width:760px; }
+  .hero .btn{ align-self:flex-start; margin-top:28px; }
+
+</style>
+</head>
+<body>
+
+<a class="skip" href="#come-lavorare">Vai al contenuto</a>
+<header class="topbar">
+  <div class="topbar-in">
+    <details class="pagesel">
+      <summary title="Cambia pagina"><b>06</b> Esercizi</summary>
+      <nav class="pagesel-menu" aria-label="Pagine del corso">
+        <a href="01-web.html"><b>01</b>Internet e Web</a>
+        <a href="02-html.html"><b>02</b>HTML</a>
+        <a href="03-css.html"><b>03</b>CSS</a>
+        <a href="04-layout.html"><b>04</b>Esempi di layout</a>
+        <a href="05-form.html"><b>05</b>Form</a>
+        <a href="06-esercizi.html" class="current" aria-current="page"><b>06</b>Esercizi</a>
+        <a href="07-prontuario.html"><b>07</b>Prontuario</a>
+        <a href="index.html" class="to-index">← Tutte le pagine (indice)</a>
+      </nav>
+    </details>
+    <nav class="links" id="topLinks" aria-label="Sezioni">
+      <a href="#come-lavorare">Come lavorare</a><a href="#css">CSS e layout</a><a href="#form">Form</a>
+    </nav>
+    <a class="back" href="index.html">← Indice</a>
+  </div>
+</header>
+
+<!-- HERO -->
+<section class="hero" id="hero">
+  <span class="sec-num">06 · Esercizi</span>
+  <h1>Esercizi su CSS, layout e form.</h1>
+  <p class="page-ref">In preparazione alla verifica</p>
+  <p class="lede">Sei esercizi in due gruppi, dal più guidato al più autonomo: prima lo stile e il layout delle pagine, poi i form. L'ultimo è una prova generale a tempo, come la verifica.</p>
+  <div class="tags"><span>selettori</span><span>box model</span><span>display: flex</span><span>&lt;form&gt;</span><span>validazione</span><span>:focus</span></div>
+  <a class="btn primary" href="07-prontuario.html">Apri il prontuario →</a>
+</section>
+
+<section id="come-lavorare" class="content">
+  <span class="sec-num">Come lavorare</span>
+  <h2>Prima di cominciare</h2>
+  <ul><li><b>Crea una cartella per esercizio:</b> <code>esercizio1/</code>, <code>esercizio2/</code>… per CSS e layout, <code>form1/</code>, <code>form2/</code>… per i form. Dentro metti i file <code>.html</code> e la sottocartella <code>css/</code> con <code>style.css</code>. Usa nomi in minuscolo, senza spazi né accenti.</li><li><b>Usa solo il <a href="07-prontuario.html">prontuario</a></b>, come accadrà in verifica: abituati a cercarci la sintassi invece di copiarla dagli esercizi vecchi.</li><li><b>Controlla nel browser dopo ogni regola</b> che scrivi: se una regola non ha effetto, verifica cosa non funziona prima di andare avanti.</li></ul>
+</section>
+
+<section id="css">
+  <span class="sec-num">01 · CSS e layout</span>
+  <h2>Tre esercizi sullo stile e sulla disposizione delle pagine</h2>
+  
+  <div class="panel ex-card content" id="css-1">
+    <span class="ex-level base">Livello base</span>
+    <h3>Esercizio 1 – La scheda del film</h3>
+    <p>Obiettivo: scrivere un foglio di stile esterno usando i tre tipi di selettore e il box model. In questo esercizio sono indicate le proprietà da usare; dal prossimo esercizio andranno cercate nel prontuario.</p><p>L'HTML è già pronto: copialo in <code>esercizio1/index.html</code> e cambia solo i testi segnaposto (titolo, anno, trama, voto) con i dati di un film vero. Non modificare tag, classi e id.</p><pre class="code-block"><span class="tg">&lt;!DOCTYPE</span> html<span class="tg">&gt;</span>
+<span class="tg">&lt;html</span> <span class="at">lang</span>=<span class="vl">"it"</span><span class="tg">&gt;</span>
+<span class="tg">&lt;head</span><span class="tg">&gt;</span>
+  <span class="tg">&lt;meta</span> <span class="at">charset</span>=<span class="vl">"UTF-8"</span><span class="tg">&gt;</span>
+  <span class="tg">&lt;title</span><span class="tg">&gt;</span>Il mio film preferito<span class="tg">&lt;/title</span><span class="tg">&gt;</span>
+  <span class="tg">&lt;link</span> <span class="at">rel</span>=<span class="vl">"stylesheet"</span> <span class="at">href</span>=<span class="vl">"css/style.css"</span><span class="tg">&gt;</span>
+<span class="tg">&lt;/head</span><span class="tg">&gt;</span>
+<span class="tg">&lt;body</span><span class="tg">&gt;</span>
+  <span class="tg">&lt;div</span> <span class="at">class</span>=<span class="vl">"scheda"</span><span class="tg">&gt;</span>
+    <span class="tg">&lt;h1</span> <span class="at">id</span>=<span class="vl">"titolo"</span><span class="tg">&gt;</span>Il mio film preferito<span class="tg">&lt;/h1</span><span class="tg">&gt;</span>
+    <span class="tg">&lt;p</span><span class="tg">&gt;</span>Titolo: <span class="tg">&lt;span</span> <span class="at">class</span>=<span class="vl">"evidenzia"</span><span class="tg">&gt;</span>scrivi qui il titolo<span class="tg">&lt;/span</span><span class="tg">&gt;</span><span class="tg">&lt;/p</span><span class="tg">&gt;</span>
+    <span class="tg">&lt;p</span><span class="tg">&gt;</span>Anno di uscita: <span class="tg">&lt;span</span> <span class="at">class</span>=<span class="vl">"evidenzia"</span><span class="tg">&gt;</span>0000<span class="tg">&lt;/span</span><span class="tg">&gt;</span><span class="tg">&lt;/p</span><span class="tg">&gt;</span>
+    <span class="tg">&lt;p</span> <span class="at">class</span>=<span class="vl">"trama"</span><span class="tg">&gt;</span>Scrivi qui la trama in tre o quattro righe.<span class="tg">&lt;/p</span><span class="tg">&gt;</span>
+    <span class="tg">&lt;p</span> <span class="at">class</span>=<span class="vl">"voto"</span><span class="tg">&gt;</span>Il mio voto: 9/10<span class="tg">&lt;/p</span><span class="tg">&gt;</span>
+  <span class="tg">&lt;/div</span><span class="tg">&gt;</span>
+<span class="tg">&lt;/body</span><span class="tg">&gt;</span>
+<span class="tg">&lt;/html</span><span class="tg">&gt;</span></pre><p>Dentro la cartella <code>esercizio1</code>, crea la sottocartella <code>css</code> e, al suo interno, il file <code>style.css</code>. È il foglio di stile che l'HTML richiama già con il tag <code>&lt;link&gt;</code>. In questo file scrivi una regola CSS per ognuno dei punti qui sotto: ogni punto indica il selettore da usare e l'aspetto che l'elemento deve avere.</p><ol><li><code>body</code> con sfondo grigio chiaro e un <code>font-family</code> a tua scelta.</li><li><code>p</code>: tutti i paragrafi con <code>font-size</code> di 16px.</li><li><code>#titolo</code> centrato, in maiuscolo con <code>text-transform</code>, di un colore a scelta.</li><li><code>.scheda</code> larga al massimo 500px, centrata nella pagina, con sfondo bianco, <code>padding</code> di 20px, un bordo di 2px e angoli arrotondati.</li><li><code>.evidenzia</code> (è la classe degli span) in grassetto, con uno sfondo giallo chiaro.</li><li><code>.trama</code> in corsivo, con un bordo solo a sinistra (<code>border-left</code>) e un po' di <code>padding</code>.</li><li><code>.voto</code> allineata a destra.</li></ol><p>Nel file css, sopra ogni regola, scrivi un commento che dice se il suo selettore è di tipo, di classe o di id (es. <code>/* selettore di classe */</code>).</p><h4>Anteprima</h4><figure class="shot"><img src="img/esercizi/anteprima-css-es1.png" alt="Anteprima della scheda del film" loading="lazy"><figcaption>Ecco come può apparire la scheda finita. Colori e caratteri possono essere diversi: conta che ogni regola produca l'effetto richiesto.</figcaption></figure><h4>Prova e osserva</h4><p>Rispondi con un commento in fondo al CSS:</p><ul><li>porta il <code>padding</code> di <code>.scheda</code> a 60px e guarda il risultato; poi rimettilo a 20px e porta invece il <code>margin</code> a 60px. Che differenza vedi?</li><li>aggiungi <code>p { color: green; }</code> e <code>.voto { color: red; }</code>: di che colore è il voto, e perché?</li></ul>
+    
+  </div>
+  
+  <div class="panel ex-card content" id="css-2">
+    <span class="ex-level intermedio">Livello intermedio</span>
+    <h3>Esercizio 2 – Il sito della gita (pagina a blocchi)</h3>
+    <p>Obiettivo: scrivere da zero due pagine che condividono lo stesso foglio di stile e lo stesso menu.</p><p>Crea in <code>esercizio2/</code> le pagine <code>index.html</code> (<b>Programma</b>) e <code>info.html</code> (<b>Informazioni utili</b>) per una gita di classe in una città a tua scelta. Entrambe hanno, nell'ordine:</p><ol><li>un'<b>intestazione</b> (<code>div</code> con classe <code>intestazione</code>) con il nome della città e le date della gita;</li><li>un <b>menu</b> (<code>div</code> con id <code>menu</code>) con due link: <em>Programma</em>, che porta a <code>index.html</code>, e <em>Informazioni utili</em>, che porta a <code>info.html</code>. Il menu è identico nelle due pagine; dai a <b>ciascuno dei due link</b> la classe <code>voce</code>;</li><li>il <b>contenuto</b> (<code>div</code> con classe <code>contenuto</code>), diverso nelle due pagine:<ol><li>in <code>index.html</code>: un titolo <code>h2</code> “Programma” e il programma giorno per giorno;</li><li>in <code>info.html</code>: un titolo <code>h2</code> “Informazioni utili”, un elenco puntato di cose da portare e i numeri utili;</li><li>in tutte e due le pagine: <b>un solo</b> paragrafo, quello con l’informazione da non perdere (per esempio “Ritrovo alle 7:00 davanti alla scuola”), ha la classe <code>importante</code>;</li></ol></li><li>un <b>piè di pagina</b> (<code>div</code> con classe <code>piede</code>), identico nelle due pagine, con un paragrafo che contiene la tua classe, il nome della scuola e l’anno scolastico.</li></ol><h4>Schema della pagina</h4><figure class="shot"><img src="img/esercizi/schema-css-es2.png" alt="Schema della pagina della gita" loading="lazy"><figcaption>Lo schema mostra come sono disposti e annidati i blocchi, con le loro classi e id. Colori e caratteri li scegli tu.</figcaption></figure><h4>Il foglio di stile</h4><p>Dentro la cartella <code>esercizio2</code>, crea la sottocartella <code>css</code> e, al suo interno, il file <code>style.css</code>. Collegalo a <b>tutte e due</b> le pagine con il tag <code>&lt;link&gt;</code>. In questo file scrivi una regola CSS per ognuno dei punti qui sotto: ogni punto indica il selettore da usare e l'aspetto che l'elemento deve avere. Le proprietà che servono cercale nel prontuario.</p><ol><li><code>body</code>: la pagina non ha spazi vuoti attorno ai bordi della finestra, ha uno sfondo chiaro e un tipo di carattere a tua scelta.</li><li><code>.intestazione</code>: è una fascia colorata che occupa tutta la larghezza, con il testo bianco, centrato e ben distanziato dai bordi della fascia.</li><li><code>#menu</code>: è una fascia più chiara dell’intestazione, con il testo centrato e abbastanza distanziato dai bordi della fascia.</li><li><code>.voce</code>: le voci del menu stanno sulla stessa riga (<code>display: inline-block;</code>), sono in grassetto, hanno un colore intonato all’intestazione e sono distanziate l’una dall’altra.</li><li><code>.contenuto</code>: ha dello spazio tutto intorno, così il testo non tocca i bordi della finestra.</li><li><code>.importante</code>: il paragrafo importante ha uno sfondo giallo chiaro e una linea colorata spessa solo sul lato sinistro, e il testo non tocca né lo sfondo né la linea.</li><li><code>.piede</code>: il piè di pagina è una fascia scura, di un colore diverso dall’intestazione, con il testo bianco, centrato e più piccolo del resto della pagina.</li></ol><p>Nel file css, sopra ogni regola, scrivi un commento che dice se il suo selettore è di tipo, di classe o di id (es. <code>/* selettore di classe */</code>).</p><p><b>Tocco in più:</b> in ogni pagina aggiungi al link della pagina corrente la classe <code>attiva</code> e dalle un colore diverso dalle altre voci. Un elemento può avere più classi: si scrivono nello stesso attributo <code>class</code>, separate da uno spazio, per esempio <code>&lt;a class="voce attiva" href="index.html"&gt;</code>. Scrivi la regola <code>.attiva</code> <b>dopo</b> quella di <code>.voce</code> e spiega in un commento perché l'ordine conta.</p><p><b>Prova e osserva:</b> nella regola <code>.voce</code> sostituisci <code>inline-block</code> con <code>block</code> e guarda il menu. Che cosa cambia? Poi rimetti <code>inline-block</code>.</p>
+    
+  </div>
+  
+  <div class="panel ex-card content" id="css-3">
+    <span class="ex-level avanzato">Livello avanzato</span>
+    <h3>Esercizio 3 – Il cinema del quartiere (elementi affiancati)</h3>
+    <p>Obiettivo: usare <code>display: flex</code> per mettere i blocchi uno accanto all'altro, prima in riga e poi con un menu laterale.</p><h4>Parte A – <code>esercizio3/index.html</code>, i film della settimana</h4><p>Intestazione e menu come nell'esercizio 2. Il menu ha due voci: <b>Film</b>, che porta a <code>index.html</code>, e <b>Orari</b>, che porta a <code>orari.html</code>. Sotto, un <code>div</code> con classe <code>riga</code> che contiene <b>tre</b> <code>div</code> con classe <code>film</code>. Il <code>div</code> con classe <code>riga</code> serve da contenitore: è a lui che darai la regola che mette i film uno accanto all'altro.</p><p>Ogni film è un <code>div</code> con classe <code>film</code> e contiene, nell’ordine:</p><ul><li>un titolo <code>&lt;h2&gt;</code> con il nome del film;</li><li>un paragrafo con il genere (per esempio Commedia, Fantasy, Animazione), scritto dentro uno <code>&lt;span&gt;</code> con classe <code>genere</code>;</li><li>un paragrafo con una breve frase che riassume la trama;</li><li>un paragrafo con il prezzo del biglietto.</li></ul><figure class="shot"><img src="img/esercizi/schema-css-es3a.png" alt="Schema della pagina dei film" loading="lazy"><figcaption>Schema della pagina dei film. Colori e caratteri li scegli tu: conta la struttura.</figcaption></figure><h4>Parte B – <code>esercizio3/orari.html</code>, menu laterale</h4><p>Stessa intestazione e stesso menu della Parte A. Sotto, un <code>div</code> con classe <code>pagina</code>, che fa da contenitore e contiene due <code>div</code>:</p><ul><li>uno con classe <code>laterale</code>: è il menu dei giorni, con tre link, <b>Venerdì</b>, <b>Sabato</b> e <b>Domenica</b>. Ogni link ha la classe <code>giorno</code> e porta alla parte della pagina con gli orari di quel giorno (per esempio <code>&lt;a class="giorno" href="#venerdì"&gt;Venerdì&lt;/a&gt;</code>);</li><li>uno con classe <code>principale</code>: contiene gli orari dei tre giorni, uno sotto l'altro. Per ogni giorno scrivi un titolo <code>&lt;h3&gt;</code> con il nome del giorno e sotto gli spettacoli con il loro orario. Dai a ogni titolo l'id a cui punta il link corrispondente (per esempio <code>&lt;h3 id="venerdì"&gt;Venerdì&lt;/h3&gt;</code>): così, cliccando un giorno nel menu, la pagina salta ai suoi orari.</li></ul><figure class="shot"><img src="img/esercizi/schema-css-es3b.png" alt="Schema della pagina degli orari" loading="lazy"><figcaption>Schema della pagina degli orari. Colori e caratteri li scegli tu: conta la struttura.</figcaption></figure><h4>Parte C – <code>esercizio3/css/style.css</code>, lo stile delle due pagine</h4><p>Dentro la cartella <code>esercizio3</code>, crea la sottocartella <code>css</code> e, al suo interno, il file <code>style.css</code>. Collegalo a <b>tutte e due</b> le pagine (<code>index.html</code> e <code>orari.html</code>) con il tag <code>&lt;link&gt;</code>. Per intestazione e menu puoi riusare le regole dell'esercizio 2. Poi scrivi una regola CSS per ognuno dei punti qui sotto: ogni punto indica il selettore da usare e l'aspetto che l'elemento deve avere. Le proprietà che servono cercale nel prontuario.</p><ol><li><code>body</code>: la pagina ha uno sfondo di colore scuro.</li><li><code>.riga</code>: i tre film stanno uno accanto all'altro, sulla stessa riga.</li><li><code>.film</code>: ogni scheda è larga il 30%, ha sfondo bianco, un bordo e gli angoli arrotondati; il testo non tocca il bordo e le schede sono distanziate l'una dall'altra.</li><li><code>.genere</code>: il genere sembra una piccola etichetta, con il testo bianco e piccolo su uno sfondo colorato, un po' di spazio attorno al testo e gli angoli arrotondati.</li><li><code>.pagina</code>: il menu laterale e gli orari stanno uno accanto all'altro.</li><li><code>.laterale</code>: è largo 180px, ha uno sfondo chiaro e il testo non tocca i bordi.</li><li><code>.giorno</code>: i giorni stanno uno sotto l'altro, in grassetto e distanziati tra loro.</li><li><code>.principale</code>: ha uno sfondo bianco e dello spazio tutto intorno, così gli orari non toccano il menu laterale; il testo non tocca i bordi dello sfondo.</li></ol><p>Nel file css, sopra ogni regola, scrivi un commento che dice se il suo selettore è di tipo, di classe o di id (es. <code>/* selettore di classe */</code>).</p><h4>Prova e osserva</h4><ul><li>nella regola <code>.riga</code> cancella la dichiarazione che mette le schede una accanto all'altra e guarda la pagina. Che cosa succede? Poi rimettila.</li><li>aggiungi un quarto film dentro la <code>riga</code>: le schede ci stanno ancora in una riga? Che cosa fa il browser con la larghezza del 30%?</li></ul>
+    
+  </div>
+  
+  <div class="panel ex-card content" id="css-auto">
+    <span class="ex-level riepilogo">Riepilogo</span>
+    <h3>Autovalutazione – CSS e layout</h3>
+    <p>Alla fine dei tre esercizi spunta quello che hai fatto davvero, poi riapri le pagine nel browser e controlla.</p><ul class="check"><li><label><input type="checkbox"> <span>Ogni esercizio ha la sua cartella, con i file <code>.html</code> e <code>css/style.css</code>, e i nomi sono in minuscolo, senza spazi né accenti</span></label></li><li><label><input type="checkbox"> <span>Ogni pagina ha la struttura HTML completa e il suo <code>style.css</code> collegato con <code>&lt;link&gt;</code></span></label></li><li><label><input type="checkbox"> <span>In ogni foglio di stile, sopra ogni regola, c'è il commento con il tipo di selettore</span></label></li><li><label><input type="checkbox"> <span>Esercizio 1: ho cambiato solo i testi segnaposto, senza toccare tag, classi e id</span></label></li><li><label><input type="checkbox"> <span>Esercizio 1: la scheda è centrata e ogni punto produce l'effetto richiesto</span></label></li><li><label><input type="checkbox"> <span>Esercizio 2: le due pagine hanno lo stesso aspetto e cambiano solo nel contenuto</span></label></li><li><label><input type="checkbox"> <span>Esercizio 2: i link del menu funzionano in entrambe le direzioni e la voce della pagina corrente ha un colore diverso</span></label></li><li><label><input type="checkbox"> <span>Esercizio 2: in ogni pagina un solo paragrafo ha la classe <code>importante</code></span></label></li><li><label><input type="checkbox"> <span>Esercizio 3: i tre film stanno uno accanto all'altro</span></label></li><li><label><input type="checkbox"> <span>Esercizio 3: nella pagina degli orari il menu dei giorni sta a sinistra, accanto agli orari</span></label></li><li><label><input type="checkbox"> <span>Esercizio 3: cliccando un giorno nel menu, la pagina salta ai suoi orari</span></label></li><li><label><input type="checkbox"> <span>Ho fatto tutti i “Prova e osserva” e so spiegare che cosa succede</span></label></li></ul>
+    
+  </div>
+</section>
+
+<section id="form">
+  <span class="sec-num">02 · Form</span>
+  <h2>Tre esercizi sui moduli, fino alla prova generale</h2>
+  
+  <div class="panel ex-card content" id="form-1">
+    <span class="ex-level base">Livello base</span>
+    <h3>Esercizio 1 – Il torneo di videogiochi</h3>
+    <p>Obiettivo: scrivere un form semplice, collegando ogni etichetta al suo campo, e vedere quali dati invia. In questo esercizio sono indicati i controlli da usare; dal prossimo andranno scelti da te.</p><p>Crea <code>form1/index.html</code> con la struttura HTML completa e un titolo <code>&lt;h1&gt;</code> “Iscriviti al torneo”. Sotto, un form con <code>action="/torneo"</code> e <code>method="get"</code> che contiene, nell'ordine:</p><div class="table-scroll"><table class="table"><thead><tr><th>Dato</th><th>Controllo</th><th>Regole</th></tr></thead><tbody><tr><td>Nome e cognome</td><td><code>input</code> di tipo <code>text</code></td><td>obbligatorio</td></tr><tr><td>Email</td><td><code>input</code> di tipo <code>email</code></td><td>obbligatorio</td></tr><tr><td>Classe: 3ª, 4ª, 5ª</td><td><code>select</code> con tre <code>option</code></td><td>—</td></tr><tr><td>Gioco: Mario Kart, Minecraft, Rocket League</td><td>tre <code>radio</code>, dentro un <code>fieldset</code> con la <code>legend</code> “Scegli il gioco”</td><td>obbligatorio</td></tr><tr><td>Accetto il regolamento</td><td><code>checkbox</code></td><td>obbligatorio</td></tr></tbody></table></div><h4>Regole per l'HTML</h4><ul><li>ogni campo ha una <code>label</code> collegata con <code>for</code> e <code>id</code>, e un <code>name</code>;</li><li>i tre radio hanno lo stesso <code>name</code>; radio, option e checkbox hanno un <code>value</code>;</li><li>le etichette dei radio e della checkbox hanno la classe <code>scelta</code>;</li><li>in fondo, un pulsante <b>Iscriviti</b> che invia il form.</li></ul><h4>Lo stile</h4><p>Dentro la cartella <code>form1</code>, crea la sottocartella <code>css</code> e, al suo interno, il file <code>style.css</code>, e collegalo a <code>index.html</code> con il tag <code>&lt;link&gt;</code>. Scrivi una regola CSS per ognuno dei punti qui sotto:</p><ol><li><code>form</code> largo al massimo 400px (<code>max-width</code>), centrato nella pagina, con <code>padding</code> di 20px, un bordo e angoli arrotondati.</li><li><code>label</code>: ogni etichetta sta sopra il suo campo (<code>display: block</code>), con un po' di spazio sopra (<code>margin-top</code>).</li><li><code>.scelta</code>: le etichette dei radio e della checkbox restano accanto alla loro casella (<code>display: inline</code>).</li><li><code>button</code> con sfondo colorato, testo bianco e angoli arrotondati.</li></ol><p>Nel file css, sopra ogni regola, scrivi un commento che dice se il suo selettore è di tipo, di classe o di id (es. <code>/* selettore di classe */</code>).</p><h4>Anteprima</h4><figure class="shot"><img src="img/esercizi/anteprima-form-es1.png" alt="Anteprima del form del torneo" loading="lazy"><figcaption>Ecco come può apparire il form finito. Colori e caratteri possono essere diversi: conta che ogni regola produca l'effetto richiesto.</figcaption></figure><h4>Prova e osserva</h4><ul><li>compila il form e invialo: nella barra degli indirizzi leggi le coppie <code>name=valore</code>. Ci sono tutti i dati?</li><li>togli il <code>name</code> al campo email e invia di nuovo: che cosa cambia nella barra degli indirizzi? Poi rimettilo.</li><li>prova a inviare il form senza scegliere il gioco: che cosa succede?</li></ul>
+    
+  </div>
+  
+  <div class="panel ex-card content" id="form-2">
+    <span class="ex-level intermedio">Livello intermedio</span>
+    <h3>Esercizio 2 – Ordina la pizza (form completo)</h3>
+    <p>Obiettivo: scegliere da solo il controllo giusto per ogni dato, far controllare i dati al browser e dare al form un aspetto ordinato.</p><p>Crea <code>form2/ordina.html</code> per la pizzeria "Da Gino": un titolo <code>&lt;h1&gt;</code> e sotto un form con <code>action="/ordine"</code>. Il form deve raccogliere i dati della tabella qui sotto. <b>Il controllo da usare per ogni dato lo scegli tu.</b></p><div class="table-scroll"><table class="table"><thead><tr><th>Dato</th><th>Regole</th></tr></thead><tbody><tr><td>Nome</td><td>obbligatorio</td></tr><tr><td>Telefono</td><td>obbligatorio, 10 cifre</td></tr><tr><td>Indirizzo di consegna</td><td>obbligatorio, almeno 5 caratteri</td></tr><tr><td>Pizza: Margherita, Diavola, Quattro formaggi, Ortolana</td><td>obbligatorio, una sola</td></tr><tr><td>Quantità</td><td>da 1 a 10</td></tr><tr><td>Impasto: classico, integrale, senza glutine</td><td>una sola scelta, obbligatoria</td></tr><tr><td>Aggiunte: bufala, olive, patatine</td><td>zero, una o più</td></tr><tr><td>Orario di consegna: 19:30, 20:00, 20:30, 21:00</td><td>una sola scelta</td></tr><tr><td>Note per il fattorino</td><td>al massimo 150 caratteri</td></tr><tr><td>Accetto le condizioni del servizio</td><td>obbligatorio</td></tr></tbody></table></div><h4>Regole per l'HTML</h4><ul><li>ogni campo ha <code>label</code> collegata con <code>for</code> e <code>id</code>, e un <code>name</code>; radio, checkbox e option hanno un <code>value</code>;</li><li>impasto e aggiunte stanno ciascuno in un <code>fieldset</code> con la sua <code>legend</code>;</li><li>un pulsante <b>Ordina</b> e uno <b>Ricomincia</b>.</li></ul><p><b>Controllo dei dati.</b> Metti per ora <code>method="get"</code>, compila il form e invialo: nella barra degli indirizzi leggi le coppie <code>name=valore</code>. Ci sono tutti i dati? Il nome che hai scritto è quello giusto? Quando tutto torna, passa a <code>method="post"</code>.</p><h4>Lo stile</h4><p>Dentro la cartella <code>form2</code>, crea la sottocartella <code>css</code> e, al suo interno, il file <code>style.css</code>, e collegalo a <code>ordina.html</code> con il tag <code>&lt;link&gt;</code>. Questa volta i selettori li scegli tu: scrivi le regole che servono per ottenere l'aspetto descritto nei punti qui sotto e cerca le proprietà nel prontuario.</p><ol><li>Il form è largo al massimo 420px, è centrato nella pagina, ha uno sfondo colorato e gli angoli arrotondati.</li><li>Le etichette dei campi stanno sopra il proprio campo.</li><li>Campi di testo, menu a tendina e area di testo sono tutti della stessa larghezza (attento: una regola scritta per tutti gli <code>input</code> vale anche per radio e checkbox; per colpire solo alcuni campi usa una classe).</li><li>Le etichette di radio e checkbox restano accanto alla propria casella.</li><li>Quando un campo è selezionato, il suo bordo cambia colore.</li><li>Quando un campo contiene un dato non valido, dopo che l'utente l'ha toccato, il bordo diventa rosso.</li><li>I due pulsanti hanno colori diversi, e il colore cambia quando ci passa sopra il mouse.</li></ol><p>Nel file css, sopra ogni regola, scrivi un commento che dice se il suo selettore è di tipo, di classe o di id, e se usa una pseudo-classe (es. <code>/* selettore di tipo con pseudo-classe */</code>).</p><p><b>Prova e osserva:</b> prova a inviare il form vuoto, con un telefono di 9 cifre e con 12 pizze. Quali messaggi compaiono?</p>
+    
+  </div>
+  
+  <div class="panel ex-card content" id="form-3">
+    <span class="ex-level riepilogo">Riepilogo</span>
+    <h3>Esercizio 3 – Prova generale: il museo di scienze (90 minuti)</h3>
+    <p>Obiettivo: fare tutto da solo, a tempo, come alla verifica. Fai partire un timer e usa solo il prontuario.</p><p><b>Parte 1 – Home (25 min).</b> In <code>form3/index.html</code>: intestazione con il nome del museo, menu con <b>Home</b> e <b>Prenota una visita</b>, tre schede affiancate (<em>Le sale</em>, <em>I laboratori</em>, <em>Orari e biglietti</em>) e piè di pagina. Crea il file <code>form3/css/style.css</code> e collegalo a tutte e due le pagine. Nel CSS le tre schede stanno una accanto all'altra, con un bordo, gli angoli arrotondati e il testo distanziato dal bordo. Usa almeno un selettore di tipo, uno di classe e uno di id, e uno <code>span</code> con una classe per evidenziare un prezzo. Sopra ogni regola scrivi il commento con il tipo di selettore.</p><p><b>Parte 2 – Form (35 min).</b> In <code>form3/prenota.html</code>, con la stessa intestazione e lo stesso menu, un form con <code>method="post"</code> per prenotare una visita guidata per una classe:</p><ul><li>scuola (obbligatoria) e email del docente (obbligatoria);</li><li>data della visita (obbligatoria) e numero di studenti, da 10 a 30;</li><li>percorso, da un menu: Dinosauri, Spazio, Corpo umano;</li><li>lingua della visita, una sola tra italiano e inglese, in un <code>fieldset</code>;</li><li>laboratori facoltativi, uno o più tra Fossili, Microscopio, Planetario, in un <code>fieldset</code>;</li><li>richieste particolari, al massimo 200 caratteri;</li><li>pulsanti di invio e reset.</li></ul><p><b>Parte 3 – Stile del form (15 min).</b> Il form è centrato e largo al massimo 420px, le etichette stanno sopra i campi e i campi hanno la stessa larghezza. Il campo selezionato ha il bordo colorato, i campi non validi hanno il bordo rosso dopo che l'utente li ha toccati, e i pulsanti cambiano colore quando ci passa sopra il mouse.</p><p><b>Parte 4 – Caccia all'errore (15 min).</b> Copia questo codice in <code>form3/errori.html</code>. Contiene <b>5 errori</b>: correggili e spiega ognuno con un commento.</p><pre class="code-block"><span class="tg">&lt;!DOCTYPE</span> html<span class="tg">&gt;</span>
+<span class="tg">&lt;html</span> <span class="at">lang</span>=<span class="vl">"it"</span><span class="tg">&gt;</span>
+<span class="tg">&lt;head</span><span class="tg">&gt;</span>
+  <span class="tg">&lt;meta</span> <span class="at">charset</span>=<span class="vl">"UTF-8"</span><span class="tg">&gt;</span>
+  <span class="tg">&lt;title</span><span class="tg">&gt;</span>Visita al museo<span class="tg">&lt;/title</span><span class="tg">&gt;</span>
+  <span class="tg">&lt;style</span><span class="tg">&gt;</span>
+    <span class="sel">.riquadro</span> {
+      <span class="prop">max-width</span>: <span class="val">380px</span>
+      <span class="prop">margin</span>: <span class="val">0 auto</span>;
+      <span class="prop">padding</span>: <span class="val">20px</span>;
+      <span class="prop">border</span>: <span class="val">2px solid #2451a3</span>;
+    }
+    <span class="sel">label</span> {
+      <span class="prop">display</span>: <span class="val">block</span>;
+      <span class="prop">margin-top</span>: <span class="val">10px</span>;
+    }
+    <span class="sel">.bottone</span> {
+      <span class="prop">margin-top</span>: <span class="val">15px</span>;
+      <span class="prop">background-color</span>: <span class="val">#2451a3</span>;
+      <span class="prop">color</span>: <span class="val">#ffffff</span>;
+    }
+    <span class="sel">.bottone:hover</span> {
+      <span class="prop">background-color</span>: <span class="val">#1b3d7a</span>;
+    }
+    <span class="sel">#avviso</span> { <span class="prop">color</span>: <span class="val">blue</span>; }
+    <span class="sel">.nota</span> { <span class="prop">color</span>: <span class="val">orange</span>; }
+  <span class="tg">&lt;/style</span><span class="tg">&gt;</span>
+<span class="tg">&lt;/head</span><span class="tg">&gt;</span>
+<span class="tg">&lt;body</span><span class="tg">&gt;</span>
+  <span class="tg">&lt;form</span> <span class="at">class</span>=<span class="vl">"riquadro"</span> <span class="at">action</span>=<span class="vl">"/visita"</span> <span class="at">method</span>=<span class="vl">"pots"</span><span class="tg">&gt;</span>
+    <span class="tg">&lt;label</span> <span class="at">for</span>=<span class="vl">"classe"</span><span class="tg">&gt;</span>Classe<span class="tg">&lt;/label</span><span class="tg">&gt;</span>
+    <span class="tg">&lt;input</span> <span class="at">type</span>=<span class="vl">"text"</span> <span class="at">id</span>=<span class="vl">"classe"</span> <span class="at">name</span>=<span class="vl">"classe"</span><span class="tg">&gt;</span>
+
+    <span class="tg">&lt;label</span> <span class="at">for</span>=<span class="vl">"studenti"</span><span class="tg">&gt;</span>Numero di studenti<span class="tg">&lt;/label</span><span class="tg">&gt;</span>
+    <span class="tg">&lt;input</span> <span class="at">type</span>=<span class="vl">"number"</span> <span class="at">id</span>=<span class="vl">"studenti"</span> <span class="at">min</span>=<span class="vl">"10"</span> <span class="at">max</span>=<span class="vl">"30"</span> required<span class="tg">&gt;</span>
+
+    <span class="tg">&lt;fieldset</span><span class="tg">&gt;</span>
+      <span class="tg">&lt;legend</span><span class="tg">&gt;</span>Lingua della visita<span class="tg">&lt;/legend</span><span class="tg">&gt;</span>
+      <span class="tg">&lt;input</span> <span class="at">type</span>=<span class="vl">"radio"</span> <span class="at">id</span>=<span class="vl">"ita"</span> <span class="at">name</span>=<span class="vl">"lingua"</span> <span class="at">value</span>=<span class="vl">"italiano"</span><span class="tg">&gt;</span>
+      <span class="tg">&lt;label</span> <span class="at">for</span>=<span class="vl">"ita"</span><span class="tg">&gt;</span>Italiano<span class="tg">&lt;/label</span><span class="tg">&gt;</span>
+      <span class="tg">&lt;input</span> <span class="at">type</span>=<span class="vl">"checkbox"</span> <span class="at">id</span>=<span class="vl">"eng"</span> <span class="at">name</span>=<span class="vl">"lingua"</span> <span class="at">value</span>=<span class="vl">"inglese"</span><span class="tg">&gt;</span>
+      <span class="tg">&lt;label</span> <span class="at">for</span>=<span class="vl">"eng"</span><span class="tg">&gt;</span>Inglese<span class="tg">&lt;/label</span><span class="tg">&gt;</span>
+    <span class="tg">&lt;/fieldset</span><span class="tg">&gt;</span>
+
+    <span class="tg">&lt;button</span> <span class="at">class</span>=<span class="vl">"botone"</span> <span class="at">type</span>=<span class="vl">"submit"</span><span class="tg">&gt;</span>Prenota<span class="tg">&lt;/button</span><span class="tg">&gt;</span>
+  <span class="tg">&lt;/form</span><span class="tg">&gt;</span>
+
+  <span class="tg">&lt;p</span> <span class="at">id</span>=<span class="vl">"avviso"</span> <span class="at">class</span>=<span class="vl">"nota"</span><span class="tg">&gt;</span>Di che colore sarà questo paragrafo?<span class="tg">&lt;/p</span><span class="tg">&gt;</span>
+  <span class="cm">&lt;!-- Di che colore è il paragrafo qui sopra? Perché, visto che .nota è scritta dopo? --&gt;</span>
+<span class="tg">&lt;/body</span><span class="tg">&gt;</span>
+<span class="tg">&lt;/html</span><span class="tg">&gt;</span></pre><h4>Autovalutazione</h4><p>Alla fine spunta quello che hai fatto davvero, poi riapri le pagine nel browser e controlla.</p><ul class="check"><li><label><input type="checkbox"> <span>Le due pagine hanno la struttura completa e lo stesso <code>style.css</code> collegato</span></label></li><li><label><input type="checkbox"> <span>I link del menu funzionano in entrambe le direzioni</span></label></li><li><label><input type="checkbox"> <span>Le tre schede stanno affiancate</span></label></li><li><label><input type="checkbox"> <span>Ho usato almeno un selettore di tipo, uno di classe, uno di id e uno span, e sopra ogni regola c'è il commento con il tipo di selettore</span></label></li><li><label><input type="checkbox"> <span>Ogni campo del form ha label collegata, <code>id</code> e <code>name</code></span></label></li><li><label><input type="checkbox"> <span>I radio della lingua si escludono a vicenda</span></label></li><li><label><input type="checkbox"> <span>Inviando il form vuoto compaiono i messaggi del browser</span></label></li><li><label><input type="checkbox"> <span>Con <code>method="get"</code> vedo tutti i dati nella barra degli indirizzi</span></label></li><li><label><input type="checkbox"> <span>Il form è centrato e i campi hanno la stessa larghezza</span></label></li><li><label><input type="checkbox"> <span>Si vedono il bordo del campo selezionato, il bordo rosso sui campi non validi e il cambio di colore dei pulsanti</span></label></li><li><label><input type="checkbox"> <span>Ho trovato e spiegato i 5 errori e risposto alla domanda sulla cascata</span></label></li><li><label><input type="checkbox"> <span>Ho finito entro 90 minuti</span></label></li></ul>
+    
+  </div>
+</section>
+
+<nav class="prevnext" aria-label="Pagina precedente e successiva"><a class="prev" href="05-form.html"><span>← Pagina precedente</span><b>05 · Form</b></a><a class="next" href="07-prontuario.html"><span>Pagina successiva →</span><b>07 · Prontuario</b></a></nav>
+
+<footer><a class="btn" href="index.html" style="margin-bottom:18px">← Torna all'indice</a><br>Materiale didattico basato su "Hashtag 2", Modulo B, Linguaggi per il web · Realizzato con l'assistenza di Claude (Anthropic)</footer>
+
+<script>
+/* evidenzia nella barra in alto la sezione che stai leggendo */
+(function(){
+  var links = Array.prototype.slice.call(document.querySelectorAll('#topLinks a'));
+  var secs = links.map(function(a){ return document.querySelector(a.getAttribute('href')); }).filter(Boolean);
+  if(!('IntersectionObserver' in window)) return;
+  var obs = new IntersectionObserver(function(entries){
+    var best = null, bestRatio = 0;
+    entries.forEach(function(e){ if(e.isIntersecting && e.intersectionRatio > bestRatio){ bestRatio = e.intersectionRatio; best = e.target; } });
+    if(!best) return;
+    links.forEach(function(a){
+      var on = a.getAttribute('href')==='#'+best.id; a.classList.toggle('active', on);
+      if(on){ var p=a.parentNode; p.scrollLeft = a.offsetLeft - p.clientWidth/2 + a.clientWidth/2; }
+    });
+  }, {threshold:[0.1,0.3,0.6], rootMargin:'-10% 0px -40% 0px'});
+  secs.forEach(function(s){ obs.observe(s); });
+})();
+/* menu delle pagine: si chiude cliccando fuori o con Esc */
+(function(){
+  var d = document.querySelector('.pagesel'); if(!d) return;
+  document.addEventListener('click', function(e){ if(d.open && !d.contains(e.target)) d.open = false; });
+  document.addEventListener('keydown', function(e){ if(e.key === 'Escape' && d.open){ d.open = false; d.querySelector('summary').focus(); } });
+})();
+</script>
+</body>
+</html>
