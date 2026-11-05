@@ -25,20 +25,28 @@
   .content b{ color:var(--text); }
   .content .code-block{ margin:16px 0 8px; }
   
-  .pr-grid{ display:grid; grid-template-columns:1fr 1fr; gap:22px; margin-top:36px; }
-  @media (max-width:860px){ .pr-grid{ grid-template-columns:1fr; } }
-  .pr-item{ min-width:0; }
-  .pr-item h3{ font-size:16px; margin:0 0 8px; }
-  .pr-item .code-block{ margin:0; font-size:12.5px; line-height:1.65; }
-  .pr-item.wide{ grid-column:1 / -1; }
+  .pr-block{ margin-top:36px; }
+  .pr-block h3{ font-size:17px; margin:0 0 4px; }
+  .pr-block .table{ max-width:none; margin-top:10px; }
+  .pr-block .table td:first-child{ white-space:nowrap; }
+  .pr-block .table td{ font-size:14px; color:var(--text-dim); }
+  .pr-block .table td code{ font-family:var(--font-mono); font-size:.9em; background:var(--panel-2); border:1px solid var(--line); border-radius:4px; padding:1px 5px; color:#1E3A8A; white-space:nowrap; }
+  .pr-block .table th:nth-child(1){ width:24%; } .pr-block .table th:nth-child(2){ width:40%; }
+  .pr-note{ font-size:14px; color:var(--text-dim); margin-top:10px; max-width:80ch; }
+  .pr-note code{ font-family:var(--font-mono); font-size:.9em; background:var(--panel-2); border:1px solid var(--line); border-radius:4px; padding:1px 5px; color:#1E3A8A; }
   .hero .btn{ align-self:flex-start; margin-top:28px; }
+  @media (max-width:700px){ .pr-block .table td:first-child{ white-space:normal; } }
   @media print{
-    .topbar, .prevnext, footer, .hero .btn, .hero .tags{ display:none; }
-    section{ padding:20px 0; max-width:none; }
-    .hero{ min-height:auto; padding-top:0; }
-    .code-block{ background:#fff; color:#000; border:1px solid #999; white-space:pre-wrap; }
-    .pr-grid{ gap:12px; }
-    .pr-item{ break-inside:avoid; }
+    .topbar, .prevnext, footer, .hero .btn, .hero .tags, .hero .lede{ display:none; }
+    section{ padding:14px 0; max-width:none; border:none; }
+    section + section{ border:none; }
+    .hero{ min-height:auto; padding:0; }
+    .hero h1{ font-size:26px; }
+    .sec-num{ font-size:18px; }
+    h2{ display:none; }
+    .pr-block{ margin-top:12px; break-inside:avoid; }
+    .table{ box-shadow:none; font-size:12px; }
+    .table th, .table td{ padding:4px 8px; }
   }
 
 </style>
@@ -62,7 +70,7 @@
       </nav>
     </details>
     <nav class="links" id="topLinks" aria-label="Sezioni">
-      <a href="#html">HTML</a><a href="#html-form">Form</a><a href="#css-sintassi">CSS: sintassi</a><a href="#css-proprieta">CSS: proprietà</a>
+      <a href="#html">HTML</a><a href="#html-form">Form</a><a href="#css-proprieta">CSS: proprietà</a>
     </nav>
     <a class="back" href="index.html">← Indice</a>
   </div>
@@ -73,162 +81,26 @@
   <span class="sec-num">07 · Prontuario</span>
   <h1>Prontuario HTML e CSS.</h1>
   <p class="page-ref">Da usare negli esercizi e in verifica</p>
-  <p class="lede">La sintassi da avere sotto mano: non devi impararla a memoria. Sta a te scegliere che cosa usare, dove e perché.</p>
+  <p class="lede">I tag, gli attributi e le proprietà da avere sotto mano, con i valori che puoi usare. Non trovi il codice pronto: sta a te scegliere che cosa usare, dove e perché, e scrivere le regole.</p>
   <a class="btn" href="javascript:window.print()">Stampa il prontuario</a>
 </section>
 
 <section id="html">
   <span class="sec-num">01 · HTML</span>
   <h2>Pagina e contenuti</h2>
-  <div class="pr-grid"><div class="pr-item"><h3>Struttura</h3><pre class="code-block"><span class="tg">&lt;!DOCTYPE</span> html<span class="tg">&gt;</span>
-<span class="tg">&lt;html</span> <span class="at">lang</span>=<span class="vl">"it"</span><span class="tg">&gt;</span>
-<span class="tg">&lt;head</span><span class="tg">&gt;</span>
-  <span class="tg">&lt;meta</span> <span class="at">charset</span>=<span class="vl">"UTF-8"</span><span class="tg">&gt;</span>
-  <span class="tg">&lt;title</span><span class="tg">&gt;</span>...<span class="tg">&lt;/title</span><span class="tg">&gt;</span>
-  <span class="tg">&lt;link</span> <span class="at">rel</span>=<span class="vl">"stylesheet"</span> <span class="at">href</span>=<span class="vl">"css/style.css"</span><span class="tg">&gt;</span>
-<span class="tg">&lt;/head</span><span class="tg">&gt;</span>
-<span class="tg">&lt;body</span><span class="tg">&gt;</span>
-  ...
-<span class="tg">&lt;/body</span><span class="tg">&gt;</span>
-<span class="tg">&lt;/html</span><span class="tg">&gt;</span></pre></div><div class="pr-item"><h3>Testo</h3><pre class="code-block"><span class="tg">&lt;h1</span><span class="tg">&gt;</span>...<span class="tg">&lt;/h1</span><span class="tg">&gt;</span>  <span class="tg">&lt;h2</span><span class="tg">&gt;</span>...<span class="tg">&lt;/h2</span><span class="tg">&gt;</span>  <span class="tg">&lt;h3</span><span class="tg">&gt;</span>...<span class="tg">&lt;/h3</span><span class="tg">&gt;</span>
-<span class="tg">&lt;h4</span><span class="tg">&gt;</span>...<span class="tg">&lt;/h4</span><span class="tg">&gt;</span>  <span class="tg">&lt;h5</span><span class="tg">&gt;</span>...<span class="tg">&lt;/h5</span><span class="tg">&gt;</span>  <span class="tg">&lt;h6</span><span class="tg">&gt;</span>...<span class="tg">&lt;/h6</span><span class="tg">&gt;</span>
-<span class="tg">&lt;p</span><span class="tg">&gt;</span>...<span class="tg">&lt;/p</span><span class="tg">&gt;</span>
-<span class="tg">&lt;br</span><span class="tg">&gt;</span>
-<span class="tg">&lt;strong</span><span class="tg">&gt;</span>...<span class="tg">&lt;/strong</span><span class="tg">&gt;</span>
-<span class="tg">&lt;em</span><span class="tg">&gt;</span>...<span class="tg">&lt;/em</span><span class="tg">&gt;</span>
-<span class="cm">&lt;!-- commento --&gt;</span></pre></div><div class="pr-item"><h3>Link e immagini</h3><pre class="code-block"><span class="tg">&lt;a</span> <span class="at">href</span>=<span class="vl">"pagina.html"</span><span class="tg">&gt;</span>...<span class="tg">&lt;/a</span><span class="tg">&gt;</span>
-<span class="tg">&lt;a</span> <span class="at">href</span>=<span class="vl">"https://www.sito.it"</span> <span class="at">target</span>=<span class="vl">"_blank"</span><span class="tg">&gt;</span>...<span class="tg">&lt;/a</span><span class="tg">&gt;</span>
-<span class="tg">&lt;a</span> <span class="at">href</span>=<span class="vl">"#id-elemento"</span><span class="tg">&gt;</span>...<span class="tg">&lt;/a</span><span class="tg">&gt;</span>
-<span class="tg">&lt;img</span> <span class="at">src</span>=<span class="vl">"img/foto.jpg"</span> <span class="at">alt</span>=<span class="vl">"..."</span> <span class="at">width</span>=<span class="vl">"300"</span><span class="tg">&gt;</span></pre></div><div class="pr-item"><h3>Elenchi</h3><pre class="code-block"><span class="tg">&lt;ul</span><span class="tg">&gt;</span>
-  <span class="tg">&lt;li</span><span class="tg">&gt;</span>...<span class="tg">&lt;/li</span><span class="tg">&gt;</span>
-<span class="tg">&lt;/ul</span><span class="tg">&gt;</span>
-
-<span class="tg">&lt;ol</span><span class="tg">&gt;</span>
-  <span class="tg">&lt;li</span><span class="tg">&gt;</span>...<span class="tg">&lt;/li</span><span class="tg">&gt;</span>
-<span class="tg">&lt;/ol</span><span class="tg">&gt;</span></pre></div><div class="pr-item"><h3>Tabelle</h3><pre class="code-block"><span class="tg">&lt;table</span><span class="tg">&gt;</span>
-  <span class="tg">&lt;tr</span><span class="tg">&gt;</span>
-    <span class="tg">&lt;th</span><span class="tg">&gt;</span>...<span class="tg">&lt;/th</span><span class="tg">&gt;</span>
-    <span class="tg">&lt;th</span><span class="tg">&gt;</span>...<span class="tg">&lt;/th</span><span class="tg">&gt;</span>
-  <span class="tg">&lt;/tr</span><span class="tg">&gt;</span>
-  <span class="tg">&lt;tr</span><span class="tg">&gt;</span>
-    <span class="tg">&lt;td</span><span class="tg">&gt;</span>...<span class="tg">&lt;/td</span><span class="tg">&gt;</span>
-    <span class="tg">&lt;td</span><span class="tg">&gt;</span>...<span class="tg">&lt;/td</span><span class="tg">&gt;</span>
-  <span class="tg">&lt;/tr</span><span class="tg">&gt;</span>
-<span class="tg">&lt;/table</span><span class="tg">&gt;</span></pre></div><div class="pr-item"><h3>Contenitori e attributi per lo stile</h3><pre class="code-block"><span class="tg">&lt;div</span> <span class="at">class</span>=<span class="vl">"..."</span><span class="tg">&gt;</span>...<span class="tg">&lt;/div</span><span class="tg">&gt;</span>
-<span class="tg">&lt;span</span> <span class="at">class</span>=<span class="vl">"..."</span><span class="tg">&gt;</span>...<span class="tg">&lt;/span</span><span class="tg">&gt;</span>
-<span class="tg">&lt;div</span> <span class="at">id</span>=<span class="vl">"..."</span><span class="tg">&gt;</span>...<span class="tg">&lt;/div</span><span class="tg">&gt;</span>
-<span class="tg">&lt;p</span> <span class="at">class</span>=<span class="vl">"nome1 nome2"</span><span class="tg">&gt;</span>...<span class="tg">&lt;/p</span><span class="tg">&gt;</span></pre></div></div>
+  <div class="pr-block"><h3>Struttura della pagina</h3><div class="table-scroll"><table class="table"><thead><tr><th>Tag</th><th>Attributi principali</th><th>Significato</th></tr></thead><tbody><tr><td><code>&lt;!DOCTYPE html&gt;</code></td><td>—</td><td>Prima riga: il documento è HTML5</td></tr><tr><td><code>&lt;html&gt;</code></td><td><code>lang</code></td><td>Contiene tutta la pagina</td></tr><tr><td><code>&lt;head&gt;</code></td><td>—</td><td>Informazioni sulla pagina, non visibili</td></tr><tr><td><code>&lt;meta&gt;</code></td><td><code>charset</code></td><td>Codifica dei caratteri (UTF-8)</td></tr><tr><td><code>&lt;title&gt;</code></td><td>—</td><td>Titolo nella scheda del browser</td></tr><tr><td><code>&lt;link&gt;</code></td><td><code>rel</code> / <code>href</code></td><td>Collega un foglio di stile esterno</td></tr><tr><td><code>&lt;body&gt;</code></td><td>—</td><td>Contenuto visibile della pagina</td></tr></tbody></table></div></div><div class="pr-block"><h3>Testo, link e immagini</h3><div class="table-scroll"><table class="table"><thead><tr><th>Tag</th><th>Attributi principali</th><th>Significato</th></tr></thead><tbody><tr><td><code>&lt;h1&gt;</code> … <code>&lt;h6&gt;</code></td><td>—</td><td>Titoli, dal più importante al meno importante</td></tr><tr><td><code>&lt;p&gt;</code></td><td>—</td><td>Paragrafo</td></tr><tr><td><code>&lt;br&gt;</code></td><td>—</td><td>A capo (tag vuoto)</td></tr><tr><td><code>&lt;strong&gt;</code> / <code>&lt;em&gt;</code></td><td>—</td><td>Grassetto / corsivo</td></tr><tr><td><code>&lt;a&gt;</code></td><td><code>href</code> / <code>target</code></td><td>Link: a un file, a un sito o a un <code>id</code> della pagina (<code>#nome</code>)</td></tr><tr><td><code>&lt;img&gt;</code></td><td><code>src</code> / <code>alt</code> / <code>width</code></td><td>Immagine (tag vuoto)</td></tr><tr><td><code>&lt;!-- ... --&gt;</code></td><td>—</td><td>Commento, non visibile</td></tr></tbody></table></div></div><div class="pr-block"><h3>Elenchi e tabelle</h3><div class="table-scroll"><table class="table"><thead><tr><th>Tag</th><th>Attributi principali</th><th>Significato</th></tr></thead><tbody><tr><td><code>&lt;ul&gt;</code> / <code>&lt;ol&gt;</code></td><td>—</td><td>Elenco puntato / numerato</td></tr><tr><td><code>&lt;li&gt;</code></td><td>—</td><td>Voce di un elenco</td></tr><tr><td><code>&lt;table&gt;</code></td><td>—</td><td>Tabella</td></tr><tr><td><code>&lt;tr&gt;</code></td><td>—</td><td>Riga della tabella</td></tr><tr><td><code>&lt;th&gt;</code> / <code>&lt;td&gt;</code></td><td>—</td><td>Cella di intestazione / cella normale</td></tr></tbody></table></div></div><div class="pr-block"><h3>Contenitori e attributi per lo stile</h3><div class="table-scroll"><table class="table"><thead><tr><th>Tag</th><th>Attributi principali</th><th>Significato</th></tr></thead><tbody><tr><td><code>&lt;div&gt;</code></td><td><code>class</code> / <code>id</code></td><td>Contenitore di blocco: va a capo</td></tr><tr><td><code>&lt;span&gt;</code></td><td><code>class</code> / <code>id</code></td><td>Contenitore in linea: resta nella riga</td></tr><tr><td>qualsiasi tag</td><td><code>class</code></td><td>Una o più classi, separate da uno spazio</td></tr><tr><td>qualsiasi tag</td><td><code>id</code></td><td>Nome unico nella pagina</td></tr></tbody></table></div></div>
 </section>
 
 <section id="html-form">
   <span class="sec-num">02 · Form</span>
   <h2>Tag, tipi di campo e attributi</h2>
-  <div class="pr-grid"><div class="pr-item"><h3>Tag</h3><pre class="code-block"><span class="tg">&lt;form</span> <span class="at">action</span>=<span class="vl">"/..."</span> <span class="at">method</span>=<span class="vl">"post"</span><span class="tg">&gt;</span>  <span class="tg">&lt;/form</span><span class="tg">&gt;</span>
-<span class="tg">&lt;form</span> <span class="at">action</span>=<span class="vl">"/..."</span> <span class="at">method</span>=<span class="vl">"get"</span><span class="tg">&gt;</span>  <span class="tg">&lt;/form</span><span class="tg">&gt;</span>
-
-<span class="tg">&lt;label</span> <span class="at">for</span>=<span class="vl">"x"</span><span class="tg">&gt;</span>...<span class="tg">&lt;/label</span><span class="tg">&gt;</span>
-<span class="tg">&lt;input</span> <span class="at">type</span>=<span class="vl">"..."</span> <span class="at">id</span>=<span class="vl">"x"</span> <span class="at">name</span>=<span class="vl">"x"</span><span class="tg">&gt;</span>
-
-<span class="tg">&lt;textarea</span> <span class="at">id</span>=<span class="vl">"..."</span> <span class="at">name</span>=<span class="vl">"..."</span> <span class="at">rows</span>=<span class="vl">"4"</span><span class="tg">&gt;</span><span class="tg">&lt;/textarea</span><span class="tg">&gt;</span>
-
-<span class="tg">&lt;select</span> <span class="at">id</span>=<span class="vl">"..."</span> <span class="at">name</span>=<span class="vl">"..."</span><span class="tg">&gt;</span>
-  <span class="tg">&lt;option</span> <span class="at">value</span>=<span class="vl">"..."</span><span class="tg">&gt;</span>...<span class="tg">&lt;/option</span><span class="tg">&gt;</span>
-  <span class="tg">&lt;option</span> <span class="at">value</span>=<span class="vl">"..."</span> selected<span class="tg">&gt;</span>...<span class="tg">&lt;/option</span><span class="tg">&gt;</span>
-<span class="tg">&lt;/select</span><span class="tg">&gt;</span>
-
-<span class="tg">&lt;input</span> <span class="at">type</span>=<span class="vl">"radio"</span> <span class="at">id</span>=<span class="vl">"..."</span> <span class="at">name</span>=<span class="vl">"..."</span> <span class="at">value</span>=<span class="vl">"..."</span><span class="tg">&gt;</span>
-<span class="tg">&lt;input</span> <span class="at">type</span>=<span class="vl">"radio"</span> <span class="at">id</span>=<span class="vl">"..."</span> <span class="at">name</span>=<span class="vl">"..."</span> <span class="at">value</span>=<span class="vl">"..."</span> checked<span class="tg">&gt;</span>
-<span class="tg">&lt;input</span> <span class="at">type</span>=<span class="vl">"checkbox"</span> <span class="at">id</span>=<span class="vl">"..."</span> <span class="at">name</span>=<span class="vl">"..."</span> <span class="at">value</span>=<span class="vl">"..."</span><span class="tg">&gt;</span>
-
-<span class="tg">&lt;fieldset</span><span class="tg">&gt;</span>
-  <span class="tg">&lt;legend</span><span class="tg">&gt;</span>...<span class="tg">&lt;/legend</span><span class="tg">&gt;</span>
-<span class="tg">&lt;/fieldset</span><span class="tg">&gt;</span>
-
-<span class="tg">&lt;button</span> <span class="at">type</span>=<span class="vl">"submit"</span><span class="tg">&gt;</span>...<span class="tg">&lt;/button</span><span class="tg">&gt;</span>
-<span class="tg">&lt;button</span> <span class="at">type</span>=<span class="vl">"reset"</span><span class="tg">&gt;</span>...<span class="tg">&lt;/button</span><span class="tg">&gt;</span></pre></div><div><div class="pr-item"><h3>Valori di type</h3><pre class="code-block">text · email · password · tel · url
-number · date · time · color · range
-file · radio · checkbox · submit · reset</pre></div><div style="height:22px"></div><div class="pr-item"><h3>Attributi dei campi</h3><pre class="code-block"><span class="at">placeholder</span>=<span class="vl">"..."</span>
-<span class="at">value</span>=<span class="vl">"..."</span>
-required
-<span class="at">minlength</span>=<span class="vl">"3"</span>     <span class="at">maxlength</span>=<span class="vl">"200"</span>
-<span class="at">min</span>=<span class="vl">"1"</span>           <span class="at">max</span>=<span class="vl">"10"</span>
-<span class="at">min</span>=<span class="vl">"2026-01-01"</span>  <span class="at">max</span>=<span class="vl">"2026-12-31"</span>
-<span class="at">step</span>=<span class="vl">"0.5"</span>
-<span class="at">pattern</span>=<span class="vl">"[0-9]{5}"</span>
-<span class="at">pattern</span>=<span class="vl">"[A-Z]{2}[0-9]{3}"</span>
-checked
-selected</pre></div></div></div>
-</section>
-
-<section id="css-sintassi">
-  <span class="sec-num">03 · CSS: sintassi</span>
-  <h2>Dove si scrive, regole e selettori</h2>
-  <div class="pr-grid"><div class="pr-item"><h3>Dove si scrive</h3><pre class="code-block"><span class="tg">&lt;link</span> <span class="at">rel</span>=<span class="vl">"stylesheet"</span> <span class="at">href</span>=<span class="vl">"css/style.css"</span><span class="tg">&gt;</span>
-
-<span class="tg">&lt;style</span><span class="tg">&gt;</span>
-  <span class="val">...</span>
-<span class="tg">&lt;/style</span><span class="tg">&gt;</span>
-
-<span class="tg">&lt;p</span> <span class="at">style</span>=<span class="vl">"color: red;"</span><span class="tg">&gt;</span>...<span class="tg">&lt;/p</span><span class="tg">&gt;</span></pre></div><div class="pr-item"><h3>Regola</h3><pre class="code-block"><span class="sel">selettore</span> {
-  <span class="prop">proprietà</span>: <span class="val">valore</span>;
-  <span class="prop">proprietà</span>: <span class="val">valore</span>;
-}
-
-<span class="cm">/* commento */</span></pre></div><div class="pr-item"><h3>Selettori</h3><pre class="code-block"><span class="sel">p</span> { }
-<span class="sel">.nome-classe</span> { }
-<span class="sel">#nome-id</span> { }
-<span class="sel">h1, h2, p</span> { }
-<span class="sel">.scheda p</span> { }</pre></div><div class="pr-item"><h3>Pseudo-classi</h3><pre class="code-block"><span class="sel">a:hover</span> { }
-<span class="sel">button:hover</span> { }
-<span class="sel">input:focus</span> { }
-<span class="sel">input:user-invalid</span> { }
-<span class="sel">input:invalid</span> { }</pre></div></div>
+  <div class="pr-block"><h3>Tag del form</h3><div class="table-scroll"><table class="table"><thead><tr><th>Tag</th><th>Attributi principali</th><th>Significato</th></tr></thead><tbody><tr><td><code>&lt;form&gt;</code></td><td><code>action</code> / <code>method</code></td><td>Contenitore dei campi; <code>method</code>: <code>get</code> o <code>post</code></td></tr><tr><td><code>&lt;label&gt;</code></td><td><code>for</code></td><td>Etichetta: <code>for</code> uguale all'<code>id</code> del campo</td></tr><tr><td><code>&lt;input&gt;</code></td><td><code>type</code> / <code>id</code> / <code>name</code> / <code>value</code></td><td>Campo (tag vuoto); il tipo dipende da <code>type</code></td></tr><tr><td><code>&lt;textarea&gt;</code></td><td><code>id</code> / <code>name</code> / <code>rows</code></td><td>Testo su più righe</td></tr><tr><td><code>&lt;select&gt;</code></td><td><code>id</code> / <code>name</code></td><td>Menu a tendina</td></tr><tr><td><code>&lt;option&gt;</code></td><td><code>value</code> / <code>selected</code></td><td>Voce del menu a tendina</td></tr><tr><td><code>&lt;fieldset&gt;</code></td><td>—</td><td>Raggruppa campi che vanno insieme</td></tr><tr><td><code>&lt;legend&gt;</code></td><td>—</td><td>Titolo del gruppo</td></tr><tr><td><code>&lt;button&gt;</code></td><td><code>type</code></td><td>Pulsante: <code>submit</code> (invia) o <code>reset</code> (cancella)</td></tr></tbody></table></div></div><div class="pr-block"><h3>Valori di type</h3><div class="table-scroll"><table class="table"><thead><tr><th>Valore</th><th>Campo</th></tr></thead><tbody><tr><td><code>text</code> / <code>password</code></td><td>Testo su una riga / testo nascosto</td></tr><tr><td><code>email</code> / <code>tel</code> / <code>url</code></td><td>Indirizzo email / telefono / indirizzo web</td></tr><tr><td><code>number</code> / <code>range</code></td><td>Numero / cursore</td></tr><tr><td><code>date</code> / <code>time</code></td><td>Data / ora</td></tr><tr><td><code>radio</code></td><td>Una sola scelta tra più opzioni</td></tr><tr><td><code>checkbox</code></td><td>Casella da spuntare</td></tr><tr><td><code>color</code> / <code>file</code></td><td>Colore / file da caricare</td></tr></tbody></table></div></div><div class="pr-block"><h3>Attributi dei campi</h3><div class="table-scroll"><table class="table"><thead><tr><th>Attributo</th><th>Valori ammessi</th><th>Significato</th></tr></thead><tbody><tr><td><code>required</code></td><td>—</td><td>Campo obbligatorio</td></tr><tr><td><code>minlength</code> / <code>maxlength</code></td><td>numero di caratteri</td><td>Lunghezza minima / massima del testo</td></tr><tr><td><code>min</code> / <code>max</code></td><td>numero o data (<code>AAAA-MM-GG</code>)</td><td>Valore minimo / massimo</td></tr><tr><td><code>step</code></td><td>numero</td><td>Di quanto può variare un numero</td></tr><tr><td><code>pattern</code></td><td>schema, es. <code>[0-9]{5}</code></td><td>Il testo deve seguire lo schema</td></tr><tr><td><code>placeholder</code></td><td>testo</td><td>Suggerimento grigio nel campo vuoto</td></tr><tr><td><code>checked</code> / <code>selected</code></td><td>—</td><td>Preseleziona un radio o checkbox / una option</td></tr></tbody></table></div><p class="pr-note">Nello schema di <code>pattern</code>: <code>[0-9]</code> = una cifra, <code>[A-Z]</code> = una lettera maiuscola, <code>{5}</code> = ripetuto 5 volte.</p></div>
 </section>
 
 <section id="css-proprieta">
-  <span class="sec-num">04 · CSS: proprietà</span>
-  <h2>Colori, testo, spazi, dimensioni e disposizione</h2>
-  <div class="pr-grid"><div class="pr-item"><h3>Colori</h3><pre class="code-block"><span class="prop">color</span>: <span class="val">red</span>;
-<span class="prop">color</span>: <span class="val">#0b6e4f</span>;
-<span class="prop">color</span>: <span class="val">rgb(11, 110, 79)</span>;
-<span class="prop">background-color</span>: <span class="val">lightyellow</span>;</pre></div><div class="pr-item"><h3>Dimensioni</h3><pre class="code-block"><span class="prop">width</span>: <span class="val">300px</span>;  <span class="prop">width</span>: <span class="val">30%</span>;
-<span class="prop">width</span>: <span class="val">100%</span>;   <span class="prop">width</span>: <span class="val">auto</span>;
-<span class="prop">max-width</span>: <span class="val">500px</span>;
-<span class="prop">height</span>: <span class="val">200px</span>;</pre></div><div class="pr-item wide"><h3>Testo</h3><pre class="code-block"><span class="prop">font-family</span>: <span class="val">Arial, Verdana, sans-serif</span>;
-<span class="prop">font-size</span>: <span class="val">16px</span>;  <span class="prop">font-size</span>: <span class="val">1.5em</span>;  <span class="prop">font-size</span>: <span class="val">120%</span>;
-<span class="prop">font-weight</span>: <span class="val">normal</span>;  <span class="prop">font-weight</span>: <span class="val">bold</span>;  <span class="prop">font-weight</span>: <span class="val">700</span>;
-<span class="prop">font-style</span>: <span class="val">normal</span>;  <span class="prop">font-style</span>: <span class="val">italic</span>;
-<span class="prop">text-align</span>: <span class="val">left</span>;  <span class="prop">text-align</span>: <span class="val">center</span>;  <span class="prop">text-align</span>: <span class="val">right</span>;
-<span class="prop">text-transform</span>: <span class="val">uppercase</span>;  <span class="val">lowercase</span>;  <span class="val">capitalize</span>;
-<span class="prop">text-decoration</span>: <span class="val">none</span>;  <span class="prop">text-decoration</span>: <span class="val">underline</span>;
-<span class="prop">line-height</span>: <span class="val">1.5</span>;</pre></div><div class="pr-item wide"><h3>Spazi e bordi</h3><pre class="code-block"><span class="prop">padding</span>: <span class="val">10px</span>;
-<span class="prop">padding</span>: <span class="val">10px 20px</span>;
-<span class="prop">padding</span>: <span class="val">5px 10px 15px 20px</span>;
-<span class="prop">padding-top</span>: <span class="val">10px</span>;   <span class="prop">padding-right</span>: <span class="val">10px</span>;   <span class="prop">padding-bottom</span>: <span class="val">10px</span>;   <span class="prop">padding-left</span>: <span class="val">10px</span>;
-
-<span class="prop">margin</span>: <span class="val">10px</span>;
-<span class="prop">margin</span>: <span class="val">0 auto</span>;
-<span class="prop">margin</span>: <span class="val">5px 10px 15px 20px</span>;
-<span class="prop">margin-top</span>: <span class="val">10px</span>;    <span class="prop">margin-right</span>: <span class="val">10px</span>;    <span class="prop">margin-bottom</span>: <span class="val">10px</span>;    <span class="prop">margin-left</span>: <span class="val">10px</span>;
-
-<span class="prop">border</span>: <span class="val">2px solid #333333</span>;
-<span class="prop">border-top</span>: <span class="val">1px dashed gray</span>;
-<span class="prop">border-left</span>: <span class="val">5px solid orange</span>;
-<span class="prop">border-style</span>: <span class="val">solid</span>;  <span class="val">dashed</span>;  <span class="val">dotted</span>;  <span class="val">double</span>;  <span class="val">none</span>;
-<span class="prop">border-radius</span>: <span class="val">10px</span>;
-<span class="prop">border-top-left-radius</span>: <span class="val">10px</span>;</pre></div><div class="pr-item wide"><h3>Disposizione</h3><pre class="code-block"><span class="prop">display</span>: <span class="val">block</span>;
-<span class="prop">display</span>: <span class="val">inline</span>;
-<span class="prop">display</span>: <span class="val">inline-block</span>;
-<span class="prop">display</span>: <span class="val">flex</span>;
-<span class="prop">display</span>: <span class="val">none</span>;
-
-<span class="sel">.contenitore</span> {
-  <span class="prop">display</span>: <span class="val">flex</span>;
-  <span class="prop">gap</span>: <span class="val">10px</span>;
-  <span class="prop">flex-wrap</span>: <span class="val">wrap</span>;
-  <span class="prop">justify-content</span>: <span class="val">center</span>;  <span class="val">space-between</span>;
-  <span class="prop">align-items</span>: <span class="val">center</span>;
-}</pre></div></div>
+  <span class="sec-num">03 · CSS: proprietà</span>
+  <h2>Testo, spazi e bordi, disposizione</h2>
+  <div class="pr-block"><h3>Proprietà per il testo</h3><div class="table-scroll"><table class="table"><thead><tr><th>Proprietà</th><th>Valori ammessi</th><th>Significato</th></tr></thead><tbody><tr><td><code>color</code></td><td>nome del colore / <code>rgb(n1,n2,n3)</code> / esadecimale</td><td>Colore del testo</td></tr><tr><td><code>background-color</code></td><td>come <code>color</code></td><td>Colore di sfondo</td></tr><tr><td><code>font-family</code></td><td>Arial / Verdana / Georgia … (anche più di uno, separati da virgola)</td><td>Tipo di carattere</td></tr><tr><td><code>font-size</code></td><td>pixel (<code>16px</code>) / em (<code>1.5em</code>) / percentuale (<code>120%</code>)</td><td>Dimensione del carattere</td></tr><tr><td><code>font-weight</code></td><td><code>normal</code> / <code>bold</code> / numero da 100 a 900</td><td>Spessore del carattere</td></tr><tr><td><code>font-style</code></td><td><code>normal</code> / <code>italic</code></td><td>Corsivo</td></tr><tr><td><code>text-align</code></td><td><code>left</code> / <code>center</code> / <code>right</code></td><td>Allineamento del testo nel contenitore</td></tr><tr><td><code>text-transform</code></td><td><code>uppercase</code> / <code>lowercase</code> / <code>capitalize</code></td><td>Maiuscolo o minuscolo</td></tr><tr><td><code>text-decoration</code></td><td><code>none</code> / <code>underline</code></td><td>Sottolineatura</td></tr><tr><td><code>line-height</code></td><td>numero, es. <code>1.5</code></td><td>Interlinea</td></tr></tbody></table></div></div><div class="pr-block"><h3>Proprietà per spazi, bordi e dimensioni</h3><div class="table-scroll"><table class="table"><thead><tr><th>Proprietà</th><th>Valori ammessi</th><th>Significato</th></tr></thead><tbody><tr><td><code>padding</code></td><td>misura in pixel, da 1 a 4 valori (sopra / destra / sotto / sinistra)</td><td>Spazio tra il contenuto e il bordo (verso l'interno)</td></tr><tr><td><code>padding-top</code> … <code>-left</code></td><td>misura in pixel</td><td>Padding su un solo lato</td></tr><tr><td><code>margin</code></td><td>misura in pixel o <code>auto</code>, da 1 a 4 valori</td><td>Spazio tra il bordo e gli altri elementi (verso l'esterno)</td></tr><tr><td><code>margin-top</code> … <code>-left</code></td><td>misura in pixel o <code>auto</code></td><td>Margin su un solo lato</td></tr><tr><td><code>border</code></td><td>3 valori: spessore, stile, colore</td><td>Bordo su tutti i lati</td></tr><tr><td><code>border-left</code> (top, right, bottom)</td><td>come <code>border</code></td><td>Bordo su un solo lato</td></tr><tr><td><code>border-style</code></td><td><code>solid</code> / <code>dashed</code> / <code>dotted</code> / <code>double</code> / <code>none</code></td><td>Stile del bordo</td></tr><tr><td><code>border-radius</code></td><td>misura in pixel o percentuale</td><td>Arrotondamento degli angoli</td></tr><tr><td><code>width</code></td><td>pixel / percentuale / <code>auto</code></td><td>Larghezza</td></tr><tr><td><code>max-width</code></td><td>pixel / percentuale</td><td>Larghezza massima</td></tr><tr><td><code>height</code></td><td>pixel / <code>auto</code></td><td>Altezza</td></tr></tbody></table></div><p class="pr-note">Box model, dall'interno verso l'esterno: contenuto → <code>padding</code> → <code>border</code> → <code>margin</code>.</p></div><div class="pr-block"><h3>Proprietà per la disposizione</h3><div class="table-scroll"><table class="table"><thead><tr><th>Proprietà</th><th>Valori ammessi</th><th>Significato</th></tr></thead><tbody><tr><td><code>display</code></td><td><code>block</code> / <code>inline</code> / <code>inline-block</code> / <code>flex</code> / <code>none</code></td><td>Come l'elemento si dispone nella pagina</td></tr><tr><td><code>gap</code></td><td>misura in pixel</td><td>Spazio tra gli elementi affiancati (con <code>flex</code>)</td></tr><tr><td><code>flex-wrap</code></td><td><code>nowrap</code> / <code>wrap</code></td><td>Se gli elementi affiancati possono andare a capo</td></tr><tr><td><code>justify-content</code></td><td><code>flex-start</code> / <code>center</code> / <code>space-between</code></td><td>Distribuzione orizzontale degli elementi affiancati</td></tr><tr><td><code>align-items</code></td><td><code>flex-start</code> / <code>center</code> / <code>stretch</code></td><td>Allineamento verticale degli elementi affiancati</td></tr></tbody></table></div><p class="pr-note"><code>display: flex</code> si dà al contenitore: sono i suoi figli diretti a mettersi uno accanto all'altro.</p></div>
 </section>
 
 <nav class="prevnext" aria-label="Pagina precedente e successiva"><a class="prev" href="06-esercizi.html"><span>← Pagina precedente</span><b>06 · Esercizi</b></a><span></span></nav>
