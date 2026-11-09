@@ -1,0 +1,417 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Programmazione IA</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="css/style.css">
+<style>
+  .formula-table.code-cost td:not(:first-child){font-family:'IBM Plex Sans',sans-serif; font-size:.95rem;}
+  .formula-table.code-cost td{vertical-align:top;}
+  .badge.lab{color:var(--blue); border-color:var(--blue); background:var(--blue-dim);}
+  .badge.crit{color:var(--red); border-color:var(--red); background:#f6dcd5;}
+  .t{font-family:'IBM Plex Mono',monospace; font-size:.72rem; padding:.2em .55em; border:1px solid; display:inline-block; margin-right:.3em;}
+  .t.cod{color:#fff; border-color:var(--teal); background:var(--teal);}
+  .t.sim{color:var(--teal); border-color:var(--teal); background:var(--teal-dim);}
+  .t.teo{color:var(--ink-soft); border-color:var(--line); background:var(--paper-dim);}
+  .t.dis{color:var(--red); border-color:var(--red); background:#f6dcd5;}
+  .phase{font-family:'IBM Plex Mono',monospace; font-size:.8rem; color:var(--ink-soft); margin:2.4em 0 .6em; text-transform:uppercase; letter-spacing:.05em;}
+  .inc{background:#fff; border:1px solid var(--line); border-left:4px solid var(--teal); padding:1.3em 1.6em; margin:1.2em 0;}
+  .inc.lab{border-left-color:var(--blue); background:var(--blue-dim);}
+  .inc.crit{border-left-color:var(--red);}
+  .inc-head{display:flex; justify-content:space-between; align-items:baseline; gap:1em; flex-wrap:wrap; margin-bottom:.4em;}
+  .inc-head h3{margin:0; font-size:1.15rem;}
+  .inc-head .h{font-family:'IBM Plex Mono',monospace; font-size:.8rem; color:var(--ink-soft);}
+  .split{display:flex; height:.55em; margin:.3em 0 .9em; border:1px solid var(--line);}
+  .split .p{background:var(--teal);} .split .q{background:var(--paper-dim);} .split .d{background:#f6dcd5;}
+  .inc dl{display:grid; grid-template-columns:8.5em 1fr; gap:.45em 1em; margin:.6em 0 0; font-size:.95rem;}
+  .inc dt{font-family:'IBM Plex Mono',monospace; font-size:.78rem; color:var(--ink-soft); padding-top:.15em;}
+  .inc dd{margin:0;}
+  .inc ul{margin:0; padding-left:1.1em;} .inc li{margin-bottom:.35em;}
+  @media(max-width:600px){ .inc dl{grid-template-columns:1fr;} .inc dt{padding-top:.5em;} .formula-table{font-size:.9rem;} .formula-table td{padding:.7em .6em;} }
+  .bar{display:flex; height:2.4em; border:1px solid var(--ink); margin:1.4em 0 .4em; font-family:'IBM Plex Mono',monospace; font-size:.75rem;}
+  .bar div{display:flex; align-items:center; justify-content:center; text-align:center; border-right:1px solid var(--ink); overflow:hidden; white-space:nowrap;}
+  .bar div:last-child{border-right:none;}
+  .bar .a{background:var(--amber-dim);} .bar .b{background:var(--blue-dim);} .bar .c{background:var(--teal-dim);}
+  table.rub td{text-align:left; vertical-align:top; font-family:'IBM Plex Sans',sans-serif; font-size:.88rem;}
+  table.rub td:first-child{font-weight:600;}
+  table.rub tbody tr:last-child{background:none;}
+  .big{font-family:'IBM Plex Mono',monospace; font-size:2rem; font-weight:600; color:var(--teal); line-height:1;}
+</style>
+</head>
+<body>
+
+<nav class="toc">
+  <a class="home" href="01-index.html"><span class="n">←</span>Indice</a>
+  <a href="#quadro"><span class="n">01</span>Quadro</a>
+  <a href="#obiettivi"><span class="n">02</span>Obiettivi</a>
+  <a href="#scansione"><span class="n">03</span>Scansione</a>
+  <a href="#incontri"><span class="n">04</span>Incontri</a>
+  <a href="#valutazione"><span class="n">05</span>Valutazione</a>
+  <a href="#materiali"><span class="n">06</span>Materiali</a>
+</nav>
+
+<header class="hero">
+  <a class="back-link" href="01-index.html">← Torna all'indice</a>
+  <div class="eyebrow">Programmazione docente · Modulo B — Unità B3 e B4 · Quinta scienze applicate</div>
+  <h1>Unità di apprendimento: intelligenza artificiale e data science</h1>
+  <p class="sub">26 ore, 13 incontri da 2 ore, impostati soprattutto come laboratorio al computer. Il percorso va dai modelli più semplici alle reti neurali, con il laboratorio sugli LLM tenuto da un esperto dopo le prime 8 ore. Per ogni argomento sono indicate le pagine del libro, quando ci sono.</p>
+  <div class="legend-box">
+    <div class="item"><span class="t cod">Pratica · codice</span></div>
+    <div class="item"><span class="t sim">Pratica · simulatore</span></div>
+    <div class="item"><span class="t teo">Teoria</span></div>
+    <div class="item"><span class="t dis">Discussione</span></div>
+  </div>
+</header>
+
+<!-- ============================================================ -->
+<section id="quadro">
+  <div class="kicker"><span class="num">01</span>Quadro generale</div>
+  <h2>Destinatari, tempi, prerequisiti</h2>
+  <div class="table-scroll"><table class="formula-table plain code-cost">
+    <tbody>
+      <tr><td>Classe</td><td>Quinta, liceo scientifico opzione scienze applicate</td></tr>
+      <tr><td>Disciplina</td><td>Informatica (collegamenti con matematica, fisica, filosofia, educazione civica)</td></tr>
+      <tr><td>Durata</td><td>26 ore: 8 ore in classe, 4 ore di laboratorio con l'esperto, 14 ore in classe</td></tr>
+      <tr><td>Impostazione</td><td>Circa 18 ore e mezza su 26 al computer. Ogni incontro alterna una parte breve di teoria (15–30 minuti) e una parte lunga di lavoro pratico, quasi sempre su Colab.</td></tr>
+      <tr><td>Libro</td><td>"Hashtag 3", Modulo B: Unità B3 "Intelligenza artificiale e reti neurali" (pp. 184–213) e Unità B4 "Data Science" (pp. 215–239)</td></tr>
+      <tr><td>Prerequisiti</td><td>Python: funzioni, liste, cicli, classi e oggetti; uso di base di NumPy e Matplotlib; vettori e prodotto scalare (fisica); concetto di derivata (matematica)</td></tr>
+      <tr><td>Ambienti</td><td>Google Colab (consigliato), browser per le pagine interattive e per TensorFlow Playground</td></tr>
+    </tbody>
+  </table></div>
+
+  <div class="grid3" style="margin-top:1.6em">
+    <div class="panel m0"><div class="big">18,5 h</div><p class="m0" style="margin-top:.4em">di pratica al computer, compreso il laboratorio con l'esperto</p></div>
+    <div class="panel m0"><div class="big">4 h</div><p class="m0" style="margin-top:.4em">di teoria, distribuite in blocchi brevi all'inizio degli incontri</p></div>
+    <div class="panel m0"><div class="big">3,5 h</div><p class="m0" style="margin-top:.4em">di discussione e verifica</p></div>
+  </div>
+
+  <div class="teacher-note"><strong>Perché non si segue l'ordine del libro</strong>
+    Il libro presenta prima le reti neurali (Unità B3) e poi il machine learning e i dati (Unità B4). Qui si procede al contrario, dal modello più semplice al più complesso: k-NN (nessun parametro da addestrare), regressione lineare (due parametri e un errore da minimizzare con il metodo del gradiente), percettrone ("una regressione con una soglia"), reti multistrato. Così il metodo del gradiente si incontra prima su una retta, che si può disegnare, e training set, test set e accuratezza sono già noti quando si arriva a Keras. Le pagine del libro sono indicate argomento per argomento.<br>
+    Per i tempi stretti, neurone, percettrone e reti multistrato si affrontano subito dopo il laboratorio: prima basta l'idea che una rete trasformi vettori e che i suoi strati nascosti producano rappresentazioni imparate, presentata in 10 minuti nell'incontro 4. Le parti del laboratorio più legate ai vettori (vicini, analogie, bias) usano GloVe, che non è una rete neurale, e richiedono solo k-NN e coseno.<br>
+    <strong>Machine learning prima del resto della data science.</strong> Anche dentro la B4 l'ordine cambia: il libro segue il processo reale (big data, pulizia, visualizzazione, poi i modelli), qui il machine learning viene prima, per tre motivi. Il laboratorio richiede distanze, vicini, coseno e vettori, non pulizia o grafici. Iris è già pulito, quindi l'attenzione resta sull'idea di "imparare dai dati". La pulizia ha più senso quando si sa a che cosa serve: chi ha già usato un modello capisce perché un valore mancante lo rovina. Il processo non si salta del tutto: Pandas ed EDA su Iris aprono l'incontro 2 (pp. 217–222), e il mini-progetto rimette tutto nell'ordine reale (dataset, pulizia, grafici, modello).<br>
+    Il modello simbolico si tratta in sintesi nel primo incontro; Prolog e SWISH (pp. 188–189) restano facoltativi. Boom, applicazioni e rischi (pp. 192–194) chiudono l'unità, dopo il laboratorio.</div>
+
+  <div class="teacher-note"><strong>Ipotesi da verificare</strong>Il laboratorio con l'esperto è stimato in 4 ore. Se dura meno, le ore libere vanno al mini-progetto; se dura di più, si riduce l'incontro 12 dedicato al mini-progetto.</div>
+</section>
+
+<!-- ============================================================ -->
+<section id="obiettivi" class="alt"><div class="inner">
+  <div class="kicker"><span class="num">02</span>Obiettivi</div>
+  <h2>Competenze, abilità, conoscenze</h2>
+  <div class="grid3">
+    <div class="panel m0">
+      <h3 class="mt0">Competenze</h3>
+      <ul class="bullets m0">
+        <li>Comprendere i principi, le potenzialità e i limiti dei sistemi di intelligenza artificiale.</li>
+        <li>Usare strumenti informatici per analizzare dati e costruire modelli a supporto dell'indagine scientifica.</li>
+        <li>Valutare in modo critico l'impatto etico e sociale dell'IA, anche alla luce delle norme europee.</li>
+      </ul>
+    </div>
+    <div class="panel m0">
+      <h3 class="mt0">Abilità</h3>
+      <ul class="bullets m0">
+        <li>Distinguere approccio simbolico e sub-simbolico, white box e black box.</li>
+        <li>Implementare in Python neurone, percettrone e rete multistrato.</li>
+        <li>Scrivere il metodo del gradiente e addestrare un percettrone.</li>
+        <li>Addestrare e valutare una rete con Keras.</li>
+        <li>Esplorare, pulire e visualizzare un dataset con Pandas e Matplotlib.</li>
+        <li>Applicare regressione lineare, k-NN e k-means e interpretarne i risultati.</li>
+        <li>Rappresentare dati come vettori e confrontarli con distanza e coseno.</li>
+      </ul>
+    </div>
+    <div class="panel m0">
+      <h3 class="mt0">Conoscenze</h3>
+      <ul class="bullets m0">
+        <li>Definizioni di IA, test di Turing, ANI/AGI/ASI, tappe storiche.</li>
+        <li>Sistemi esperti e alberi di decisione (in sintesi).</li>
+        <li>Neurone artificiale, funzioni di attivazione, separabilità lineare, reti feedforward e CNN.</li>
+        <li>Addestramento, metodo del gradiente, backpropagation, overfitting.</li>
+        <li>Big data, processo di data science, EDA, data cleaning, data visualization.</li>
+        <li>Apprendimento supervisionato (regressione, k-NN) e non supervisionato (k-means); per rinforzo.</li>
+        <li>Embeddings e LLM (laboratorio); AI Act.</li>
+      </ul>
+    </div>
+  </div>
+</div></section>
+
+<!-- ============================================================ -->
+<section id="scansione">
+  <div class="kicker"><span class="num">03</span>Scansione</div>
+  <h2>13 incontri in tre fasi</h2>
+
+  <div class="bar">
+    <div class="a" style="flex:8">Fase A · ore 1–8</div>
+    <div class="b" style="flex:4">Lab · 9–12</div>
+    <div class="c" style="flex:14">Fase C · ore 13–26</div>
+  </div>
+
+  <div class="table-scroll"><table class="formula-table plain code-cost" style="margin-top:2em">
+    <thead><tr><th>Ore</th><th>Incontro</th><th>Pagine</th><th>Pratica</th></tr></thead>
+    <tbody>
+      <tr><td>1–2</td><td><a href="#i1">1 · Che cos'è l'intelligenza artificiale</a></td><td>184–192</td><td>30 min</td></tr>
+      <tr><td>3–4</td><td><a href="#i2">2 · I dati e il primo classificatore: k-NN</a></td><td>204, 216–222</td><td>100 min</td></tr>
+      <tr><td>5–6</td><td><a href="#i3">3 · La regressione e il metodo del gradiente</a></td><td>204–205, 229–232</td><td>80 min</td></tr>
+      <tr><td>7–8</td><td><a href="#i4">4 · Vettori, angoli e direzioni</a></td><td>191, 195 + extra</td><td>100 min</td></tr>
+      <tr><td>9–12</td><td><a href="#i5">5–6 · Laboratorio LLMlego con l'esperto</a></td><td>—</td><td>4 h</td></tr>
+      <tr><td>13–14</td><td><a href="#i7">7 · Dal neurone alle reti neurali</a></td><td>195–204</td><td>80 min</td></tr>
+      <tr><td>15–16</td><td><a href="#i8">8 · Reti neurali con Keras</a></td><td>196, 204–212</td><td>105 min</td></tr>
+      <tr><td>17–18</td><td><a href="#i9">9 · Big data e data cleaning</a></td><td>216–218, 223–225</td><td>85 min</td></tr>
+      <tr><td>19–20</td><td><a href="#i10">10 · Visualizzare i dati</a></td><td>225–229, 232–233</td><td>105 min</td></tr>
+      <tr><td>21–22</td><td><a href="#i11">11 · k-means e k-NN a confronto</a></td><td>230, 233–235</td><td>95 min</td></tr>
+      <tr><td>23–24</td><td><a href="#i12">12 · Mini-progetto</a></td><td>—</td><td>90 min</td></tr>
+      <tr><td>25–26</td><td><a href="#i13">13 · Chiusura critica e verifica</a></td><td>192–194, 235</td><td>—</td></tr>
+    </tbody>
+  </table></div>
+  <p>Gli argomenti con il riferimento puntuale alle pagine sono nella <a href="scaletta.html">scaletta</a>.</p>
+</section>
+
+<!-- ============================================================ -->
+<section id="incontri" class="alt"><div class="inner">
+  <div class="kicker"><span class="num">04</span>Gli incontri</div>
+  <h2>Che cosa si fa, minuto più minuto meno</h2>
+
+  <div class="phase">Fase A · ore 1–8 · dai dati ai vettori</div>
+
+  <div class="inc" id="i1">
+    <div class="inc-head"><h3>1 · Che cos'è l'intelligenza artificiale</h3><span class="h">ore 1–2 · pp. 184–192</span></div>
+    <div class="split"><div class="d" style="flex:20"></div><div class="q" style="flex:25"></div><div class="p" style="flex:30"></div><div class="q" style="flex:35"></div><div class="d" style="flex:10"></div></div>
+    <dl>
+      <dt>Sequenza</dt><dd><ul>
+        <li><span class="t dis">20'</span> § 1 · La domanda: le otto macchine della pagina (è IA o no?), con "come funziona" ed "e allora?". Le risposte si riprendono nel § 7 e nell'incontro 13.</li>
+        <li><span class="t teo">25'</span> § 2 · Come si definisce l'IA: la citazione di Dartmouth, la definizione del libro e la domanda aperta «Ma possiamo definire una macchina intelligente?»; test di Turing e la scheda "un chatbot che supera il test, pensa?" (pp. 184–185).</li>
+        <li><span class="t sim">15'</span> § 3 · Tre tipi di IA (ANI, AGI, ASI): classificare sei sistemi (p. 185).</li>
+        <li><span class="t sim">15'</span> § 4 · Storia: le tappe del libro sulla curva cliccabile, gli inverni dell'IA e l'AI boom; i due approcci, simbolico e sub-simbolico (pp. 185–186, 190).</li>
+        <li><span class="t teo">20'</span> § 5 · Modello simbolico in sintesi: lo schema del sistema esperto (utente, interfaccia, motore inferenziale, base di conoscenza, esperto), l'albero "indovina l'animale" da percorrere sulla pagina, i limiti (pp. 186–187, 190).</li>
+        <li><span class="t teo">15'</span> § 6 · Dalle regole alle macchine che imparano: il gatto nella foto, Deep Blue e AlphaGo, programmazione tradizionale e machine learning, white box e black box (pp. 190–192).</li>
+        <li><span class="t dis">10'</span> § 7 · Per chiudere: «Rivediamo le otto macchine» (è IA? di che tipo?), confrontando le risposte con quelle date all'inizio.</li>
+      </ul></dd>
+      <dt>Materiali</dt><dd><a href="02-che-cos-e-IA.html">Pagina della lezione 1</a></dd>
+    </dl>
+  </div>
+
+  <div class="inc" id="i2">
+    <div class="inc-head"><h3>2 · I dati e il primo classificatore: k-NN</h3><span class="h">ore 3–4 · pp. 204, 216–222</span></div>
+    <div class="split"><div class="q" style="flex:20"></div><div class="p" style="flex:100"></div></div>
+    <dl>
+      <dt>Sequenza</dt><dd><ul>
+        <li><span class="t teo">20'</span> Le fasi della data science; dataset, EDA, Pandas (pp. 216–220).</li>
+        <li><span class="t cod">30'</span> Programma 1 "Iris 1": <code>info()</code>, <code>head()</code>, filtri, medie per specie (pp. 221–222). Dirlo esplicitamente: «questo dataset è già stato pulito da qualcuno; più avanti vedremo come si fa».</li>
+        <li><span class="t cod">30'</span> Ogni fiore è un punto in 4D: scatter plot, distanza euclidea, ricerca dei vicini.</li>
+        <li><span class="t cod">25'</span> Il k-NN: voto di maggioranza tra i k vicini; che cosa cambia con k.</li>
+        <li><span class="t cod">15'</span> Training set e test set: quanti fiori del test set il k-NN classifica bene? Prima idea di accuratezza (p. 204).</li>
+      </ul></dd>
+      <dt>Materiali</dt><dd><a href="03-dai-dati-ai-vettori.html#lezione2">Pagina delle lezioni 2–4, § 1–4</a> · notebook <a href="notebooks/lezione02-dati-e-knn.ipynb">lezione02-dati-e-knn</a> (con <a href="notebooks/lezione02-dati-e-knn-soluzioni.ipynb">soluzioni</a>) · codice del libro</dd>
+    </dl>
+  </div>
+
+  <div class="inc" id="i3">
+    <div class="inc-head"><h3>3 · La regressione e il metodo del gradiente</h3><span class="h">ore 5–6 · pp. 204–205, 229–232</span></div>
+    <div class="split"><div class="q" style="flex:25"></div><div class="p" style="flex:80"></div><div class="q" style="flex:15"></div></div>
+    <dl>
+      <dt>Sequenza</dt><dd><ul>
+        <li><span class="t teo">15'</span> Modelli di machine learning; lo schema "uno dentro l'altro" (informatica ⊃ IA ⊃ machine learning ⊃ reti neurali ⊃ deep learning); i tre tipi di apprendimento (pp. 229–230).</li>
+        <li><span class="t teo">10'</span> Regressione lineare e minimi quadrati (p. 231).</li>
+        <li><span class="t cod">30'</span> Programma 5 "Fish market" (pp. 231–232).</li>
+        <li><span class="t sim">15'</span> L'errore da minimizzare e il metodo del gradiente: simulazione con passo corto, passo lungo, minimi locali (pp. 204–205).</li>
+        <li><span class="t cod">35'</span> La stessa retta trovata scrivendo il metodo del gradiente in Python sull'MSE; confronto con <code>polyfit()</code>.</li>
+        <li><span class="t teo">15'</span> Iperparametri (il passo, la k del k-NN), underfitting e overfitting (p. 205).</li>
+      </ul></dd>
+      <dt>Materiali</dt><dd><a href="03-dai-dati-ai-vettori.html#lezione3">Pagina delle lezioni 2–4, § 5–8</a> · notebook <a href="notebooks/lezione03-regressione-gradiente.ipynb">lezione03-regressione-gradiente</a> (con <a href="notebooks/lezione03-regressione-gradiente-soluzioni.ipynb">soluzioni</a>) · codice del libro</dd>
+    </dl>
+  </div>
+
+  <div class="inc" id="i4">
+    <div class="inc-head"><h3>4 · Vettori, angoli e direzioni</h3><span class="h">ore 7–8 · pp. 191, 195 + materiali extra</span></div>
+    <div class="split"><div class="q" style="flex:10"></div><div class="p" style="flex:100"></div><div class="d" style="flex:10"></div></div>
+    <dl>
+      <dt>Sequenza</dt><dd><ul>
+        <li><span class="t teo">10'</span> Da dove vengono i vettori delle parole: una rete neurale trasforma un vettore in un altro, e i suoi strati nascosti producono rappresentazioni che nessuno ha progettato. Solo l'idea: neurone e reti si studiano dopo il laboratorio (pagina delle lezioni 2–4, § 9).</li>
+        <li><span class="t cod">30'</span> Similarità del coseno: dal prodotto scalare della fisica a Iris, prima e dopo aver centrato i dati.</li>
+        <li><span class="t cod">10'</span> Matrice di similarità.</li>
+        <li><span class="t cod">25'</span> Direzioni e proiezioni: la freccia da setosa a virginica.</li>
+        <li><span class="t cod">25'</span> Aritmetica tra vettori con il vocabolario fatto a mano: re − uomo + donna.</li>
+        <li><span class="t cod">10'</span> PCA: vedere 4 dimensioni in 2, e quanta informazione si perde.</li>
+        <li><span class="t dis">10'</span> «Come fa un modello a sapere che <em>gatto</em> e <em>cane</em> sono vicini?». Ipotesi scritte e conservate.</li>
+      </ul></dd>
+      <dt>Materiali</dt><dd><a href="03-dai-dati-ai-vettori.html#lezione4">Pagina delle lezioni 2–4, § 9–15</a> · notebook <a href="notebooks/lezione04-vettori-e-direzioni.ipynb">lezione04-vettori-e-direzioni</a> (con <a href="notebooks/lezione04-vettori-e-direzioni-soluzioni.ipynb">soluzioni</a>)</dd>
+    </dl>
+  </div>
+
+  <div class="phase">Fase B · ore 9–12 · laboratorio</div>
+
+  <div class="inc lab" id="i5">
+    <div class="inc-head"><h3>5–6 · Laboratorio LLMlego con l'esperto</h3><span class="h">ore 9–12 <span class="badge lab">esperto esterno</span></span></div>
+    <dl>
+      <dt>Contenuti</dt><dd>Tokenizzazione, word embeddings, aritmetica tra parole, embeddings contestuali, bias, sentence embeddings, ricerca semantica (RAG) e suoi limiti.</dd>
+      <dt>Ruolo del docente</dt><dd><ul>
+        <li>Prima: concordare durata e ambiente (Colab o PC della scuola con i modelli già scaricati, circa 1,1 GB). Dire all'esperto che cosa la classe ha fatto: k-NN, regressione e gradiente, coseno e direzioni; le reti neurali le conoscono solo come idea.</li>
+        <li>Durante: annotare gli esempi che colpiscono di più (bias sulle professioni, limiti del RAG, gli "stati nascosti" di BERT), da riprendere negli incontri 7 e 13.</li>
+      </ul></dd>
+      <dt>Materiali</dt><dd><a href="https://github.com/tlm-journalclub-org/LLMlego" target="_blank" rel="noopener">Repository LLMlego</a> (materiale dell'esperto)</dd>
+    </dl>
+  </div>
+
+  <div class="phase">Fase C · ore 13–26 · dopo il laboratorio</div>
+
+  <div class="inc" id="i7">
+    <div class="inc-head"><h3>7 · Dal neurone alle reti neurali</h3><span class="h">ore 13–14 · pp. 195–204</span></div>
+    <div class="split"><div class="d" style="flex:15"></div><div class="q" style="flex:15"></div><div class="p" style="flex:80"></div><div class="q" style="flex:10"></div></div>
+    <dl>
+      <dt>Sequenza</dt><dd><ul>
+        <li><span class="t dis">15'</span> Debriefing del laboratorio: si rileggono le ipotesi su <em>gatto</em> e <em>cane</em>. Domanda ponte: che cosa sono gli "stati nascosti" da cui l'esperto prendeva i vettori di BERT?</li>
+        <li><span class="t teo">15'</span> Neurone biologico e artificiale; funzioni di attivazione (pp. 195–196).</li>
+        <li><span class="t cod">20'</span> Programma 2 "Neurone artificiale"; <code>feed()</code> riscritta con <code>np.dot()</code>: la somma pesata è un prodotto scalare (p. 197).</li>
+        <li><span class="t sim">15'</span> "Trova la retta": pesi e soglia per NAND, AND, OR; il caso impossibile dello XOR (pp. 198, 200).</li>
+        <li><span class="t cod">10'</span> Programma 3 "Percettrone" (pp. 199–200).</li>
+        <li><span class="t cod">20'</span> Addestrare un percettrone: partendo da pesi casuali, la macchina trova da sola i pesi della porta AND. È la stessa idea del gradiente dell'incontro 3.</li>
+        <li><span class="t cod">15'</span> Programma 4 "Rete multistrato" per lo XOR (pp. 201–203); #ProvaOra XNOR a casa.</li>
+        <li><span class="t teo">10'</span> Reti multistrato e CNN; retropropagazione dell'errore come gradiente applicato a tutta la rete (pp. 201, 203–204). Ecco che cos'erano gli strati nascosti del laboratorio.</li>
+      </ul></dd>
+      <dt>Materiali</dt><dd><a href="04-intelligenza-artificiale-e-reti-neurali.html#neurone">Pagina IA, § 9–12</a> · notebook da preparare</dd>
+      <dt>Nota</dt><dd>Il percettrone si presenta come "una regressione con una soglia": i ragazzi vi ritrovano pesi, errore e gradiente dell'incontro 3.</dd>
+    </dl>
+  </div>
+
+  <div class="inc" id="i8">
+    <div class="inc-head"><h3>8 · Reti neurali con Keras</h3><span class="h">ore 15–16 · pp. 196, 204–212</span></div>
+    <div class="split"><div class="q" style="flex:15"></div><div class="p" style="flex:105"></div></div>
+    <dl>
+      <dt>Sequenza</dt><dd><ul>
+                <li><span class="t teo">15'</span> Batch, epoche, validation set; ReLU e softmax; TensorFlow e Keras (pp. 196, 204–205).</li>
+        <li><span class="t cod">50'</span> Programma 5 "Riconoscitore di cifre 1" su Colab (pp. 206–209).</li>
+        <li><span class="t cod">25'</span> Programma 6 "Riconoscitore di cifre 2": esempi sbagliati, seconda fase di addestramento (pp. 209–212).</li>
+        <li><span class="t cod">30'</span> Esperimenti a gruppi: 32, 128 o 1024 neuroni nascosti; 2 o 20 epoche; numero di parametri. Chi trova l'overfitting?</li>
+      </ul></dd>
+      <dt>Materiali</dt><dd><a href="04-intelligenza-artificiale-e-reti-neurali.html#keras">Pagina IA, § 13</a> · codice del libro</dd>
+    </dl>
+  </div>
+
+  <div class="inc" id="i9">
+    <div class="inc-head"><h3>9 · Big data e data cleaning</h3><span class="h">ore 17–18 · pp. 216–218, 223–225</span></div>
+    <div class="split"><div class="q" style="flex:25"></div><div class="d" style="flex:10"></div><div class="p" style="flex:85"></div></div>
+    <dl>
+      <dt>Sequenza</dt><dd><ul>
+        <li><span class="t teo">25'</span> Problemi intrattabili e analisi di sensibilità; big data e le tre V; dati strutturati e non strutturati (pp. 216–217).</li>
+        <li><span class="t dis">10'</span> Quanta energia consumano i data center (box pp. 217–218).</li>
+        <li><span class="t cod">40'</span> Programma 2 "Penguins 1": valori nulli, filtri, correlazioni; #ProvaOra (pp. 223–225). Il confronto con Iris dell'incontro 2: i dati veri arrivano sporchi, e un modello addestrato su dati sporchi sbaglia.</li>
+        <li><span class="t cod">45'</span> EDA e pulizia, in autonomia, sul dataset scelto per il mini-progetto.</li>
+      </ul></dd>
+      <dt>Materiali</dt><dd>Codice del libro · pagina B4 da preparare</dd>
+    </dl>
+  </div>
+
+  <div class="inc" id="i10">
+    <div class="inc-head"><h3>10 · Visualizzare i dati</h3><span class="h">ore 19–20 · pp. 225–229, 232–233</span></div>
+    <div class="split"><div class="q" style="flex:15"></div><div class="p" style="flex:105"></div></div>
+    <dl>
+      <dt>Sequenza</dt><dd><ul>
+        <li><span class="t teo">15'</span> La data visualization; tipi di diagramma; Matplotlib, Seaborn, Plotly (pp. 225–226).</li>
+        <li><span class="t cod">40'</span> Programma 3 "Datasaurus dozen": prima solo medie e deviazioni standard, la classe prova a indovinare le forme; poi i grafici (pp. 226–228).</li>
+        <li><span class="t cod">20'</span> Programma 4 "Penguins 2": barre e torta (pp. 228–229).</li>
+        <li><span class="t cod">25'</span> Programma 6 "Penguins 3": la regressione dell'incontro 3 rivista con Seaborn (pp. 232–233).</li>
+        <li><span class="t cod">20'</span> Grafici sul dataset del mini-progetto.</li>
+      </ul></dd>
+      <dt>Materiali</dt><dd>Codice del libro · pagina B4 da preparare</dd>
+    </dl>
+  </div>
+
+  <div class="inc" id="i11">
+    <div class="inc-head"><h3>11 · k-means e k-NN a confronto</h3><span class="h">ore 21–22 · pp. 230, 233–235</span></div>
+    <div class="split"><div class="q" style="flex:15"></div><div class="p" style="flex:30"></div><div class="q" style="flex:10"></div><div class="p" style="flex:65"></div></div>
+    <dl>
+      <dt>Sequenza</dt><dd><ul>
+        <li><span class="t teo">15'</span> Clustering e metodo k-means (pp. 233–234).</li>
+        <li><span class="t cod">30'</span> Programma 7 "Iris 2": cluster contro specie reali; cambiare <code>k</code> (pp. 234–235).</li>
+        <li><span class="t teo">10'</span> k-NN e k-means a confronto: entrambi hanno una k e usano le distanze, ma il k-NN è supervisionato (k = numero di vicini) e il k-means no (k = numero di cluster).</li>
+        <li><span class="t cod">25'</span> Il k-NN dell'incontro 2 rifatto con <code>KNeighborsClassifier</code> di scikit-learn: accuratezza sul test set al variare di k; confronto con i cluster.</li>
+        <li><span class="t cod">40'</span> Avvio del mini-progetto: regressione, k-NN o k-means sul dataset scelto.</li>
+      </ul></dd>
+      <dt>Materiali</dt><dd>Codice del libro · notebook da preparare · consegna del mini-progetto da preparare</dd>
+    </dl>
+  </div>
+
+  <div class="inc" id="i12">
+    <div class="inc-head"><h3>12 · Mini-progetto</h3><span class="h">ore 23–24</span></div>
+    <div class="split"><div class="p" style="flex:90"></div><div class="d" style="flex:30"></div></div>
+    <dl>
+      <dt>Sequenza</dt><dd><ul>
+        <li><span class="t cod">90'</span> Lavoro in laboratorio sul mini-progetto, con il docente che passa tra i gruppi.</li>
+        <li><span class="t dis">30'</span> Presentazioni di 3 minuti e revisione tra pari con la griglia di valutazione.</li>
+      </ul></dd>
+      <dt>Materiali</dt><dd>Griglia nella sezione 05 · consegna definitiva dopo una settimana</dd>
+    </dl>
+  </div>
+
+  <div class="inc crit" id="i13">
+    <div class="inc-head"><h3>13 · Chiusura critica e verifica</h3><span class="h">ore 25–26 · pp. 192–194, 235 <span class="badge crit">ed. civica</span></span></div>
+    <div class="split"><div class="d" style="flex:60"></div><div class="q" style="flex:60"></div></div>
+    <dl>
+      <dt>Sequenza</dt><dd><ul>
+        <li><span class="t dis">60'</span> Dal bias visto al laboratorio a boom, applicazioni, rischi, AI Act (con le date aggiornate), Chomsky, LLM e allucinazioni. Dibattito breve: «Regolare l'IA ora o lasciarla crescere?». Si riprendono le otto macchine dell'incontro 1.</li>
+        <li><span class="t teo">60'</span> Verifica scritta: domande chiuse, un esercizio sul neurone o sul percettrone, l'interpretazione di un grafico di accuratezza.</li>
+      </ul></dd>
+      <dt>Materiali</dt><dd><a href="04-intelligenza-artificiale-e-reti-neurali.html#boom">Pagina IA, § 8</a> · box p. 235 · verifica da preparare</dd>
+    </dl>
+  </div>
+
+</div></section>
+
+<!-- ============================================================ -->
+<section id="valutazione">
+  <div class="kicker"><span class="num">05</span>Valutazione</div>
+  <h2>Più peso al lavoro pratico</h2>
+  <div class="grid2">
+    <div class="panel m0">
+      <h3 class="mt0">Formativa (in itinere)</h3>
+      <ul class="bullets m0">
+        <li>Notebook degli incontri 1–4 e 7–11, controllati a campione.</li>
+        <li>Vero/falso interattivo della pagina IA come autovalutazione.</li>
+        <li>Partecipazione al laboratorio e al dibattito.</li>
+      </ul>
+    </div>
+    <div class="panel m0">
+      <h3 class="mt0">Sommativa</h3>
+      <ul class="bullets m0">
+        <li><strong>Mini-progetto</strong> (avviato nell'incontro 11, sviluppato nell'incontro 12, consegna dopo una settimana): 50% del voto.</li>
+        <li><strong>Verifica scritta</strong> (incontro 13, 1 ora): 50% del voto.</li>
+      </ul>
+    </div>
+  </div>
+
+  <h3>Griglia per il mini-progetto</h3>
+  <div class="table-scroll"><table class="formula-table plain rub">
+    <thead><tr><th>Criterio</th><th>Iniziale</th><th>Base</th><th>Intermedio</th><th>Avanzato</th></tr></thead>
+    <tbody>
+      <tr><td>Esplorazione e pulizia dei dati</td><td>Dati caricati senza controlli</td><td>Uso di <code>info()</code> e <code>describe()</code></td><td>Gestione dei valori mancanti motivata</td><td>EDA completa con osservazioni sui dati</td></tr>
+      <tr><td>Modello</td><td>Codice copiato non funzionante</td><td>Modello applicato correttamente</td><td>Scelte (variabili, k) motivate</td><td>Confronto tra alternative e loro limiti</td></tr>
+      <tr><td>Visualizzazione</td><td>Grafici assenti o illeggibili</td><td>Grafico corretto ma senza etichette</td><td>Grafici chiari con assi e legenda</td><td>Grafici scelti per sostenere le conclusioni</td></tr>
+      <tr><td>Interpretazione</td><td>Nessun commento</td><td>Descrizione del risultato</td><td>Interpretazione corretta</td><td>Interpretazione critica, con i limiti del modello</td></tr>
+    </tbody>
+  </table></div>
+</section>
+
+<!-- ============================================================ -->
+<section id="materiali" class="alt"><div class="inner">
+  <div class="kicker"><span class="num">06</span>Materiali</div>
+  <h2>Pronti e da preparare</h2>
+  <div class="table-scroll"><table class="formula-table plain code-cost">
+    <thead><tr><th>Stato</th><th>Materiale</th><th>Incontri</th></tr></thead>
+    <tbody>
+      <tr><td>pronto</td><td><a href="02-che-cos-e-IA.html">Pagina della lezione 1</a></td><td>1</td></tr>
+      <tr><td>pronto</td><td><a href="03-dai-dati-ai-vettori.html">Pagina delle lezioni 2–4 "Machine learning"</a> e i tre notebook con soluzioni</td><td>2–4</td></tr>
+      <tr><td>pronto</td><td><a href="04-intelligenza-artificiale-e-reti-neurali.html">Pagina studenti Unità B3</a>, con spiegazioni, codice e simulatori</td><td>3, 7, 8, 13</td></tr>
+      <tr><td>pronto</td><td><a href="scaletta.html">Scaletta degli argomenti</a></td><td>—</td></tr>
+      <tr><td>da preparare</td><td>Notebook: neurone, percettrone e suo addestramento</td><td>7</td></tr>
+      <tr><td>da preparare</td><td>Pagina studenti Unità B4; notebook del confronto k-NN / k-means</td><td>9–11</td></tr>
+      <tr><td>da preparare</td><td>Consegna del mini-progetto; verifica scritta con soluzioni</td><td>11–13</td></tr>
+    </tbody>
+  </table></div>
+</div></section>
+
+<footer><a class="back-link back-foot" href="01-index.html">← Torna all'indice</a>Programmazione basata su "Hashtag 3", Modulo B, Unità B3 e B4 · Realizzata con l'assistenza di Claude (Anthropic)</footer>
+
+</body>
+</html>

@@ -6,7 +6,7 @@
 <title>Intelligenza artificiale e reti neurali</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="style.css">
+<link rel="stylesheet" href="css/style.css">
 <style>
   .flip-face.back{line-height:1.45;}
   .formula-big{max-width:100%; overflow-x:auto; vertical-align:top;}
@@ -46,7 +46,7 @@
 <body>
 
 <nav class="toc">
-  <a class="home" href="index.html"><span class="n">←</span>Indice</a>
+  <a class="home" href="01-index.html"><span class="n">←</span>Indice</a>
   <a href="#intro"><span class="n">01</span>Intelligenza</a>
   <a href="#turing"><span class="n">02</span>Test di Turing</a>
   <a href="#tipi"><span class="n">03</span>Tipi di IA</a>
@@ -64,7 +64,7 @@
 </nav>
 
 <header class="hero">
-  <a class="back-link" href="index.html">← Torna all'indice</a>
+  <a class="back-link" href="01-index.html">← Torna all'indice</a>
   <div class="eyebrow">Modulo B — Unità B3 · Quinta scienze applicate</div>
   <h1>Intelligenza artificiale e reti neurali</h1>
   <div class="legend-box">
@@ -106,7 +106,6 @@
         <div class="flip-face">
           <span class="tag">PROVA A RISPONDERE</span>
           <p style="margin:.7em 0 0">Un chatbot di oggi riesce spesso a conversare in modo indistinguibile da una persona. Significa che <strong>pensa</strong>?</p>
-          <span class="flip-hint">clic per girare</span>
         </div>
         <div class="flip-face back"><p class="m0">Superare il test dice solo che il comportamento <em>sembra</em> umano. Il test non misura la comprensione né la coscienza: è proprio la critica che si è mossa al test fin dall'inizio, e che ritroverai nelle posizioni di Chomsky (sezione 7).</p></div>
       </div>
@@ -126,15 +125,15 @@
   <p>Si distinguono tre livelli di intelligenza artificiale. Gira le schede.</p>
   <div class="grid3">
     <div class="flip-card" onclick="this.classList.toggle('flipped')"><div class="flip-inner">
-      <div class="flip-face"><span class="tag">ANI · narrow</span><h3>IA debole, o ristretta</h3><span class="flip-hint">clic per girare</span></div>
+      <div class="flip-face"><span class="tag">ANI · narrow</span><h3>IA debole, o ristretta</h3></div>
       <div class="flip-face back">Risolve bene un singolo problema definito, ma non sa adattarsi fuori dal suo ambito. Si basa sul <strong>machine learning</strong>. È l'unico tipo che esiste oggi.</div>
     </div></div>
     <div class="flip-card" onclick="this.classList.toggle('flipped')"><div class="flip-inner">
-      <div class="flip-face"><span class="tag">AGI · general</span><h3>IA forte, o generale</h3><span class="flip-hint">clic per girare</span></div>
+      <div class="flip-face"><span class="tag">AGI · general</span><h3>IA forte, o generale</h3></div>
       <div class="flip-face back">Risolverebbe qualsiasi problema intellettuale come un essere umano (<em>machine intelligence</em>), risultando indistinguibile da esso e superando quindi il test di Turing.</div>
     </div></div>
     <div class="flip-card" onclick="this.classList.toggle('flipped')"><div class="flip-inner">
-      <div class="flip-face"><span class="tag">ASI · superintelligence</span><h3>Superintelligenza</h3><span class="flip-hint">clic per girare</span></div>
+      <div class="flip-face"><span class="tag">ASI · superintelligence</span><h3>Superintelligenza</h3></div>
       <div class="flip-face back">Ipotetica intelligenza superiore a quella umana (<em>machine consciousness</em>): sarebbe di fatto una nuova specie con capacità cognitive eccezionali.</div>
     </div></div>
   </div>
@@ -145,11 +144,11 @@
   <div class="kicker"><span class="num">4</span>Le tappe fondamentali<span class="badge onbook">Sul libro · pp. 185–186, 190</span></div>
   <h2>Entusiasmi, inverni e boom</h2>
   <p>Il termine "intelligenza artificiale" compare nel 1955 nella proposta per un seminario estivo al <strong>Dartmouth College</strong>, firmata da John McCarthy, Marvin Minsky, Nathaniel Rochester e Claude Shannon. Da allora la ricerca ha alternato fasi di grande entusiasmo e fasi di delusione, chiamate <strong>AI winter</strong>, quando calavano interesse e investimenti.</p>
-  <p>L'andamento ricorda lo <strong>hype cycle</strong> ("ciclo dell'esagerazione") della società Gartner. <strong>Clicca sui punti</strong> della curva per leggere gli eventi.</p>
+  <p>L'andamento ricorda lo <strong>hype cycle</strong> ("ciclo dell'esagerazione") della società Gartner. <strong>Clicca sui punti</strong> della curva per leggere gli eventi, sulle fasce azzurre per capire perché arrivano gli AI winter e sulla freccia rossa per capire la ripresa.</p>
 
   <div class="panel">
     <canvas class="ai-canvas wide" id="hypeCanvas" width="960" height="360"></canvas>
-    <div class="msg" id="hypeMsg" style="text-align:center; min-height:2.8em">Clicca su un punto della curva.</div>
+    <div class="msg" id="hypeMsg" style="text-align:center; min-height:2.8em">Clicca su un punto della curva, su una fascia AI WINTER o sulla freccia AI BOOM.</div>
   </div>
 
   <div class="teacher-note"><strong>Da notare</strong>Il primo AI winter (1974–1980) segue le critiche al percettrone e il rapporto Lighthill; il secondo (1987–1993) arriva quando diventano evidenti i limiti dei sistemi esperti. Entrambi nascono da aspettative troppo alte rispetto ai risultati.</div>
@@ -327,7 +326,6 @@ uncle(U, N) :- parent_child(P, N), sibling(U, P).   <span class="c">% regola in 
       <div class="flip-face">
         <span class="tag">PROVA A RISPONDERE · #LetsTalkAbout p. 194</span>
         <p style="margin:.7em 0 0">Yann LeCun, uno dei padri delle reti convoluzionali, ironizza sulla paura dell'IA paragonandola a quella per l'invenzione della penna a sfera: «si potrebbero scrivere cose orribili, vietiamola!». Sei d'accordo con il paragone?</p>
-        <span class="flip-hint">clic per girare</span>
       </div>
       <div class="flip-face back"><p class="m0">Il paragone sottolinea che ogni tecnologia può essere usata male e che regolarla troppo presto può frenare l'innovazione. Chi non è d'accordo osserva che una penna non prende decisioni, non agisce su larga scala e non è una black box: per questo molti ritengono necessario un principio di precauzione. Non c'è una risposta giusta: discutetene in classe.</p></div>
     </div>
@@ -621,7 +619,7 @@ test accuracy: 0.9778</div>
   <div class="msg" id="quizScore"></div>
 </div></section>
 
-<footer><a class="back-link back-foot" href="index.html">← Torna all'indice</a>Materiale didattico basato su "Hashtag 3", Modulo B, Unità B3 — Intelligenza artificiale e reti neurali · Realizzato con l'assistenza di Claude (Anthropic)</footer>
+<footer><a class="back-link back-foot" href="01-index.html">← Torna all'indice</a>Materiale didattico basato su "Hashtag 3", Modulo B, Unità B3 — Intelligenza artificiale e reti neurali · Realizzato con l'assistenza di Claude (Anthropic)</footer>
 
 <script>
 (function(){
@@ -639,25 +637,32 @@ test accuracy: 0.9778</div>
     // curva schematica di interesse (anno, livello 0..1)
     const curve = [[1940,.04],[1949,.07],[1956,.14],[1962,.3],[1969,.36],[1972,.28],[1975,.06],[1979,.08],[1985,.38],[1987,.32],[1990,.05],[1993,.08],[1997,.16],[2005,.25],[2012,.4],[2016,.58],[2020,.78],[2023,.95],[2025,1]];
     const ev = [
-      [1943, 'McCulloch e Pitts definiscono il neurone artificiale.'],
+      [1943, 'McCulloch e Pitts definiscono la rete neurale artificiale.'],
       [1950, 'Turing propone un test per valutare l\'intelligenza delle macchine.'],
-      [1956, 'Seminario di Dartmouth: nasce ufficialmente l\'intelligenza artificiale.'],
-      [1957, 'Rosenblatt realizza il Mark I Perceptron, la prima rete neurale.'],
-      [1969, 'Minsky e Papert criticano il percettrone nel libro "Perceptrons".'],
-      [1973, 'Il rapporto Lighthill critica i risultati dell\'IA: inizia il primo AI winter.'],
-      [1985, 'Successi dei sistemi esperti; Rumelhart, Hinton e altri riscoprono la backpropagation.'],
-      [1989, 'Yann LeCun inventa le reti neurali convoluzionali (CNN).'],
-      [1991, 'Fallisce il progetto giapponese dei computer di quinta generazione: secondo AI winter.'],
-      [1997, 'Deep Blue di IBM batte il campione di scacchi Garry Kasparov.'],
+      [1956, 'Nasce l\'intelligenza artificiale in un convegno al Dartmouth College. Il termine era stato coniato l\'anno prima, nella proposta del convegno, da John McCarthy, Marvin Minsky, Nathaniel Rochester e Claude Shannon.'],
+      [1957, 'Rosenblatt costruisce il Mark I Perceptron, una rete neurale fatta di fili, sensori di luce e manopole. I pesi, che noi scriveremo come numeri in Python, erano manopole girate da piccoli motori.'],
+      [1969, 'Minsky e Papert criticano il percettrone in una pubblicazione che ha grande eco: dimostrano che, con un solo strato di neuroni, non riesce a imparare nemmeno regole semplici come lo XOR («o l\'uno o l\'altro, ma non tutti e due»). Molti concludono che le reti neurali non hanno futuro.'],
+      [1973, 'James Lighthill, un matematico incaricato dal governo britannico di valutare la ricerca sull\'IA, pubblica un rapporto molto critico: i programmi funzionano solo su problemi semplici, quelli reali restano troppo complessi («i problemi intrattabili restano intrattabili»). I fondi vengono tagliati: inizia il primo AI winter.'],
+      [1985, 'Indipendentemente tra loro, Rumelhart, Parker e LeCun trovano un modo per addestrare reti con più strati di neuroni: la rete confronta la sua risposta con quella giusta e corregge i pesi partendo dall\'ultimo strato e tornando indietro. Si chiama retropropagazione dell\'errore (backpropagation) e supera il limite indicato nel 1969.'],
+      [1989, 'Yann LeCun inventa le reti neurali convoluzionali (CNN), fatte apposta per le immagini: ogni neurone guarda solo un piccolo pezzo dell\'immagine, come una lente che la scorre. Le usa per leggere i codici postali scritti a mano sulle buste.'],
+      [1991, 'Si conclude con un fallimento il progetto giapponese dei computer di quinta generazione: macchine pensate per ragionare con regole logiche, cioè con il modello simbolico. Le promesse non vengono mantenute e il secondo AI winter si aggrava.'],
+      [1997, 'IBM Deep Blue batte il campione di scacchi Garry Kasparov.'],
       [2014, 'Una macchina supera, anche se con qualche critica, il test di Turing.'],
-      [2016, 'AlphaGo di DeepMind batte Lee Sedol, campione di go.'],
-      [2023, 'Geoffrey Hinton lascia Google lanciando un avvertimento sui pericoli dell\'IA. È il boom dell\'IA.']
+      [2016, 'AlphaGo di DeepMind batte Lee Sedol, il campione di go, un antico gioco da tavolo con più configurazioni possibili degli atomi dell\'universo: impossibile provarle tutte, AlphaGo ha dovuto imparare a giocare.'],
+      [2023, 'Geoffrey Hinton, uno dei padri delle reti neurali moderne (nel 2024 riceverà il premio Nobel per la fisica), lascia Google per poter parlare liberamente dei pericoli dell\'IA: notizie e immagini false sempre più credibili, posti di lavoro a rischio e, in futuro, sistemi più intelligenti di noi difficili da controllare. Proprio chi ha contribuito a creare queste tecnologie invita alla prudenza.']
     ];
     function level(y){ for (let i = 1; i < curve.length; i++){ if (y <= curve[i][0]){ const [a, va] = curve[i - 1], [b, vb] = curve[i]; const t = (y - a) / (b - a); return va + (vb - va) * (1 - Math.cos(t * Math.PI)) / 2; } } return 1; }
-    let sel = -1;
+    let sel = -1, selW = -1;
+    const RIP = '<b>La ripresa (dagli anni 2000) e l\'AI boom</b> · Gli algoritmi per addestrare reti con molti strati esistevano già (1985, 1989), ma mancavano due ingredienti, che arrivano ora: enormi quantità di dati da cui imparare, grazie a internet e agli smartphone (i <b>big data</b>), e computer abbastanza potenti per addestrare reti grandi, grazie alle schede grafiche (<b>GPU</b>). Con algoritmi, dati e potenza di calcolo insieme, le reti neurali iniziano a funzionare davvero (libro, pp. 192–193).';
+    const WIN = [[1974, 1980, '<b>Primo AI winter (1974–1980)</b> · Negli anni \'60 i ricercatori avevano promesso macchine intelligenti nel giro di pochi anni, ma i risultati non arrivano: Minsky e Papert mostrano i limiti del percettrone (1969) e il rapporto Lighthill boccia la ricerca (1973). Nel Regno Unito e negli Stati Uniti i fondi vengono tagliati e molti ricercatori abbandonano il settore.'], [1987, 1993, '<b>Secondo AI winter (1987–1993)</b> · Negli anni \'80 l\'entusiasmo torna grazie ai sistemi esperti, adottati da molte aziende. Ma raccogliere la conoscenza degli esperti è difficile, i sistemi costano molto e si adattano male quando le condizioni cambiano. Le aziende smettono di investire e nel 1991 fallisce anche il progetto giapponese dei computer di quinta generazione.']];
     function draw(){
       ctx.clearRect(0, 0, W, H);
-      [[1974, 1980], [1987, 1993]].forEach(([a, b]) => { ctx.fillStyle = '#dbe6fd'; ctx.fillRect(sx(a), pad / 2, sx(b) - sx(a), H - pad * 1.5); ctx.fillStyle = BLUE; ctx.font = FONT; ctx.textAlign = 'center'; ctx.fillText('AI WINTER', (sx(a) + sx(b)) / 2, pad / 2 + 14); });
+      [[1974, 1980], [1987, 1993]].forEach(([a, b], wi) => { ctx.fillStyle = selW === wi ? '#b9cdfa' : '#dbe6fd'; ctx.fillRect(sx(a), pad / 2, sx(b) - sx(a), H - pad * 1.5); ctx.fillStyle = BLUE; ctx.font = FONT; ctx.textAlign = 'center'; ctx.fillText('AI WINTER', (sx(a) + sx(b)) / 2, pad / 2 + 14); });
+      // freccia AI BOOM, come nella Figura 4 del libro
+      (() => { const x0 = sx(2020), x1 = W - 28, y0 = 150, h = 36, tip = 20;
+        ctx.fillStyle = selW === 2 ? '#efb7a8' : '#f6dcd5'; ctx.strokeStyle = '#c4432c'; ctx.lineWidth = 2;
+        ctx.beginPath(); ctx.moveTo(x0, y0); ctx.lineTo(x1, y0); ctx.lineTo(x1 + tip, y0 + h / 2); ctx.lineTo(x1, y0 + h); ctx.lineTo(x0, y0 + h); ctx.closePath(); ctx.fill(); ctx.stroke();
+        ctx.fillStyle = '#c4432c'; ctx.font = '600 13px "IBM Plex Mono", monospace'; ctx.textAlign = 'center'; ctx.fillText('AI BOOM', (x0 + x1 + tip) / 2, y0 + h / 2 + 5); })();
       ctx.strokeStyle = LINE; ctx.lineWidth = 1; ctx.beginPath(); ctx.moveTo(pad, H - pad); ctx.lineTo(W - pad / 2, H - pad); ctx.stroke();
       ctx.fillStyle = SOFT; ctx.font = FONT; ctx.textAlign = 'center';
       for (let y = 1940; y <= 2020; y += 10) ctx.fillText(y, sx(y), H - pad + 16);
@@ -670,7 +675,10 @@ test accuracy: 0.9778</div>
     cv.addEventListener('click', e => {
       const [px, py] = pos(cv, e); let best = -1, bd = 1e9;
       ev.forEach(([y], i) => { const d = Math.hypot(sx(y) - px, sy(level(y)) - py); if (d < bd){ bd = d; best = i; } });
-      if (bd < 30){ sel = best; msg.innerHTML = `<b>${ev[sel][0]}</b> · ${ev[sel][1]}`; draw(); }
+      if (bd < 30){ sel = best; selW = -1; msg.innerHTML = `<b>${ev[sel][0]}</b> · ${ev[sel][1]}`; draw(); return; }
+      const w = WIN.findIndex(([a, b]) => px >= sx(a) && px <= sx(b));
+      if (w >= 0){ selW = w; sel = -1; msg.innerHTML = WIN[w][2]; draw(); return; }
+      if (px >= sx(1999)){ selW = 2; sel = -1; msg.innerHTML = RIP; draw(); }
     });
     draw();
   })();
