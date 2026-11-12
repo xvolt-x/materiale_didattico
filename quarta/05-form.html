@@ -28,6 +28,14 @@
 
   .mono{ font-family:var(--font-mono); }
   p.note{ font-size:14px; color:var(--text-dim); margin-top:14px; }
+  .method-title{ font-size:15px; margin:0 0 10px; color:var(--text); }
+  .browser .stage.method-stage{ font-family:var(--font-body, inherit); font-size:15px; line-height:1.6; min-height:auto; }
+  .browser .addr b{ font-weight:600; }
+  p.mw{ max-width:76ch; }
+  .code-block .link-hl{ background:rgba(250,204,21,.18); border-radius:3px; padding:0 2px; }
+  .stage .demo-hint{ font-family:var(--font-body); font-size:13px; color:var(--text-dim); margin:12px 0 0; }
+  .stage.styled #demoNome:focus{ border:2px solid #1d4ed8; background:#eef3ff; box-shadow:0 0 0 4px rgba(29,78,216,.18); }
+  .stage .demo-hint.ok{ color:#15803d; font-weight:600; }
   ul.note-list{ font-size:14px; color:var(--text-dim); margin:14px 0 0; padding-left:20px; }
   ul.note-list li{ margin-bottom:6px; }
 
@@ -153,19 +161,34 @@
   <p class="lede">Tutti i campi di un modulo stanno dentro un elemento <span class="mono">&lt;form&gt;</span>. I suoi due attributi principali dicono <b>dove</b> e <b>come</b> verranno spediti i dati: tocca le parti qui sotto per scoprirle.</p>
 
   <div class="anat-bar" id="anatomyForm">
-    <span class="seg" data-name="Tag di apertura" data-expl="Apre il form. Tutto ciò che sta tra &lt;form&gt; e &lt;/form&gt; fa parte dello stesso modulo e viene inviato insieme."><span class="tg">&lt;form</span></span><span class="pl"> </span><span class="seg" data-name="action — dove" data-expl="L'indirizzo (URL) a cui il browser spedirà i dati quando l'utente preme il pulsante di invio."><span class="at">action</span>=<span class="vl">"/iscrizione"</span></span><span class="pl"> </span><span class="seg" data-name="method — come" data-expl="Il modo in cui i dati vengono spediti: get (nell'indirizzo) oppure post (nascosti nel corpo della richiesta)."><span class="at">method</span>=<span class="vl">"post"</span></span><span class="pl">&gt;</span><span class="seg" data-name="Contenuto" data-expl="Qui vanno i campi: input, etichette, menu a tendina, pulsanti…"><span class="ct"> … campi … </span></span><span class="seg" data-name="Tag di chiusura" data-expl="Chiude il form. Un campo scritto fuori da &lt;form&gt; non viene inviato con gli altri."><span class="tg">&lt;/form&gt;</span></span>
+    <span class="seg" data-name="Tag di apertura" data-expl="Apre il form. Tutti i campi scritti tra &lt;form&gt; e &lt;/form&gt; fanno parte dello stesso modulo: quando si preme il pulsante di invio, partono tutti insieme."><span class="tg">&lt;form</span></span><span class="pl"> </span><span class="seg" data-name="action — dove" data-expl="Dice DOVE vanno i dati: è l'indirizzo della pagina, o del programma sul server, che li riceverà. In questo esempio i dati andranno a /iscrizione."><span class="at">action</span>=<span class="vl">"/iscrizione"</span></span><span class="pl"> </span><span class="seg" data-name="method — come" data-expl="Dice COME viaggiano i dati. Con get vengono scritti nella barra degli indirizzi, dopo il punto di domanda, e tutti li vedono. Con post viaggiano insieme alla richiesta e nella barra non compaiono. Qui sotto trovi un esempio dei due casi."><span class="at">method</span>=<span class="vl">"post"</span></span><span class="pl">&gt;</span><span class="seg" data-name="Contenuto" data-expl="Qui dentro vanno i campi del modulo: caselle di testo, etichette, menu a tendina, pulsanti… Li vediamo uno per uno nelle prossime sezioni."><span class="ct"> … campi … </span></span><span class="seg" data-name="Tag di chiusura" data-expl="Chiude il form. Un campo scritto dopo &lt;/form&gt; non fa parte del modulo: i suoi dati non vengono inviati con gli altri."><span class="tg">&lt;/form&gt;</span></span>
   </div>
   <div class="anat-cap" id="anatomyFormCaption"><div class="name">Tocca una parte qui sopra</div><div class="expl">Un form è un contenitore: da solo non mostra nulla, sono i campi al suo interno a comparire nella pagina.</div></div>
 
+  <h3 style="margin-top:44px">Che cosa succede quando premi «Invia»</h3>
+  <p class="mw">Il browser prende tutti i campi del form, li mette in fila come coppie <code>name=valore</code> e li spedisce all'indirizzo scritto in <code>action</code>. L'attributo <code>method</code> decide <b>come</b> viaggiano quei dati. Qui sotto lo stesso form, con nome <b>Anna</b> e classe <b>4A</b>, viene inviato nei due modi: guarda la barra degli indirizzi.</p>
+
+  <div class="grid2" style="margin-top:22px">
+    <div>
+      <p class="method-title"><code>method="get"</code> · come una <b>cartolina</b></p>
+      <div class="browser"><div class="bar"><span class="dotb"></span><span class="dotb"></span><span class="dotb"></span><span class="addr sent">…/iscrizione<b>?nome=Anna&amp;classe=4A</b></span></div><div class="stage method-stage">I dati sono scritti <b>nell'indirizzo</b>, dopo il punto di domanda <code>?</code> e separati da <code>&amp;</code>. Chiunque guardi lo schermo li legge, e l'indirizzo si può salvare nei preferiti o mandare a qualcuno.</div></div>
+    </div>
+    <div>
+      <p class="method-title"><code>method="post"</code> · come una <b>lettera in busta</b></p>
+      <div class="browser"><div class="bar"><span class="dotb"></span><span class="dotb"></span><span class="dotb"></span><span class="addr">…/iscrizione</span></div><div class="stage method-stage">L'indirizzo resta pulito: i dati <code>nome=Anna&amp;classe=4A</code> viaggiano <b>dentro la richiesta</b>, nascosti alla vista. Se ricarichi la pagina, il browser chiede se vuoi spedirli di nuovo.</div></div>
+    </div>
+  </div>
+
   <div class="table-scroll">
     <table class="table" style="margin-top:36px">
-      <thead><tr><th>method</th><th>Dove finiscono i dati</th><th>Quando si usa</th></tr></thead>
+      <thead><tr><th>method</th><th>Dove finiscono i dati</th><th>Si vedono nell'indirizzo?</th><th>Quando si usa</th></tr></thead>
       <tbody>
-        <tr><td><code>get</code></td><td>Nell'indirizzo, dopo il <code>?</code> — ad esempio <code>/cerca?parola=html</code></td><td>Ricerche e filtri: l'indirizzo si può salvare o condividere</td></tr>
-        <tr><td><code>post</code></td><td>Nel corpo della richiesta, non visibili nell'indirizzo</td><td>Login, registrazioni, dati personali</td></tr>
+        <tr><td><code>get</code></td><td>Nell'indirizzo, dopo il <code>?</code></td><td>Sì</td><td>Ricerche e filtri: l'indirizzo si può salvare o condividere</td></tr>
+        <tr><td><code>post</code></td><td>Dentro la richiesta</td><td>No</td><td>Login, registrazioni, dati personali, ordini</td></tr>
       </tbody>
     </table>
   </div>
+  <div class="tip"><b>Attenzione →</b> <code>post</code> nasconde i dati alla vista, ma non li protegge: chi intercetta la richiesta può leggerli comunque. A proteggerli è la connessione sicura <code>https</code>, quella con il lucchetto nella barra degli indirizzi.</div>
   <div class="tip"><b>Ricorda →</b> per ora non abbiamo un server che riceve i dati, e va bene così. Quando premi il pulsante di invio, il browser prova comunque a spedirli: con <code>method="get"</code> puoi vedere nella barra degli indirizzi esattamente che cosa ha inviato.</div>
 </section>
 
@@ -176,9 +199,28 @@
   <p class="lede"><span class="mono">&lt;input&gt;</span> è un tag <b>vuoto</b>, come <span class="mono">&lt;img&gt;</span>: non ha contenuto né tag di chiusura. Quasi sempre è accompagnato da una <span class="mono">&lt;label&gt;</span>, l'etichetta che spiega che cosa scrivere.</p>
 
   <div class="anat-bar" id="anatomyInput">
-    <span class="seg" data-name="Etichetta" data-expl="Il testo visibile accanto al campo. Cliccandoci sopra si attiva il campo, e gli screen reader lo leggono ad alta voce."><span class="tg">&lt;label</span></span><span class="pl"> </span><span class="seg" data-name="for — a chi si riferisce" data-expl="Deve avere lo stesso valore dell'id del campo: è così che etichetta e campo vengono collegati."><span class="at">for</span>=<span class="vl">"nome"</span></span><span class="pl">&gt;</span><span class="seg" data-name="Testo dell'etichetta" data-expl="Ciò che l'utente legge. Scrivilo sempre: il placeholder non lo sostituisce."><span class="ct">Nome</span></span><span class="tg">&lt;/label&gt;</span><span class="br"></span><span class="seg" data-name="Tag input" data-expl="Il campo vero e proprio. È un tag vuoto: niente contenuto, niente tag di chiusura."><span class="tg">&lt;input</span></span><span class="pl"> </span><span class="seg" data-name="type — tipo di campo" data-expl="Decide che campo mostrare: testo, email, password, data, numero… Cambiando solo questo valore cambia tutto il comportamento."><span class="at">type</span>=<span class="vl">"text"</span></span><span class="pl"> </span><span class="seg" data-name="id — identificativo" data-expl="Il nome del campo all'interno della pagina. Deve essere unico, e uguale al for della label."><span class="at">id</span>=<span class="vl">"nome"</span></span><span class="pl"> </span><span class="seg" data-name="name — nome del dato" data-expl="Il nome con cui il dato viene spedito. Senza name il campo compare nella pagina, ma il suo valore NON viene inviato."><span class="at">name</span>=<span class="vl">"nome"</span></span><span class="pl"> </span><span class="seg" data-name="placeholder — suggerimento" data-expl="Testo grigio di esempio che scompare quando si inizia a scrivere. Facoltativo."><span class="at">placeholder</span>=<span class="vl">"Mario"</span></span><span class="pl">&gt;</span>
+    <span class="seg" data-name="Etichetta" data-expl="Il testo visibile accanto al campo. Cliccandoci sopra si attiva il campo, e gli screen reader lo leggono ad alta voce."><span class="tg">&lt;label</span></span><span class="pl"> </span><span class="seg" data-name="for — a chi si riferisce" data-expl="Dice a quale campo appartiene l'etichetta. Il suo valore deve essere identico all'id del campo, che trovi poco più avanti nel tag input: qui tutti e due valgono nome. Lo spieghiamo meglio qui sotto."><span class="at">for</span>=<span class="vl">"nome"</span></span><span class="pl">&gt;</span><span class="seg" data-name="Testo dell'etichetta" data-expl="Ciò che l'utente legge. Scrivilo sempre: il placeholder non lo sostituisce."><span class="ct">Nome</span></span><span class="tg">&lt;/label&gt;</span><span class="br"></span><span class="seg" data-name="Tag input" data-expl="Il campo vero e proprio. È un tag vuoto: niente contenuto, niente tag di chiusura."><span class="tg">&lt;input</span></span><span class="pl"> </span><span class="seg" data-name="type — tipo di campo" data-expl="Decide che campo mostrare: testo, email, password, data, numero… Cambiando solo questo valore cambia tutto il comportamento."><span class="at">type</span>=<span class="vl">"text"</span></span><span class="pl"> </span><span class="seg" data-name="id — identificativo" data-expl="Un nome che identifica il campo, unico nella pagina: è lo stesso id che usi nel CSS con il selettore #nome. Qui serve anche a collegare il campo alla sua etichetta, perché il for della label deve avere esattamente questo valore."><span class="at">id</span>=<span class="vl">"nome"</span></span><span class="pl"> </span><span class="seg" data-name="name — nome del dato" data-expl="Il nome con cui il dato viene spedito. Senza name il campo compare nella pagina, ma il suo valore NON viene inviato."><span class="at">name</span>=<span class="vl">"nome"</span></span><span class="pl"> </span><span class="seg" data-name="placeholder — suggerimento" data-expl="Testo grigio di esempio che scompare quando si inizia a scrivere. Facoltativo."><span class="at">placeholder</span>=<span class="vl">"Mario"</span></span><span class="pl">&gt;</span>
   </div>
   <div class="anat-cap" id="anatomyInputCaption"><div class="name">Tocca una parte qui sopra</div><div class="expl">Tre attributi da non dimenticare mai: <b>type</b>, <b>id</b> e <b>name</b>.</div></div>
+
+  <h3 style="margin-top:44px">Come si collegano etichetta e campo</h3>
+  <p class="mw">La <span class="mono">&lt;label&gt;</span> e l'<span class="mono">&lt;input&gt;</span> sono due tag separati. Per dire al browser che vanno insieme si danno all'etichetta e al campo due attributi con <b>lo stesso valore</b>: <code>for</code> nella label e <code>id</code> nel campo.</p>
+  <div class="grid2" style="margin-top:18px">
+    <pre class="code-block"><span class="tg">&lt;label</span> <span class="at link-hl">for</span>=<span class="vl link-hl">"nome"</span><span class="tg">&gt;</span>Nome<span class="tg">&lt;/label&gt;</span>
+<span class="tg">&lt;input</span> <span class="at">type</span>=<span class="vl">"text"</span> <span class="at link-hl">id</span>=<span class="vl link-hl">"nome"</span> <span class="at">name</span>=<span class="vl">"nome"</span><span class="tg">&gt;</span></pre>
+    <div class="browser"><div class="bar"><span class="dotb"></span><span class="dotb"></span><span class="dotb"></span><span class="addr">anteprima</span></div><div class="stage styled"><label for="demoNome">Nome</label><input type="text" id="demoNome" name="nome"><p class="demo-hint" id="demoHint">Prova: clicca sulla parola «Nome», non sul campo. Il campo si attiva lo stesso.</p></div></div>
+  </div>
+  <div class="table-scroll">
+    <table class="table" style="margin-top:24px">
+      <thead><tr><th>Attributo</th><th>Dove si scrive</th><th>A che cosa serve</th></tr></thead>
+      <tbody>
+        <tr><td><code>id</code></td><td>nel campo</td><td>Dà al campo un nome unico nella pagina, lo stesso che usi nel CSS con <code>#</code></td></tr>
+        <tr><td><code>for</code></td><td>nella label</td><td>Indica l'<code>id</code> del campo a cui appartiene l'etichetta: deve essere scritto identico</td></tr>
+        <tr><td><code>name</code></td><td>nel campo</td><td>È il nome con cui il dato viene spedito quando si invia il form</td></tr>
+      </tbody>
+    </table>
+  </div>
+  <div class="tip"><b>Ricorda →</b> spesso <code>id</code> e <code>name</code> hanno lo stesso valore, come qui, ma servono a cose diverse: <code>id</code> collega l'etichetta al campo (e serve al CSS), <code>name</code> serve a spedire il dato.</div>
 
   <h3 style="margin-top:56px; font-size:16px; color:var(--text-dim); font-weight:600">I tipi di input</h3>
   <p class="lede" style="margin-top:8px">Lo stesso tag, con un <span class="mono">type</span> diverso, diventa un campo diverso. Scegli un tipo e prova il campo nell'anteprima: su smartphone alcuni tipi aprono anche una tastiera dedicata.</p>
@@ -357,7 +399,7 @@
       <div class="browser">
         <div class="bar"><span class="dotb"></span><span class="dotb"></span><span class="dotb"></span><span class="addr" id="exAddr">iscrizione.html</span></div>
         <div class="stage">
-          <form class="demo-form" data-action="/iscrizione" data-method="post" data-addr="exAddr" data-out="exOut">
+          <form class="demo-form" data-action="/iscrizione" data-method="post" data-addr="exAddr">
             <fieldset>
               <legend>Dati personali</legend>
               <label for="eNome">Nome</label>
@@ -392,11 +434,19 @@
           </form>
         </div>
       </div>
-      <div class="sent-box" id="exOut"><div class="name">Dati inviati</div>Ancora nulla: compila il modulo e premi <b>Iscriviti</b>.</div>
     </div>
   </div>
   <p class="note">Senza CSS i campi appaiono un po' disordinati: è normale, l'HTML si occupa solo della struttura. Nella prossima sezione gli diamo un aspetto ordinato.</p>
-  <p class="note">Osserva il riquadro <b>Dati inviati</b>: ogni riga è una coppia <span class="mono">name = valore</span>. La checkbox, se spuntata, invia il valore <span class="mono">on</span>; un campo senza <span class="mono">name</span> non comparirebbe affatto.</p>
+
+  <h3 style="margin-top:44px">Prova e osserva: sbaglia di proposito</h3>
+  <p class="mw">Copia l'esempio completo in un file, imposta <code>method="get"</code> e introduci <b>uno alla volta</b> questi errori, inviando ogni volta il modulo e guardando la barra degli indirizzi.</p>
+  <ul class="mw">
+    <li>Togli l'attributo <code>name</code> dal campo email: che cosa cambia nell'indirizzo?</li>
+    <li>Dai ai due radio button due <code>name</code> diversi: che cosa succede quando li selezioni?</li>
+    <li>Sbaglia il <code>for</code> di una label: che cosa succede cliccando sul testo dell'etichetta?</li>
+    <li>Sposta un campo fuori dal tag <code>&lt;form&gt;</code>: viene ancora inviato?</li>
+  </ul>
+  <p class="mw">Per ogni errore scrivi, in un commento HTML accanto al campo, che cosa hai osservato e perché secondo te succede.</p>
 </section>
 
 <!-- 7. DARE STILE AI FORM -->
@@ -486,70 +536,9 @@
 <!-- ESERCIZI -->
 <section id="esercizi">
   <span class="sec-num">08 · Esercizi</span>
-  <h2>Quattro esercizi, difficoltà crescente</h2>
-  <p class="lede">Quattro moduli da realizzare in HTML, ciascuno con il suo <b>foglio di stile esterno</b>. Come negli esercizi delle pagine precedenti, crea per ciascuno una cartella dedicata (es. <span class="mono">form1/</span>) con un file <span class="mono">index.html</span> e una sottocartella <span class="mono">css/</span> con il file <span class="mono">style.css</span>.</p>
-  <p class="lede">Conserva bene questi moduli: più avanti li <b>riprenderemo</b> per ricevere davvero i dati inviati e salvarli.</p>
-
-  <div class="panel ex-card">
-    <span class="ex-level base">Livello base</span>
-    <h3>1. La pagina di accesso</h3>
-    <p class="lede" style="margin-top:0">Crea un modulo di login, come quelli che trovi su qualsiasi sito.</p>
-    <ul class="note-list">
-      <li>Struttura HTML completa, con un titolo <span class="mono">&lt;h1&gt;</span> "Accedi".</li>
-      <li>Un <span class="mono">&lt;form&gt;</span> con <span class="mono">method="post"</span>.</li>
-      <li>Un campo email e un campo password, ciascuno con la sua <span class="mono">&lt;label&gt;</span> collegata tramite <span class="mono">for</span> e <span class="mono">id</span>.</li>
-      <li>Entrambi i campi obbligatori; la password di almeno 8 caratteri.</li>
-      <li>Una checkbox "Ricordami" e un pulsante di invio.</li>
-      <li>Nel CSS: etichette sopra i campi (<span class="mono">display: block</span>), campi della stessa larghezza, modulo largo al massimo 360px e centrato nella pagina.</li>
-    </ul>
-    <p class="ex-goal">Obiettivo: scrivere correttamente un form minimo, collegando ogni etichetta al proprio campo, e dargli un aspetto ordinato.</p>
-  </div>
-
-  <div class="panel ex-card">
-    <span class="ex-level intermedio">Livello intermedio</span>
-    <h3>2. Il modulo di contatto</h3>
-    <p class="lede" style="margin-top:0">Crea il modulo "Scrivici" di un sito a tua scelta (una squadra sportiva, una biblioteca, un negozio).</p>
-    <ul class="note-list">
-      <li>Campi per nome, email e telefono, con il <span class="mono">type</span> più adatto per ciascuno.</li>
-      <li>Un menu a tendina <span class="mono">&lt;select&gt;</span> "Motivo del contatto" con almeno 3 opzioni.</li>
-      <li>Un'area di testo <span class="mono">&lt;textarea&gt;</span> per il messaggio.</li>
-      <li>Una checkbox obbligatoria per il consenso al trattamento dei dati.</li>
-      <li>Un pulsante di invio e uno di <span class="mono">reset</span>.</li>
-      <li>Nel CSS: un bordo colorato sul campo attivo con <span class="mono">:focus</span>, e un colore diverso per i due pulsanti, che cambia al passaggio del mouse con <span class="mono">:hover</span>.</li>
-    </ul>
-    <p class="ex-goal">Obiettivo: scegliere il controllo giusto per ogni tipo di informazione.</p>
-  </div>
-
-  <div class="panel ex-card">
-    <span class="ex-level avanzato">Livello avanzato</span>
-    <h3>3. Il sondaggio di classe</h3>
-    <p class="lede" style="margin-top:0">Crea un questionario anonimo su un argomento a piacere (le abitudini digitali, la gita di fine anno, la mensa…).</p>
-    <ul class="note-list">
-      <li>Almeno tre gruppi di domande, ciascuno dentro un <span class="mono">&lt;fieldset&gt;</span> con la sua <span class="mono">&lt;legend&gt;</span>.</li>
-      <li>Almeno una domanda a risposta singola (radio) e una a risposta multipla (checkbox).</li>
-      <li>Un campo <span class="mono">number</span> con <span class="mono">min</span> e <span class="mono">max</span> (ad esempio l'età, o le ore passate al telefono).</li>
-      <li>Un campo <span class="mono">range</span> per esprimere un voto da 1 a 10.</li>
-      <li>Usa <span class="mono">method="get"</span>: invia il modulo e osserva l'indirizzo nella barra del browser. Riesci a riconoscere ogni risposta?</li>
-      <li>Nel CSS: dai a ogni <span class="mono">fieldset</span> uno sfondo leggero, bordi arrotondati e un po' di spazio interno (box model); segnala in rosso i campi non validi con <span class="mono">:user-invalid</span>.</li>
-    </ul>
-    <p class="ex-goal">Obiettivo: organizzare un modulo lungo in gruppi e capire come vengono "impacchettati" i dati inviati.</p>
-  </div>
-
-  <div class="panel ex-card">
-    <span class="ex-level riepilogo">Livello riepilogo</span>
-    <h3>4. Caccia all'errore</h3>
-    <p class="lede" style="margin-top:0">Parti dall'<a href="#esempio" style="color:var(--signal); text-decoration:underline">esempio completo</a>: copialo in un file, impostalo con <span class="mono">method="get"</span> e introduci uno alla volta questi errori, inviando ogni volta il modulo.</p>
-    <ul class="note-list">
-      <li>Togli l'attributo <span class="mono">name</span> dal campo email: che cosa cambia nell'indirizzo?</li>
-      <li>Dai ai due radio button due <span class="mono">name</span> diversi: che cosa succede quando li selezioni?</li>
-      <li>Sbaglia il <span class="mono">for</span> di una label: che cosa succede cliccando sul testo dell'etichetta?</li>
-      <li>Sposta un campo fuori dal tag <span class="mono">&lt;form&gt;</span>: viene ancora inviato?</li>
-    </ul>
-    <p class="note">Per ogni errore scrivi, in un commento HTML accanto al campo, che cosa hai osservato e perché secondo te succede. Infine collega al modulo il foglio di stile della sezione <a href="#stile" style="color:var(--signal); text-decoration:underline">Dare stile ai form</a> e personalizzalo con i tuoi colori.</p>
-    <p class="ex-goal">Obiettivo: capire, sbagliando di proposito, a che cosa serve davvero ciascun attributo.</p>
-  </div>
-
-  <p class="lede" style="margin-top:32px">Prima di consegnare, controlla il tuo modulo con il <b>W3C Markup Validation Service</b> (<a href="https://validator.w3.org" target="_blank" style="color:var(--signal); text-decoration:underline">validator.w3.org</a>) per verificare che il codice sia corretto e senza errori.</p>
+  <h2>Gli esercizi sui form</h2>
+  <p class="lede">Gli esercizi su questa pagina sono raccolti insieme a quelli su CSS e layout, nella pagina degli esercizi: tre moduli di difficoltà crescente, fino a una prova generale come la verifica.</p>
+  <a class="btn primary" href="06-esercizi.html#form" style="margin-top:22px">Vai agli esercizi sui form →</a>
 </section>
 
 <nav class="prevnext" aria-label="Pagina precedente e successiva"><a class="prev" href="04-layout.html"><span>← Pagina precedente</span><b>04 · Esempi di layout</b></a><a class="next" href="06-esercizi.html"><span>Pagina successiva →</span><b>06 · Esercizi</b></a></nav>
@@ -654,14 +643,14 @@
       note: 'Un menu a tendina da cui scegliere una sola voce. Ogni <span class="mono">&lt;option&gt;</span> mostra un testo, ma invia il suo <span class="mono">value</span>: scegliendo "Verona" viene spedito <span class="mono">citta=vr</span>.'
     },
     radio: {
-      code: '<input type="radio" id="si" name="gita" value="si">\n<label for="si">Sì</label>\n<input type="radio" id="no" name="gita" value="no">\n<label for="no">No</label>',
+      code: '<p>Parteciperai alla gita?</p>\n<input type="radio" id="si" name="gita" value="si">\n<label for="si">Sì</label>\n<input type="radio" id="no" name="gita" value="no">\n<label for="no">No</label>',
       html: '<p style="margin:0 0 10px">Parteciperai alla gita?</p><input type="radio" id="c_si" name="gita" value="si"> <label for="c_si">Sì</label> &nbsp; <input type="radio" id="c_no" name="gita" value="no"> <label for="c_no">No</label>',
-      note: 'I radio button con lo stesso <span class="mono">name</span> formano un gruppo: se ne può selezionare <b>uno solo</b>. Prova a cliccare prima su "Sì" e poi su "No".'
+      note: 'I radio button con lo stesso <span class="mono">name</span> formano un gruppo: se ne può selezionare <b>uno solo</b>. Prova a cliccare prima su "Sì" e poi su "No".<br>La domanda non fa parte dei radio: qui è un semplice paragrafo <span class="mono">&lt;p&gt;</span>. Nella sezione 04 vedrai come legarla alle scelte con <span class="mono">&lt;fieldset&gt;</span> e <span class="mono">&lt;legend&gt;</span>.'
     },
     checkbox: {
-      code: '<input type="checkbox" id="html" name="lingue" value="html">\n<label for="html">HTML</label>\n<input type="checkbox" id="css" name="lingue" value="css">\n<label for="css">CSS</label>\n<input type="checkbox" id="python" name="lingue" value="python">\n<label for="python">Python</label>',
+      code: '<p>Quali linguaggi conosci?</p>\n<input type="checkbox" id="html" name="lingue" value="html">\n<label for="html">HTML</label>\n<input type="checkbox" id="css" name="lingue" value="css">\n<label for="css">CSS</label>\n<input type="checkbox" id="python" name="lingue" value="python">\n<label for="python">Python</label>',
       html: '<p style="margin:0 0 10px">Quali linguaggi conosci?</p><input type="checkbox" id="c_html" name="lingue" value="html"> <label for="c_html">HTML</label> &nbsp; <input type="checkbox" id="c_css" name="lingue" value="css"> <label for="c_css">CSS</label> &nbsp; <input type="checkbox" id="c_py" name="lingue" value="python"> <label for="c_py">Python</label>',
-      note: 'Ogni casella si spunta indipendentemente dalle altre: si possono scegliere <b>nessuna, una o più</b> opzioni. Una checkbox da sola serve anche per le domande sì/no, come "Accetto le condizioni".'
+      note: 'Ogni casella si spunta indipendentemente dalle altre: si possono scegliere <b>nessuna, una o più</b> opzioni. Una checkbox da sola serve anche per le domande sì/no, come "Accetto le condizioni".<br>Anche qui la domanda è un semplice paragrafo <span class="mono">&lt;p&gt;</span>, separato dalle caselle.'
     },
     button: {
       code: '<button type="submit">Invia</button>\n<button type="reset">Cancella</button>',
@@ -692,7 +681,7 @@
       addr.textContent = isPost ? action : action + '?' + query;
       addr.classList.add('sent');
       var rows = pairs.map(function(p){ return '<tr><td>' + esc(p[0]) + '</td><td>' + (p[1] === '' ? '<span class="empty">(vuoto)</span>' : esc(p[1])) + '</td></tr>'; }).join('');
-      out.innerHTML = '<div class="name">Dati inviati a ' + esc(action) + (isPost ? ' · method="post"' : ' · method="get"') + '</div>' +
+      if(out) out.innerHTML = '<div class="name">Dati inviati a ' + esc(action) + (isPost ? ' · method="post"' : ' · method="get"') + '</div>' +
         (isPost ? 'Con <b>post</b> i dati non compaiono nell\'indirizzo: viaggiano nel corpo della richiesta.' : 'Con <b>get</b> i dati finiscono nell\'indirizzo, dopo il <b>?</b> (guarda la barra qui sopra).') +
         '<table>' + rows + '</table>';
     });
@@ -741,6 +730,16 @@
   var d = document.querySelector('.pagesel'); if(!d) return;
   document.addEventListener('click', function(e){ if(d.open && !d.contains(e.target)) d.open = false; });
   document.addEventListener('keydown', function(e){ if(e.key === 'Escape' && d.open){ d.open = false; d.querySelector('summary').focus(); } });
+})();
+</script>
+<script>
+/* anteprima label-campo: messaggio quando il campo si attiva */
+(function(){
+  var f = document.getElementById('demoNome'), h = document.getElementById('demoHint');
+  if(!f || !h) return;
+  var orig = h.textContent;
+  f.addEventListener('focus', function(){ h.textContent = '✓ Il campo è attivo: ora puoi scrivere.'; h.classList.add('ok'); });
+  f.addEventListener('blur', function(){ h.textContent = orig; h.classList.remove('ok'); });
 })();
 </script>
 </body>
